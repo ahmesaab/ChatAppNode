@@ -8,6 +8,7 @@ router.get('/:id', function(req, res, next) {
   service.getPerson(req.param("id"),function(person){
     service.getUsers(function(users)
     {
+      console.log("Testing Github2");
       res.render('profile', {
         user: person,
         users: users,
