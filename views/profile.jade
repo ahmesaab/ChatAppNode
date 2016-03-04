@@ -1,0 +1,34 @@
+//
+   Created by Ahmed on 3/4/2016.
+
+extends layout
+
+block content
+   h1= user.firstName + ' ' + user.lastName
+   if id == user.id
+      script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js")
+      script(src="/javascripts/dropdown.js")
+      p shape:
+      select(class='shape', value="#{user.shape}")
+         each val in [1, 2, 3]
+            if user.shape == val
+               option(selected) #{val}
+            else
+               option #{val}
+      p color:
+      select(class='color', value="#{user.color}")
+         each val in [1, 2, 3]
+            if user.color == val
+               option(selected) #{val}
+            else
+               option #{val}
+   else
+      p shape:
+      p #{user.shape}
+      p color:
+      p #{user.color}
+   br
+   br
+   each val in users
+      a(href='#{val.id}') #{val.firstName+' '+val.lastName}
+      br
