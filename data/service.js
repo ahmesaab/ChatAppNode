@@ -45,17 +45,23 @@ function Service() {
     };
 
     this.changeAttribute = function(attribute,value,id,callback){
-        this.connection.query('UPDATE users SET '+attribute+'='+value+' WHERE id='+id,
-            function(err, rows, fields) {
-                if(err)
+        if(attribute!=='shape' && attribute!=='color')
+            callback(false);
+        else
+        {
+            this.connection.query('UPDATE users SET '+attribute+'=? WHERE id='+id,[value],
+                function(err, rows, fields)
                 {
-                    console.log(err);
-                    callback(false);
+                    if(err)
+                    {
+                        console.log(err);
+                        callback(false);
+                    }
+                    else
+                        callback(true);
                 }
-                else
-                    callback(true);
-            }
-        );
+            );
+        }
     };
 
     this.close = function()
