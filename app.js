@@ -4,11 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var orm = require('orm');
+//var orm = require('orm');
 var session = require('express-session');
 
 var routes = require('./routes/index');
 var user = require('./routes/user');
+var chats = require('./routes/chats');
+var chat = require('./routes/chat');
 var changeSettings = require('./routes/api_changeSettings');
 
 var app = express();
@@ -32,7 +34,9 @@ app.use(session({
 app.use(express.static('public'));
 
 app.use('/', routes);
+app.use('/chat', chat);
 app.use('/user', user);
+app.use('/chats', chats);
 app.use('/api_changeSettings', changeSettings);
 
 // ORM

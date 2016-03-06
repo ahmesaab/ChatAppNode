@@ -5,7 +5,7 @@ extends layout
 
 block content
    h1= user.firstName + ' ' + user.lastName
-   if id == user.id
+   if userID == user.id
       script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js")
       script(src="/javascripts/dropdown.js")
       p shape:

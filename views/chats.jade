@@ -1,0 +1,9 @@
+//
+   Created by Ahmed on 3/5/2016.
+
+extends layout
+block content
+   p
+      each chat in chats
+         a(href='/chat/#{chat.ID}') #{chat.title + ' by ' + chat.ownerID}
+         br

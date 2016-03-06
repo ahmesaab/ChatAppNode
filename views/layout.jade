@@ -4,4 +4,12 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    if userID
+      button(class="btn", onclick="window.location='/chats'").
+        MyChats
+      button(class="btn", onclick="window.location='/user/"+userID+"'").
+        MyProfile
+     else
+       button(class="btn", onclick="window.location='/'").
+         Login
     block content

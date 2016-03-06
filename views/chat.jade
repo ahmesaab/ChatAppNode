@@ -1,0 +1,19 @@
+//
+   Created by Ahmed on 3/6/2016.
+
+extends layout
+block content
+   h1 #{chat.title}
+   h3 Members
+   each member in members
+      p #{member.firstName+' '+member.lastName}
+   br
+   h3 Thread
+   each message in messages
+      p User#{message.displayName} said: #{message.content}
+      br
+   br
+   p
+      input(type="text", placeholder="bla bla bla..")
+      button(class="btn", onclick="alert('Sent')").
+         Send
