@@ -16,7 +16,7 @@ router.get('/:chatID', function(req, res, next) {
             {
                 if(status)
                 {
-                    res.render('chat',
+                    res.render('sockettest',
                         {
                             chat: chat,
                             messages: messages,
