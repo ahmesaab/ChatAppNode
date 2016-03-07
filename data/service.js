@@ -2,7 +2,7 @@
  * Created by Ahmed on 3/4/2016.
  */
 var Person = require('../models/person.js');
-var Chat = require('../models/chat.js');
+var Chat = require('../models/conversation.js');
 var Message = require('../models/message.js')
 var DB = require('../data/database.js');
 
