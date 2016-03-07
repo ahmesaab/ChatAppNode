@@ -1,10 +1,10 @@
+//Imports
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-//var orm = require('orm');
 var session = require('express-session');
 
 var routes = require('./routes/index');
@@ -13,43 +13,46 @@ var chats = require('./routes/chats');
 var chat = require('./routes/chat');
 var changeSettings = require('./routes/api_changeSettings');
 
+//Express Application
 var app = express();
 
-// view engine setup
+//View Engine Setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+//Session Settings
+var sessionMiddleware = session({
+  secret: 'SuperDooberSecretSexToy',
+  resave: true,
+  saveUninitialized: true
+})
+
+//Other Middleware Setups
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({
-  secret: 'hellooothere',
-  resave: true,
-  saveUninitialized: true
-}));
-//app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static('public'));
+app.use(sessionMiddleware);
+app.use(express.static(path.join(__dirname, 'public')));
 
+
+//Controllers
 app.use('/', routes);
 app.use('/chat', chat);
 app.use('/user', user);
 app.use('/chats', chats);
 app.use('/api_changeSettings', changeSettings);
 
-// ORM
-//app.use(orm.express("mysql://root:roxas@localhost/chat", {
-//  define: function (db, models, next) {
-//    models.person = db.define("person", {
-//      name      : String,
-//      id      : Number
-//    });
-//    next();
-//  }
-//}));
+//WebSocket Handler
+var webSocketHandler = require('./routes/wshandler');
 
+//WebSocket Settings (Socket.io)
+var io = require('socket.io')(2000);
+io.sockets.on('connection', function(socket){webSocketHandler(socket)});
+io.use(function(socket, next) {
+  sessionMiddleware(socket.request, socket.request.res, next);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
