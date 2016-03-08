@@ -6,24 +6,23 @@ var router = express.Router();
 var Service = require('../data/service.js');
 
 router.get('/', function(req, res, next) {
-    var currentUserID=req.session.userId;
-    if(currentUserID)
+    if(req.session.user)
     {
         var service = new Service();
-        service.getChats(currentUserID,
+        service.getChats(req.session.user.id,
             function(chats)
             {
                 res.render('chats',
                     {
                         chats: chats,
-                        userID: req.session.userId
+                        user: req.session.user
                     })
                 service.close();
             });
     }
     else
     {
-        res.send(403);
+        res.redirect('/');
     }
 });
 

@@ -2,12 +2,11 @@
  * Created by Ahmed on 3/6/2016.
  */
 
-function Message(id,userID,conversationId,content,displayName) {
+function Message(id,conversation,content,user) {
     this.id = id;
-    this.userID = userID;
-    this.conversationId = conversationId;
+    this.conversation = conversation;
     this.content = content;
-    this.displayName = displayName;
+    this.user = user;
 }
 
 module.exports = Message;

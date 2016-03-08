@@ -4,31 +4,31 @@
 extends layout
 
 block content
-   h1= user.firstName + ' ' + user.lastName
-   if userID == user.id
+   h1= profileUser.firstName + ' ' + profileUser.lastName
+   if user && (user.id == profileUser.id)
       script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js")
       script(src="/javascripts/dropdown.js")
       p shape:
-      select(class='shape', value="#{user.shape}")
+      select(class='shape', value="#{profileUser.shape}")
          each val in [1, 2, 3]
-            if user.shape == val
+            if profileUser.shape == val
                option(selected) #{val}
             else
                option #{val}
       p color:
-      select(class='color', value="#{user.color}")
+      select(class='color', value="#{profileUser.color}")
          each val in [1, 2, 3]
-            if user.color == val
+            if profileUser.color == val
                option(selected) #{val}
             else
                option #{val}
    else
       p shape:
-      p #{user.shape}
+      p #{profileUser.shape}
       p color:
-      p #{user.color}
+      p #{profileUser.color}
    br
    br
-   each val in users
-      a(href='#{val.id}') #{val.firstName+' '+val.lastName}
+   each user in users
+      a(href='#{user.id}') #{user.firstName+' '+user.lastName}
       br

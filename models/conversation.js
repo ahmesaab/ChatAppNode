@@ -5,10 +5,9 @@
  * Created by Ahmed on 3/4/2016.
  */
 
-function Chat(ID,OwnerID,Title) {
-    this.ID = ID;
-    this.ownerID = OwnerID;
-    this.title = Title;
+function Chat(id,owner,title) {
+    this.id = id;
+    this.owner = owner;
+    this.title = title;
 }
-
 module.exports = Chat;

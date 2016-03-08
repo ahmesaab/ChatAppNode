@@ -5,7 +5,7 @@ window.onload = function() {
     $('select').on('change', function () {
         var attValue = this.value;
         var attType = $(this).attr('class');
-        var urlString = '/api_changeSettings?attribute='+attType+'&value='+attValue;
+        var urlString = '/rest/changeSettings?attribute='+attType+'&value='+attValue;
         $.ajax({
             url: urlString,
             success: function(result)

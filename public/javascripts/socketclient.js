@@ -1,6 +1,10 @@
+var getConversationIDFromUrl = function() {
+   var sPageURL = decodeURIComponent(window.location)
+   var URLs = sPageURL.split('/');
+   return URLs[URLs.length-1].split('?')[0];
+};
 
-
-var socket = io.connect('http://localhost:2000');
+var socket = io.connect('http://localhost:2000/chat?chatId='+getConversationIDFromUrl());
 
 function addMessage(msg, pseudo) {
    $("#chatEntries").append('<div class="message"><p>' + pseudo + ' : ' + msg + '</p></div>');
@@ -15,29 +19,27 @@ function sentMessage() {
    }
 }
 
-function setPseudo() {
-   if ($("#pseudoInput").val() != "")
-   {
-      socket.emit('setPseudo', $("#pseudoInput").val());
-      $('#chatControls').show();
-      $('#pseudoInput').hide();
-      $('#pseudoSet').hide();
-   }
-}
-
 socket.on('message', function(data) {
    addMessage(data['message'], data['pseudo']);
 });
 
-function getCookie(name) {
-   var value = "; " + document.cookie;
-   var parts = value.split("; " + name + "=");
-   if (parts.length == 2) return parts.pop().split(";").shift();
-}
-
 
 $(function() {
-   $("#chatControls").hide();
-   $("#pseudoSet").click(function() {setPseudo()});
+   $('#chatControls').show();
    $("#submit").click(function() {sentMessage();});
 });
+
+//var getUrlParameter = function(sParam) {
+//   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+//       sURLVariables = sPageURL.split('&'),
+//       sParameterName,
+//       i;
+//
+//   for (i = 0; i < sURLVariables.length; i++) {
+//      sParameterName = sURLVariables[i].split('=');
+//
+//      if (sParameterName[0] === sParam) {
+//         return sParameterName[1] === undefined ? true : sParameterName[1];
+//      }
+//   }
+//};

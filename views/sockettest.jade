@@ -10,11 +10,16 @@ html
       script(src="/javascripts/socketclient.js")
    body
       div.container
-         header
-            h1 A Chat application with Node.js and Socket.io
-         input(type='text')#pseudoInput
-         button#pseudoSet Set Pseudo
+         h1 #{chat.title}
+         h3 Members
+         each member in members
+            p >> #{member.firstName + ' ' + member.lastName+' aka '+member.nickName}
+         h3 Thread
          div#chatEntries
+            each message in messages
+               p User#{message.user.nickName} said: #{message.content}
+         br
+         p
          div#chatControls
             input(type='text')#messageInput
             button#submit Send

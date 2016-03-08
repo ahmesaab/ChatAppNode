@@ -6,12 +6,11 @@ var router = express.Router();
 var Service = require('../data/service.js');
 
 router.get('/:chatID', function(req, res, next) {
-    var currentUserID=req.session.userId;
-    var chatID=req.param("chatID");
-    if(currentUserID)
+    var chatId=req.param("chatID");
+    if(req.session.user)
     {
         var service = new Service();
-        service.getChatSession(currentUserID,chatID,
+        service.getChatSession(req.session.user.id,chatId,
             function(chat,messages,members,status)
             {
                 if(status)
@@ -21,7 +20,7 @@ router.get('/:chatID', function(req, res, next) {
                             chat: chat,
                             messages: messages,
                             members: members,
-                            userID: req.session.userId
+                            user: req.session.user
                         })
                 }
                 else

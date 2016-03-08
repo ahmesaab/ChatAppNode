@@ -30,7 +30,7 @@ CREATE TABLE `conversation` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `ownerID_idx` (`ownerID`),
   CONSTRAINT `ownerID` FOREIGN KEY (`ownerID`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +39,7 @@ CREATE TABLE `conversation` (
 
 LOCK TABLES `conversation` WRITE;
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
+INSERT INTO `conversation` VALUES (1,1,'Partyyy'),(2,3,'TeamX');
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,7 +89,7 @@ CREATE TABLE `userconversation` (
   KEY `userID_idx` (`userID`),
   CONSTRAINT `conversationID` FOREIGN KEY (`conversationID`) REFERENCES `conversation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `userID` FOREIGN KEY (`userID`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,6 +98,7 @@ CREATE TABLE `userconversation` (
 
 LOCK TABLES `userconversation` WRITE;
 /*!40000 ALTER TABLE `userconversation` DISABLE KEYS */;
+INSERT INTO `userconversation` VALUES (1,1,1),(2,2,1),(3,1,2),(4,3,2);
 /*!40000 ALTER TABLE `userconversation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,6 +116,7 @@ CREATE TABLE `users` (
   `profileImage` varchar(45) DEFAULT NULL,
   `shape` int(11) DEFAULT NULL,
   `color` int(11) DEFAULT NULL,
+  `nickName` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
@@ -125,7 +128,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Ahmed','Saab',NULL,1,1),(2,'Amr','Alaa',NULL,2,3),(3,'Salma','Kolot',NULL,2,1);
+INSERT INTO `users` VALUES (1,'Ahmed','Saab',NULL,1,1,'Sa3bolla'),(2,'Amr','Alaa',NULL,3,3,'Moro'),(3,'Salma','Kolot',NULL,3,2,'Soso');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -138,4 +141,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-04 21:37:50
+-- Dump completed on 2016-03-08 22:43:05

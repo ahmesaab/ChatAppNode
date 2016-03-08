@@ -8,10 +8,10 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 var routes = require('./routes/index');
-var user = require('./routes/user');
+var profile = require('./routes/profile');
 var chats = require('./routes/chats');
 var chat = require('./routes/chat');
-var changeSettings = require('./routes/api_changeSettings');
+var changeSettings = require('./rest/changeSettings');
 
 //Express Application
 var app = express();
@@ -40,19 +40,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Controllers
 app.use('/', routes);
 app.use('/chat', chat);
-app.use('/user', user);
+app.use('/profile', profile);
 app.use('/chats', chats);
-app.use('/api_changeSettings', changeSettings);
+app.use('/rest/changeSettings', changeSettings);
 
 //WebSocket Handler
-var webSocketHandler = require('./routes/wshandler');
+var webSocketHandler = require('./sockets/chatHandler');
 
 //WebSocket Settings (Socket.io)
 var io = require('socket.io')(2000);
-io.sockets.on('connection', function(socket){webSocketHandler(socket)});
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
+var nsp = io.of('/chat');
+nsp.on('connection', function(socket){webSocketHandler(socket)});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
