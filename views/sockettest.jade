@@ -17,7 +17,8 @@ html
          h3 Thread
          div#chatEntries
             each message in messages
-               p User#{message.user.nickName} said: #{message.content}
+               div.message
+                  p #{message.user.nickName} : #{message.content}
          br
          p
          div#chatControls

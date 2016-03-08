@@ -30,7 +30,7 @@ CREATE TABLE `conversation` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `ownerID_idx` (`ownerID`),
   CONSTRAINT `ownerID` FOREIGN KEY (`ownerID`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `conversation` (
 
 LOCK TABLES `conversation` WRITE;
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
-INSERT INTO `conversation` VALUES (1,1,'Partyyy'),(2,3,'TeamX');
+INSERT INTO `conversation` VALUES (1,1,'Partyyy'),(2,3,'TeamX'),(3,2,'Amrzzz');
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,7 +51,7 @@ DROP TABLE IF EXISTS `messages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `messages` (
-  `ID` int(11) unsigned NOT NULL,
+  `ID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `userID` int(11) NOT NULL,
   `conversationId` int(11) NOT NULL,
   `content` varchar(45) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE `messages` (
   KEY `conversationID_idx` (`conversationId`),
   CONSTRAINT `cid` FOREIGN KEY (`conversationId`) REFERENCES `conversation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `uid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,6 +69,7 @@ CREATE TABLE `messages` (
 
 LOCK TABLES `messages` WRITE;
 /*!40000 ALTER TABLE `messages` DISABLE KEYS */;
+INSERT INTO `messages` VALUES (1,2,1,'can i escape \' ?'),(2,2,1,'i guess not mmm'),(3,2,1,'WHo are tyou ?'),(4,1,1,'sorry i was the same fuck'),(5,2,1,'again ?'),(6,1,1,'sql injection test \' DROP TABLE users'),(7,1,1,'does it work ?'),(8,1,1,'doe it now ?'),(9,1,1,'perfect :)'),(10,1,2,'fuck this');
 /*!40000 ALTER TABLE `messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +90,7 @@ CREATE TABLE `userconversation` (
   KEY `userID_idx` (`userID`),
   CONSTRAINT `conversationID` FOREIGN KEY (`conversationID`) REFERENCES `conversation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `userID` FOREIGN KEY (`userID`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +99,7 @@ CREATE TABLE `userconversation` (
 
 LOCK TABLES `userconversation` WRITE;
 /*!40000 ALTER TABLE `userconversation` DISABLE KEYS */;
-INSERT INTO `userconversation` VALUES (1,1,1),(2,2,1),(3,1,2),(4,3,2);
+INSERT INTO `userconversation` VALUES (1,1,1),(2,2,1),(3,1,2),(4,3,2),(5,3,3),(6,1,3);
 /*!40000 ALTER TABLE `userconversation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,7 +129,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Ahmed','Saab',NULL,1,1,'Sa3bolla'),(2,'Amr','Alaa',NULL,3,3,'Moro'),(3,'Salma','Kolot',NULL,3,2,'Soso');
+INSERT INTO `users` VALUES (1,'Ahmed','Saab',NULL,3,1,'Sa3bolla'),(2,'Amr','Alaa',NULL,1,3,'Moro'),(3,'Salma','Kolot',NULL,3,2,'Soso');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -141,4 +142,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-08 22:43:05
+-- Dump completed on 2016-03-08 23:52:44

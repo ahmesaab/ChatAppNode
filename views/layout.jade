@@ -3,11 +3,15 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    if messages
+      script(src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+      script(src="/javascripts/socket.io.js")
+      script(src="/javascripts/socketclient.js")
   body
     if user
       button(class="btn", onclick="window.location='/chats'").
         MyChats
-      button(class="btn", onclick="window.location='/user/"+user.id+"'").
+      button(class="btn", onclick="window.location='/profile/"+user.id+"'").
         MyProfile
      else
        button(class="btn", onclick="window.location='/'").

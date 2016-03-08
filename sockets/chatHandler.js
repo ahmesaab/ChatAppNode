@@ -2,6 +2,7 @@
  * Created by Ahmed on 3/8/2016.
  */
 var Service = require('../data/service.js');
+var Message = require('../models/message.js');
 var Handler = function(socket)
 {
     var user = socket.request.session.user;
@@ -17,6 +18,7 @@ var Handler = function(socket)
 
         socket.on('message', function (message) {
             var data = { 'message' : message, pseudo : socket.pseudo };
+            service.addMessage(socket.request.session.user.id,chatId,message);
             socket.to(chatId).emit('message', data);
             console.log("user " + socket.pseudo + " send this : " + message+" to broadcast "+chatId);
         });

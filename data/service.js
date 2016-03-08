@@ -3,7 +3,7 @@
  */
 var User = require('../models/user.js');
 var Chat = require('../models/conversation.js');
-var Message = require('../models/message.js')
+var Message = require('../models/message.js');
 var DB = require('../data/database.js');
 
 function Service() {
@@ -96,6 +96,10 @@ function Service() {
             }
         );
     };
+
+    this.addMessage = function(userId,chatId,message) {
+        this.connection.query("INSERT INTO messages(userID,conversationId,content) values ("+userId+","+chatId+",?)",[message]);
+    }
 
     this.getChatSession = function(currentUserId,chatId,callback){
         var concurrent = 0;

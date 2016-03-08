@@ -3,17 +3,18 @@
 
 extends layout
 block content
-   h1 #{chat.title}
-   h3 Members
-   each member in members
-      p #{member.firstName+' '+member.lastName}
-   br
+   div.container
+      h1 #{chat.title}
+      h3 Members
+      each member in members
+         p >> #{member.firstName + ' ' + member.lastName + ' aka ' + member.nickName}
    h3 Thread
-   each message in messages
-      p User#{message.displayName} said: #{message.content}
-      br
+   div#chatEntries
+      each message in messages
+         div.message
+            p #{message.user.nickName} : #{message.content}
    br
    p
-      input(type="text", placeholder="bla bla bla..")
-      button(class="btn", onclick="alert('Sent')").
-         Send
+   div#chatControls
+      input(type='text')#messageInput
+      button#submit Send

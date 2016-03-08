@@ -15,12 +15,13 @@ router.get('/:chatID', function(req, res, next) {
             {
                 if(status)
                 {
-                    res.render('sockettest',
+                    res.render('chat',
                         {
                             chat: chat,
                             messages: messages,
                             members: members,
-                            user: req.session.user
+                            user: req.session.user,
+                            title: 'Chat/'+chat.title
                         })
                 }
                 else
