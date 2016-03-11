@@ -12,6 +12,9 @@ var profile = require('./routes/profile');
 var chats = require('./routes/chats');
 var chat = require('./routes/chat');
 var changeSettings = require('./rest/changeSettings');
+var newConversation = require('./rest/newConversation');
+var newMemberConversation = require('./rest/newMemberConversation');
+
 
 //Express Application
 var app = express();
@@ -43,17 +46,25 @@ app.use('/chat', chat);
 app.use('/profile', profile);
 app.use('/chats', chats);
 app.use('/rest/changeSettings', changeSettings);
+app.use('/rest/newConversation',newConversation);
+app.use('/rest/newMemberConversation',newMemberConversation);
 
 //WebSocket Handler
 var webSocketHandler = require('./sockets/chatHandler');
+
+//Game WebSocket Handler
+var gameSocketHandler = require('./sockets/gameHandler');
 
 //WebSocket Settings (Socket.io)
 var io = require('socket.io')(2000);
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
-var nsp = io.of('/chat');
-nsp.on('connection', function(socket){webSocketHandler(socket)});
+var gameNamespace = io.of('/game');
+gameNamespace.on('connection', function(socket){gameSocketHandler(socket,io)});
+var chatNamespace = io.of('/chat');
+chatNamespace.on('connection', function(socket){webSocketHandler(socket)});
+
 
 
 // catch 404 and forward to error handler

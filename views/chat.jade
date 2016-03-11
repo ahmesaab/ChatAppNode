@@ -4,17 +4,29 @@
 extends layout
 block content
    div.container
-      h1 #{chat.title}
-      h3 Members
-      each member in members
-         p >> #{member.firstName + ' ' + member.lastName + ' aka ' + member.nickName}
-   h3 Thread
-   div#chatEntries
-      each message in messages
-         div.message
-            p #{message.user.nickName} : #{message.content}
-   br
-   p
-   div#chatControls
-      input(type='text')#messageInput
-      button#submit Send
+      div.row
+         div#col-sm-12
+            h1 #{chat.title}
+      div.row
+         div.col-sm-4
+            h3 Members
+               button(class="btn", onclick="addNewMember(#{chat.id})").
+                  +
+            each member in members
+               p >> #{member.firstName + ' ' + member.lastName + ' aka ' + member.nickName}
+         div.col-sm-4
+            div
+               h3(style="display: inline;") Thread
+               p#chatSocketStatus(style="display: inline") (connecting..)
+            div#chatEntries
+               each message in messages
+                  div.message
+                     p #{message.user.nickName} : #{message.content}
+            div#chatControls
+               input(type='text')#messageInput
+               button#submit Send
+         div.col-sm-4
+            div
+               h3(style="display: inline;") Aninimation
+               p#gameSocketStatus(style="display: inline") (connecting..)
+            canvas.animation.img-responsive#gameCanvas

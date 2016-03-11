@@ -98,7 +98,8 @@ function Service() {
     };
 
     this.addMessage = function(userId,chatId,message) {
-        this.connection.query("INSERT INTO messages(userID,conversationId,content) values ("+userId+","+chatId+",?)",[message]);
+        this.connection.query("INSERT INTO messages(userID,conversationId,content,timeStamp)" +
+        " values ("+userId+","+chatId+",?,NOW())",[message]);
     }
 
     this.getChatSession = function(currentUserId,chatId,callback){
@@ -148,8 +149,9 @@ function Service() {
             }
         );
 
-        this.connection.query('SELECT m.*,u.id as userId,u.firstName,u.lastName,u.nickName,u.shape,' +
-            'u.color FROM messages m INNER JOIN users u ON m.userID = u.id WHERE conversationId='+chatId,
+        this.connection.query('SELECT * FROM (SELECT m.*,u.firstName,u.lastName,u.nickName,u.shape,' +
+            'u.color FROM messages m INNER JOIN users u ON m.userID = u.id WHERE conversationId='+chatId +
+            " ORDER BY m.timeStamp DESC LIMIT 10) as subResult ORDER BY timeStamp",
             function(err, rows, fields) {
                 if(err)
                 {
@@ -170,7 +172,8 @@ function Service() {
                                 rows[i].lastName,
                                 rows[i].nickName,
                                 rows[i].shape,
-                                rows[i].color
+                                rows[i].color,
+                                rows[i].timeStamp
                             )));
                     }
                 }
@@ -227,8 +230,57 @@ function Service() {
         }
     };
 
-    this.isMember = function(attribute,value){
-        return true;
+    this.isMember = function(userId,chatId,callback){
+        this.connection.query('SELECT * FROM userconversation WHERE userID=? AND conversationID=?',[userId,chatId],
+            function(err, rows, fields)
+            {
+                if(err || rows.length<1)
+                {
+                    console.log(err);
+                    callback(false);
+                }
+                else
+                    callback(true);
+            }
+        );
+    };
+
+    this.addConversation = function(userId,title,callback){
+        this.connection.query('INSERT INTO conversation(ownerID,title) VALUES(?,?)',[userId,title],
+            function(err, rows, fields)
+            {
+                if(err)
+                {
+                    console.log(err);
+                    callback(undefined);
+                }
+                else
+                {
+                    callback(rows.insertId);
+                }
+
+            }
+        );
+
+    };
+
+    this.addUserConversation = function(userId,conversationId,callback){
+        this.connection.query('INSERT INTO userconversation(userID,conversationID)' +
+            ' VALUES(?,?)',[userId,conversationId],
+            function(err, rows, fields)
+            {
+                if(err)
+                {
+                    console.log(err);
+                    callback(false);
+                }
+                else
+                {
+                    callback(true);
+                }
+
+            }
+        );
     };
 
     this.close = function()
@@ -236,5 +288,5 @@ function Service() {
         this.db.closeConnection();
     }
 }
-// export the class
+
 module.exports = Service;

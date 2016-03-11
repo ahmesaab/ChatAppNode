@@ -4,42 +4,56 @@ var getConversationIDFromUrl = function() {
    return URLs[URLs.length-1].split('?')[0];
 };
 
-var socket = io.connect('http://localhost:2000/chat?chatId='+getConversationIDFromUrl());
 
 function addMessage(msg, pseudo) {
    $("#chatEntries").append('<div class="message"><p>' + pseudo + ' : ' + msg + '</p></div>');
 }
 
-function sentMessage() {
+function sentMessage(socket) {
    if ($('#messageInput').val() != "")
    {
       socket.emit('message', $('#messageInput').val());
-      addMessage($('#messageInput').val(), "Me", new Date().toISOString(), true);
+      addMessage($('#messageInput').val(), 'Me', new Date().toISOString(), true);
       $('#messageInput').val('');
    }
 }
 
-socket.on('message', function(data) {
-   addMessage(data['message'], data['pseudo']);
-});
+
+window.onload = function() {
+
+   init();
+   animate();
+
+   var chatSocket = io.connect('http://192.168.1.3:2000/chat?chatId='+getConversationIDFromUrl(),{'forceNew':true});
+
+   chatSocket.on('connect', function() {
+      var statusElement = $('#chatSocketStatus');
+      statusElement.text(' (connected)');
+      statusElement.css('color', 'green');
+   });
+
+   chatSocket.on('disconnect', function() {
+      var statusElement = $('#chatSocketStatus');
+      statusElement.text(' (disconnected)');
+      statusElement.css('color', 'red');
+   });
+
+   chatSocket.on('message', function(data) {
+      addMessage(data['message'], data['pseudo']);
+   });
+
+   $(function() {
+      $('#chatControls').show();
+      $("#submit").click(function() {sentMessage(chatSocket);});
+   });
+
+   $("#messageInput").keyup(function(event){
+      if(event.keyCode == 13){
+         $("#submit").click();
+      }
+   });
 
 
-$(function() {
-   $('#chatControls').show();
-   $("#submit").click(function() {sentMessage();});
-});
+}
 
-//var getUrlParameter = function(sParam) {
-//   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-//       sURLVariables = sPageURL.split('&'),
-//       sParameterName,
-//       i;
-//
-//   for (i = 0; i < sURLVariables.length; i++) {
-//      sParameterName = sURLVariables[i].split('=');
-//
-//      if (sParameterName[0] === sParam) {
-//         return sParameterName[1] === undefined ? true : sParameterName[1];
-//      }
-//   }
-//};
+
