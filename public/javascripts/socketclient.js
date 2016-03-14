@@ -24,7 +24,7 @@ window.onload = function() {
    init();
    animate();
 
-   var chatSocket = io.connect('http://192.168.1.3:2000/chat?chatId='+getConversationIDFromUrl(),{'forceNew':true});
+   var chatSocket = io.connect('http://localhost:2000/chat?chatId='+getConversationIDFromUrl(),{'forceNew':true});
 
    chatSocket.on('connect', function() {
       var statusElement = $('#chatSocketStatus');

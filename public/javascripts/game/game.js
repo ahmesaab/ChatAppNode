@@ -33,7 +33,7 @@ function init() {
 
 	// Initialise the local player
 	localPlayer = new Player(startX, startY);
-	socket = io.connect("http://192.168.1.3:2000/game?chatId="+getConversationIDFromUrl()+"&startX="+startX+"&startY="+startY,{'forceNew':true});
+	socket = io.connect("http://localhost:2000/game?chatId="+getConversationIDFromUrl()+"&startX="+startX+"&startY="+startY,{'forceNew':true});
 
 	// Start listening for events
 	setEventHandlers();
