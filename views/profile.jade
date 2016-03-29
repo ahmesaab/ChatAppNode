@@ -2,7 +2,8 @@
    Created by Ahmed on 3/4/2016.
 
 extends layout
-
+block extraHeader
+   script(src="/javascripts/addnewconvo.js")
 block content
    h1= profileUser.firstName + ' ' + profileUser.lastName
    if user && (user.id == profileUser.id)
@@ -10,18 +11,18 @@ block content
       script(src="/javascripts/dropdown.js")
       p shape:
       select(class='shape', value="#{profileUser.shape}")
-         each val in [1, 2, 3]
-            if profileUser.shape == val
-               option(selected) #{val}
+         each val, index in {1:'rectangle',2:'circle',3:'triangle'}
+            if profileUser.shape == index
+               option(selected,value=index) #{val}
             else
-               option #{val}
+               option(value=index) #{val}
       p color:
       select(class='color', value="#{profileUser.color}")
-         each val in [1, 2, 3]
-            if profileUser.color == val
-               option(selected) #{val}
+         each val, index in {1:'green',2:'red',3:'black'}
+            if profileUser.color == index
+               option(selected,value=index) #{val}
             else
-               option #{val}
+               option(value=index) #{val}
    else
       p shape:
       p #{profileUser.shape}

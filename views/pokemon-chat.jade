@@ -1,0 +1,34 @@
+//
+   Created by Ahmed on 3/14/2016.
+extends layout
+
+block extraHeader
+   script(src="/javascripts/socket.io.js")
+   script(src="/javascripts/addnewmember.js")
+   script(src="/javascripts/lib/easeljs-NEXT.min.js")
+   script(src="/javascripts/lib/tweenjs-NEXT.min.js")
+   script(src="/javascripts/lib/ScaleBitmap.js")
+   script(src="/javascripts/pokemon-chat/player.js")
+   script(src="/javascripts/pokemon-chat/animation.js")
+   script(src="/javascripts/pokemon-chat/client-game-socket.js")
+   script(src="/javascripts/pokemon-chat/main.js")
+   script(src="/javascripts/pokemon-chat/user-input-handler.js")
+   script(src="/javascripts/pokemon-chat/utils.js")
+
+block content
+   br
+   br
+   div.container
+      div.row
+         div.col-sm-12
+            div
+               h3(style="display: inline;") Aninimation
+               p#gameSocketStatus(style="display: inline") (connecting..)
+            canvas.animation.img-responsive#mapCanvas
+      div.row
+         div#col-sm-12
+            h3 Advanced Animation
+               div#chatControls
+                  input(type='text' autofocus)#messageInput
+                  button#submit(onclick="sendMessage()") Send
+            canvas(style="border:1px solid #000000;")#pokemonCanvas.col-sm-12

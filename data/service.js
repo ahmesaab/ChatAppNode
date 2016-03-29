@@ -30,7 +30,10 @@ function Service() {
                             String(rows[0].lastName),
                             String(rows[0].nickName),
                             parseInt(rows[0].shape),
-                            parseInt(rows[0].color));
+                            parseInt(rows[0].color),
+                            parseInt(rows[0].x),
+                            parseInt(rows[0].y),
+                            parseInt(rows[0].roomId));
                     }
                     callback(user);
                 }
@@ -100,6 +103,16 @@ function Service() {
     this.addMessage = function(userId,chatId,message) {
         this.connection.query("INSERT INTO messages(userID,conversationId,content,timeStamp)" +
         " values ("+userId+","+chatId+",?,NOW())",[message]);
+    }
+
+    this.updatePosition =  function(userId,x,y)
+    {
+        this.connection.query("UPDATE users SET x="+x+",y="+y+" WHERE id="+userId);
+    }
+
+    this.updateRoom =  function(userId,roomId)
+    {
+        this.connection.query("UPDATE users SET roomId="+roomId+" WHERE id="+userId);
     }
 
     this.getChatSession = function(currentUserId,chatId,callback){

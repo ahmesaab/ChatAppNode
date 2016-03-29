@@ -1,11 +1,16 @@
 /**
  * Created by Ahmed on 3/10/2016.
  */
-var Player = function(newId,chatId,startX, startY) {
-    var x = startX,
-        y = startY,
-        id=newId,
-        chatId = chatId;
+
+var Player = function(user,socketId) {
+    var x = user.x,
+        y = user.y,
+        shape = user.shape,
+        color = user.color,
+        nickName = user.nickName,
+        roomId = user.roomId,
+        socketId=socketId;
+
 
     var getX = function() {
         return x;
@@ -28,8 +33,11 @@ var Player = function(newId,chatId,startX, startY) {
         getY: getY,
         setX: setX,
         setY: setY,
-        id: id,
-        chatId:chatId
+        shape: shape,
+        color:color,
+        nickName:nickName,
+        roomId:roomId,
+        socketId:socketId
     }
 };
 

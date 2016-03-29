@@ -1,0 +1,27 @@
+//
+   Created by Ahmed on 3/23/2016.
+
+extends layout
+block extraHeader
+   script(src="/javascripts/socket.io.js")
+   script(src="/javascripts/addnewmember.js")
+   script(src="/javascripts/lib/easeljs-NEXT.min.js")
+   script(src="/javascripts/lib/tweenjs-NEXT.min.js")
+   script(src="/javascripts/lib/ScaleBitmap.js")
+   script(src="/javascripts/pokemon-chat-2/player.js")
+   script(src="/javascripts/pokemon-chat-2/animation.js")
+   script(src="/javascripts/pokemon-chat-2/client-game-socket.js")
+   script(src="/javascripts/pokemon-chat-2/main.js")
+   script(src="/javascripts/pokemon-chat-2/user-input-handler.js")
+   script(src="/javascripts/pokemon-chat-2/utils.js")
+block content
+   br
+   br
+   div.container
+      div.row
+         div#col-sm-12
+            h3 Advanced Animation
+               div#chatControls
+                  input(type='text' autofocus)#messageInput
+                  button#submit(onclick="sendMessage()") Send
+            canvas.img-responsive(style="border:1px solid #000000;")#pokemonCanvas.col-sm-12

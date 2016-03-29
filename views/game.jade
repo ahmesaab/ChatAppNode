@@ -1,0 +1,46 @@
+//
+   Created by Ahmed on 3/14/2016.
+extends layout
+
+block extraHeader
+   script(src="/javascripts/socket.io.js")
+   script(src="/javascripts/addnewmember.js")
+   script(src="/javascripts/game/game.js")
+   script(src="/javascripts/game/requestAnimationFrame.js")
+   script(src="/javascripts/game/Keys.js")
+   script(src="/javascripts/game/Player.js")
+   script(src="/javascripts/game/html5-canvas-game-character-1.js")
+   script(src="/javascripts/game/easeljs-NEXT.min.js")
+   script(src="/javascripts/game/pokemon.js")
+
+block content
+   div.container
+      div.row
+         div#col-sm-12
+            h1 Here should be the room title
+      div.row
+         div.col-sm-4
+            h3 Members
+            p >> Here should be the room members
+         div.col-sm-4
+            div
+               h3(style="display: inline;") Thread
+               p#chatSocketStatus(style="display: inline") (connecting..)
+            div#chatEntries
+            div.message
+               p Here are the messages
+            div#chatControls
+               input(type='text')#messageInput
+               button#submit Send
+         div.col-sm-4
+            div
+               h3(style="display: inline;") Aninimation
+               p#gameSocketStatus(style="display: inline") (connecting..)
+            canvas.animation.img-responsive#gameCanvas
+      div.row
+         div#col-sm-12
+            div#canvasDiv
+      div.row
+         div#col-sm-12
+            h3 Advanced Animation
+            canvas(style="border:1px solid #000000;")#pokemonCanvas.col-sm-12

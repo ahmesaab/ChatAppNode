@@ -25,15 +25,8 @@ function init() {
 	// Initialise keyboard controls
 	keys = new Keys();
 
-	// Calculate a random start position for the local player
-	// The minus 5 (half a player size) stops the player being
-	// placed right on the egde of the screen
-	var startX = Math.round(Math.random()*(canvas.width-10)),
-		startY = Math.round(Math.random()*(canvas.height-10));
-
 	// Initialise the local player
-	localPlayer = new Player(startX, startY);
-	socket = io.connect("http://localhost:2000/game?chatId="+getConversationIDFromUrl()+"&startX="+startX+"&startY="+startY,{'forceNew':true});
+	socket = io.connect("http://localhost:2000/game");
 
 	// Start listening for events
 	setEventHandlers();
@@ -53,9 +46,11 @@ var setEventHandlers = function() {
 	window.addEventListener("resize", onResize, false);
 
 	socket.on("connect", onSocketConnected);
+	socket.on("you", onYou);
 	socket.on("disconnect", onSocketDisconnect);
 	socket.on("new player", onNewPlayer);
 	socket.on("move player", onMovePlayer);
+	socket.on("message", onMessage);
 	socket.on("remove player", onRemovePlayer);
 };
 
@@ -82,10 +77,18 @@ function onResize(e) {
 
 function onSocketConnected() {
     console.log("Connected to socket server");
-    socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
-	var statusElement = $('#gameSocketStatus');
-	statusElement.text(' (connected)');
-	statusElement.css('color', 'green');
+	var gameStatusElement = $('#gameSocketStatus');
+	gameStatusElement.text(' (connected)');
+	gameStatusElement.css('color', 'green');
+	var chatStatusElement = $('#chatSocketStatus');
+	chatStatusElement.text(' (connected)');
+	chatStatusElement.css('color', 'green');
+};
+
+function onYou(data) {
+	console.log("Got Player Data from Server");
+	localPlayer = new Player(data.id,data.x, data.y,data.nickName,data.roomId,data.shape,data.color);
+	animate();
 };
 
 function onSocketDisconnect() {
@@ -93,12 +96,18 @@ function onSocketDisconnect() {
 	var statusElement = $('#gameSocketStatus');
 	statusElement.text(' (disconnected)');
 	statusElement.css('color', 'red');
+	var statusElement = $('#chatSocketStatus');
+	statusElement.text(' (disconnected)');
+	statusElement.css('color', 'red');
+};
+
+function onMessage(data) {
+	addMessage(data.message, data.nickName);
 };
 
 function onNewPlayer(data) {
     console.log("New player connected: "+data.id);
-    var newPlayer = new Player(data.x, data.y);
-	newPlayer.id = data.id;
+    var newPlayer = new Player(data.id,data.x, data.y,data.nickName,data.roomId,data.shape,data.color);
 	remotePlayers.push(newPlayer);
 };
 
@@ -121,6 +130,20 @@ function onRemovePlayer(data) {
     remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);    
 };
 
+
+
+function addMessage(msg, pseudo) {
+	$("#chatEntries").append('<div class="message"><p>' + pseudo + ' : ' + msg + '</p></div>');
+}
+
+function sentMessage(socket) {
+	if ($('#messageInput').val() != "")
+	{
+		socket.emit('message', $('#messageInput').val());
+		addMessage($('#messageInput').val(), localPlayer.nickName, new Date().toISOString(), true);
+		$('#messageInput').val('');
+	}
+}
 
 function playerById(id) {
     var i;
@@ -173,3 +196,30 @@ function draw() {
 	};
 
 };
+
+
+/**************************************************
+ ** MAIN
+ **************************************************/
+
+window.onload = function() {
+
+	init();
+
+	$(function () {
+		$('#chatControls').show();
+		$("#submit").click(function () {
+			sentMessage(socket);
+		});
+	});
+
+	$("#messageInput").keyup(function (event) {
+		if (event.keyCode == 13) {
+			$("#submit").click();
+		}
+	});
+
+	//prepareCanvas(document.getElementById("canvasDiv"), window.innerWidth, 220);
+
+	startPokemon();
+}
