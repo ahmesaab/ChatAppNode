@@ -2,67 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7626502-f4e6-4473-92a3-a71745227cd5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/big-house-2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/big-house.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/fancy-ground-green.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/light-green-circlular-tree.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/medium-house.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/tree-2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/tree.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mysql_dumb_game_clean.sql" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\MySqlDumb\chatAppDb.sql" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\models\conversation.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\models\room.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\addnewconvo.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\addnewmember.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\game\Keys.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\game\Player.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\game\game.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\game\html5-canvas-game-character-1.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\game\pokemon.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\game\requestAnimationFrame.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat-2\player.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat-2\utils.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat\animation.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat\client-game-socket.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat\main.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat\player.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat\user-input-handler.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\socketclient.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\rest\newConversation.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\rest\newMemberConversation.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\routes\chat.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\routes\chats.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\sockets\chatHandler.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\views\chat.jade" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\views\chats.jade" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\views\pokemon-chat-2.jade" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\views\pokemon-chat.jade" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\views\sockettest.jade" afterPath="" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\dropdown.js" afterPath="$PROJECT_DIR$/public/javascript/other/drop-down.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\jquery.min.js" afterPath="$PROJECT_DIR$/public/javascript/lib/jquery.min.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\lib\ScaleBitmap.js" afterPath="$PROJECT_DIR$/public/javascript/lib/ScaleBitmap.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\lib\easeljs-NEXT.combined.js" afterPath="$PROJECT_DIR$/public/javascript/lib/easeljs-NEXT.combined.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\lib\easeljs-NEXT.min.js" afterPath="$PROJECT_DIR$/public/javascript/lib/easeljs-NEXT.min.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\lib\tweenjs-NEXT.min.js" afterPath="$PROJECT_DIR$/public/javascript/lib/tweenjs-NEXT.min.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat-2\animation.js" afterPath="$PROJECT_DIR$/public/javascript/game/animation.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat-2\client-game-socket.js" afterPath="$PROJECT_DIR$/public/javascript/game/client-game-socket.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat-2\main.js" afterPath="$PROJECT_DIR$/public/javascript/game/main.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat-2\user-input-handler.js" afterPath="$PROJECT_DIR$/public/javascript/game/user-input-handler.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\pokemon-chat\utils.js" afterPath="$PROJECT_DIR$/public/javascript/game/utils.js" />
-      <change type="MOVED" beforePath="C:\Users\Ahmed\WebstormProjects\ChatApp\public\javascripts\socket.io.js" afterPath="$PROJECT_DIR$/public/javascript/lib/socket.io.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/engine.io-client/README.md" afterPath="$PROJECT_DIR$/node_modules/socket.io/node_modules/socket.io-client/node_modules/engine.io-client/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/game.jade" afterPath="$PROJECT_DIR$/views/game.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/game.js" afterPath="$PROJECT_DIR$/routes/game.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sockets/gameHandler.js" afterPath="$PROJECT_DIR$/sockets/gameHandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/layout.jade" afterPath="$PROJECT_DIR$/views/layout.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/message.js" afterPath="$PROJECT_DIR$/models/message.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/player.js" afterPath="$PROJECT_DIR$/models/player.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/profile.jade" afterPath="$PROJECT_DIR$/views/profile.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/service.js" afterPath="$PROJECT_DIR$/data/service.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ChatApp.iws" />
@@ -419,7 +358,13 @@
       <option name="project" value="LOCAL" />
       <updated>1459287833032</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="# Full Code Refactoring  ( clean the code)&#10;">
+      <created>1459890717287</created>
+      <option name="number" value="00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1459890717287</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -444,9 +389,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.43954247" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32843137" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.43954247" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2777778" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32843137" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5147059" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -456,12 +402,11 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.58401304" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38398692" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48450243" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43954247" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5147059" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32843137" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -490,7 +435,8 @@
     <MESSAGE value="#Core Completed Chat &amp; Game Animation Multi Websockets&#10;" />
     <MESSAGE value="#First Branch Commit&#10;" />
     <MESSAGE value="# Game implementation #1&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="# Game implementation #1&#10;" />
+    <MESSAGE value="# Full Code Refactoring  ( clean the code)&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="# Full Code Refactoring  ( clean the code)&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
