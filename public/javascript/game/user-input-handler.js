@@ -83,10 +83,10 @@ function sendMessage() {
     }
 }
 
-function changeRoom(roomId)
+function changeRoom(x,y)
 {
-    console.log("Changing to room "+roomId);
-    socket.emit('change room',{roomId:roomId});
+    console.log("Changing room");
+    socket.emit('change room',{x:x,y:y});
 }
 
 function getMovement(player)

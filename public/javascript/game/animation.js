@@ -4,6 +4,7 @@
 
 var speed = 0.1;
 var stage;
+var startTicker = true;
 
 function drawMap(pokemonCanvas)
 {
@@ -57,9 +58,16 @@ function startAnimation()
     drawMap(pokemonCanvas);
     addPlayerToStage(localPlayer);
 
-    createjs.Ticker.timingMode = createjs.Ticker.RAF;
-    createjs.Ticker.setInterval(30);
-    createjs.Ticker.addEventListener("tick", tick);
+    if(startTicker)
+    {
+        createjs.Ticker.timingMode = createjs.Ticker.RAF;
+        createjs.Ticker.setInterval(30);
+        createjs.Ticker.addEventListener("tick", tick);
+    }
+    else
+    {
+       createjs.Ticker.paused = false;
+    }
 
 
     function tick(event)
@@ -70,19 +78,18 @@ function startAnimation()
             var deltaZ = event.delta * speed;
             var newX = localPlayer.grant.x + ( deltaZ * movement[0]);
             var newY = localPlayer.grant.y + ( deltaZ * movement[1]);
-            var leftLegX = newX ;
-            var leftLegY = newY + navigationMap.cellLength;
-            var rightLegX = newX + navigationMap.cellLength;
-            var rightLegY = newY + navigationMap.cellLength;
+            var centerX = newX + navigationMap.cellLength;
+            var centerY = newY + navigationMap.cellLength
             try
             {
-                if(navigationMap[Math.round(leftLegX/navigationMap.cellLength)][Math.round(leftLegY/navigationMap.cellLength)]
-                    && navigationMap[Math.round(rightLegX/navigationMap.cellLength)][Math.round(rightLegY/navigationMap.cellLength)])
+
+                if(navigationMap[Math.round(centerX/navigationMap.cellLength)]
+                        [Math.round(centerY/navigationMap.cellLength)])
                 {
                     localPlayer.grant.x = newX;
                     localPlayer.grant.y = newY;
-                    localPlayer.setX(localPlayer.grant.x);
-                    localPlayer.setY(localPlayer.grant.y);
+                    localPlayer.x = localPlayer.grant.x;
+                    localPlayer.y = localPlayer.grant.y;
                     socket.emit("move player",
                         {
                             x: localPlayer.grant.x/navigationMap.cellLength,
@@ -90,21 +97,12 @@ function startAnimation()
                             frame: localPlayer.grant.currentFrame
                         });
                 }
-                else if(navigationMap[Math.round(leftLegX/navigationMap.cellLength)][Math.round(leftLegY/navigationMap.cellLength)] == null
-                    || navigationMap[Math.round(rightLegX/navigationMap.cellLength)][Math.round(rightLegY/navigationMap.cellLength)] == null)
+                else if(navigationMap[Math.round(centerX/navigationMap.cellLength)]
+                        [Math.round(centerY/navigationMap.cellLength)] == null)
                 {
-                    console.log("Reset Ticker & Clear Stage");
-                    createjs.Ticker.removeAllEventListeners();
-                    stage.removeAllChildren();
-                    remotePlayers=[];
-                    if(localPlayer.roomId==1)
-                    {
-                        changeRoom(2);
-                    }
-                    else
-                    {
-                        changeRoom(1);
-                    }
+                    clearAll();
+                    changeRoom(Math.round(centerX/navigationMap.cellLength),
+                        Math.round(centerY/navigationMap.cellLength));
                 }
             }
             catch(err)
@@ -118,6 +116,14 @@ function startAnimation()
     }
 }
 
+function clearAll()
+{
+    startTicker = false;
+    console.log("Clear Stage & Pause Ticker");
+    createjs.Ticker.paused = true;
+    stage.removeAllChildren();
+    remotePlayers=[];
+}
 
 function addPlayerToStage(player)
 {
@@ -145,8 +151,8 @@ function addPlayerToStage(player)
     });
 
     var grant = new createjs.Sprite(spriteSheet, "staionaryDown");
-    grant.x = player.getX()*navigationMap.cellLength;
-    grant.y = player.getY()*navigationMap.cellLength;
+    grant.x = player.x * navigationMap.cellLength;
+    grant.y = player.y * navigationMap.cellLength;
     grant.scaleX = (navigationMap.cellLength/spriteWidth)*2;
     grant.scaleY = (navigationMap.cellLength/spriteHeight)*2;
     grant.speed = speed;

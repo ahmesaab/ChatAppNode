@@ -5,7 +5,7 @@ var socket;
 
 window.onload = function()
 {
-    // init
+    // Initialization
     remotePlayers = [];
     socket = io.connect("http://localhost:2000/game");
     setEventHandlers();
@@ -13,7 +13,7 @@ window.onload = function()
 
 function setEventHandlers()
 {
-    // Keyboard
+    // Keyboard Events
     this.document.onkeydown = keyPressed;
     this.document.onkeyup = keyReleased;
 

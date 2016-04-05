@@ -3,30 +3,30 @@
 
 extends layout
 block extraHeader
-   script(src="/javascripts/addnewconvo.js")
+   script(src="/javascript/other/drop-down.js")
 block content
    h1= profileUser.firstName + ' ' + profileUser.lastName
    if user && (user.id == profileUser.id)
-      script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js")
-      script(src="/javascripts/dropdown.js")
-      p shape:
+      p shape (not used yet):
       select(class='shape', value="#{profileUser.shape}")
          each val, index in {1:'rectangle',2:'circle',3:'triangle'}
             if profileUser.shape == index
                option(selected,value=index) #{val}
             else
                option(value=index) #{val}
-      p color:
+      br
+      br
+      p Hair Color:
       select(class='color', value="#{profileUser.color}")
-         each val, index in {1:'green',2:'red',3:'black'}
+         each val, index in {1:'green',2:'brown'}
             if profileUser.color == index
                option(selected,value=index) #{val}
             else
                option(value=index) #{val}
    else
-      p shape:
+      p shape (not used yet):
       p #{profileUser.shape}
-      p color:
+      p Hair Color:
       p #{profileUser.color}
    br
    br

@@ -7,7 +7,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     if(req.session.user)
     {
-        res.render('pokemon-chat-2',
+        res.render('game',
             {
                 user: req.session.user,
                 title: 'Game of Life'
@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
     }
     else
     {
-        res.send(403);
+        res.redirect('/');
     }
 });
 

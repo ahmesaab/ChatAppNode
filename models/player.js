@@ -9,30 +9,11 @@ var Player = function(user,socketId) {
         color = user.color,
         nickName = user.nickName,
         roomId = user.roomId,
-        socketId=socketId;
-
-
-    var getX = function() {
-        return x;
-    };
-
-    var getY = function() {
-        return y;
-    };
-
-    var setX = function(newX) {
-        x = newX;
-    };
-
-    var setY = function(newY) {
-        y = newY;
-    };
+        socketId= socketId;
 
     return {
-        getX: getX,
-        getY: getY,
-        setX: setX,
-        setY: setY,
+        x:x,
+        y:y,
         shape: shape,
         color:color,
         nickName:nickName,

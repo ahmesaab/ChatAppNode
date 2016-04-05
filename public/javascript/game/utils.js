@@ -2,7 +2,8 @@
  * Created by Ahmed on 3/19/2016.
  */
 
-function addMessageToUi(msg, displayName, player) {
+function addMessageToUi(msg, displayName, player)
+{
     var textBubble = new createjs.Container();
 
     var configWidth = 30;
@@ -90,10 +91,16 @@ function addMessageToUi(msg, displayName, player) {
     $("#chatEntries").append('<div class="message"><p>' + displayName + ' : ' + msg + '</p></div>');
 }
 
-function playerById(id) {
+function updateMapNameUi(name)
+{
+    $('#world-name').text(name);
+}
+
+function playerById(id)
+{
     var i;
     for (i = 0; i < remotePlayers.length; i++) {
-        if (remotePlayers[i].id == id)
+        if (remotePlayers[i].socketId == id)
             return remotePlayers[i];
     };
     return false;

@@ -9,13 +9,9 @@ var session = require('express-session');
 
 var routes = require('./routes/index');
 var profile = require('./routes/profile');
-var chats = require('./routes/chats');
-var chat = require('./routes/chat');
 var game = require('./routes/game');
-var changeSettings = require('./rest/changeSettings');
-var newConversation = require('./rest/newConversation');
-var newMemberConversation = require('./rest/newMemberConversation');
 
+var changeSettings = require('./rest/changeSettings');
 
 //Express Application
 var app = express();
@@ -43,16 +39,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Controllers
 app.use('/', routes);
-app.use('/chat', chat);
 app.use('/game', game);
 app.use('/profile', profile);
-app.use('/chats', chats);
 app.use('/rest/changeSettings', changeSettings);
-app.use('/rest/newConversation',newConversation);
-app.use('/rest/newMemberConversation',newMemberConversation);
 
-//WebSocket Handler
-var webSocketHandler = require('./sockets/chatHandler');
 
 //Game WebSocket Handler
 var gameSocketHandler = require('./sockets/gameHandler');
@@ -64,9 +54,6 @@ io.use(function(socket, next) {
 });
 var gameNamespace = io.of('/game');
 gameNamespace.on('connection', function(socket){gameSocketHandler(socket,io)});
-var chatNamespace = io.of('/chat');
-chatNamespace.on('connection', function(socket){webSocketHandler(socket)});
-
 
 
 // catch 404 and forward to error handler

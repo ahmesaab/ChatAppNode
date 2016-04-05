@@ -6,21 +6,18 @@ var localPlayer;
 var navigationMap;
 var graphicsMap;
 var assets;
+var exits;
 
 function onSocketConnected() {
     console.log("Connected to socket server");
     var gameStatusElement = $('#gameSocketStatus');
-    var chatStatusElement = $('#chatSocketStatus');
     gameStatusElement.text(' (connected)');
     gameStatusElement.css('color', 'green');
-    chatStatusElement.text(' (connected)');
-    chatStatusElement.css('color', 'green');
 };
 
-function onYou(data) {
+function onYou(player) {
     console.log("Got Player Data from Server");
-    localPlayer = new Player(data.id,data.x, data.y,data.nickName,data.roomId,data.shape,data.color);
-
+    localPlayer = player;
 };
 
 function onMap(data)
@@ -31,17 +28,16 @@ function onMap(data)
     navigationMap.height = data.height;
     graphicsMap = data.draMap
     assets = data.assets;
+    exits = data.exits;
+    updateMapNameUi(data.name)
     startAnimation();
 }
 
 function onSocketDisconnect() {
     console.log("Disconnected from socket server");
     var gameStatusElement = $('#gameSocketStatus');
-    var chatStatusElement = $('#chatSocketStatus');
     gameStatusElement.text(' (disconnected)');
     gameStatusElement.css('color', 'red');
-    chatStatusElement.text(' (disconnected)');
-    chatStatusElement.css('color', 'red');
 };
 
 function onMessage(data) {
@@ -49,11 +45,10 @@ function onMessage(data) {
     addMessageToUi(data.message, data.nickName, playerById(data.id));
 };
 
-function onNewPlayer(data) {
-    console.log("Player "+data.id+" was connected")
-    var newPlayer = new Player(data.id,data.x, data.y,data.nickName,data.roomId,data.shape,data.color);
-    addPlayerToStage(newPlayer);
-    remotePlayers.push(newPlayer);
+function onNewPlayer(player) {
+    console.log("Player "+player.socketId+" was connected")
+    addPlayerToStage(player);
+    remotePlayers.push(player);
 };
 
 function onMovePlayer(data) {
@@ -66,15 +61,15 @@ function onMovePlayer(data) {
     movePlayer.grant.x = data.x*navigationMap.cellLength;
     movePlayer.grant.y = data.y*navigationMap.cellLength;
     movePlayer.grant.gotoAndStop(data.frame);
-    movePlayer.setX(data.x);
-    movePlayer.setY(data.y);
+    movePlayer.x = data.x;
+    movePlayer.y = data.y;
 };
 
-function onRemovePlayer(data) {
-    console.log("Player "+data.id+" was disconnected");
-    var removePlayer = playerById(data.id);
+function onRemovePlayer(playerId) {
+    console.log("Player "+playerId+" was disconnected");
+    var removePlayer = playerById(playerId);
     if (!removePlayer) {
-        console.log("Player not found: "+data.id);
+        console.log("Player not found: "+playerId);
         return;
     };
     stage.removeChild(removePlayer.grant);

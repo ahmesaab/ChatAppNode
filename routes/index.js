@@ -17,7 +17,8 @@ router.post('/', function(req, res, next) {
     {
         service.close();
         req.session.user = user;
-        res.redirect('/profile/'+req.session.user.id);
+        res.redirect('/game');
+        //res.redirect('/profile/'+req.session.user.id);
     });
 });
 
