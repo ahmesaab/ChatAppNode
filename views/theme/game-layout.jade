@@ -1,0 +1,24 @@
+//
+   Created by Ahmed on 4/6/2016.
+doctype html
+html
+    head
+        include head.jade
+        block extra-head
+    body#page-top.index
+        include fixed-navigation.jade
+        block content
+        include footer.jade
+        // jQuery
+        script(src='/javascript/theme/jquery.js')
+        // Bootstrap Core JavaScript
+        script(src='/javascript/theme/bootstrap.min.js')
+        // Plugin JavaScript
+        script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js')
+        script(src='/javascript/theme/classie.js')
+        script(src='/javascript/theme/cbpAnimatedHeader.js')
+        // Contact Form JavaScript
+        script(src='/javascript/theme/jqBootstrapValidation.js')
+        script(src='/javascript/theme/contact_me.js')
+        // Custom Theme JavaScript
+        script(src='/javascript/theme/freelancer.js')

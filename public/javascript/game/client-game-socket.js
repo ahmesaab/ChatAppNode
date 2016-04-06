@@ -2,6 +2,8 @@
  * Created by Ahmed on 3/19/2016.
  */
 
+var socket;
+var remotePlayers=[];
 var localPlayer;
 var navigationMap;
 var graphicsMap;
@@ -76,3 +78,25 @@ function onRemovePlayer(playerId) {
     remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
 };
 
+function setEventHandlers()
+{
+    // Keyboard Events
+    this.document.onkeydown = keyPressed;
+    this.document.onkeyup = keyReleased;
+
+    // Socket Events
+    socket.on("connect", onSocketConnected);
+    socket.on("you", onYou);
+    socket.on("disconnect", onSocketDisconnect);
+    socket.on("new player", onNewPlayer);
+    socket.on("move player", onMovePlayer);
+    socket.on("message", onMessage);
+    socket.on("remove player", onRemovePlayer);
+    socket.on("map", onMap);
+};
+
+function main(gameSocketUrl)
+{
+    socket = io.connect(gameSocketUrl);
+    setEventHandlers();
+}

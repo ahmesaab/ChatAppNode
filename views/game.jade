@@ -6,12 +6,14 @@ block extraHeader
     script(src="/javascript/lib/easeljs-NEXT.min.js")
     script(src="/javascript/lib/tweenjs-NEXT.min.js")
     script(src="/javascript/lib/ScaleBitmap.js")
-    script(src="/javascript/game/player.js")
     script(src="/javascript/game/animation.js")
     script(src="/javascript/game/client-game-socket.js")
-    script(src="/javascript/game/main.js")
     script(src="/javascript/game/user-input-handler.js")
     script(src="/javascript/game/utils.js")
+    script.
+        window.onload = function () {
+            main('#{socketUrl}');
+        }
 block content
     br
     br

@@ -10,7 +10,7 @@ router.get('/:id', function(req, res, next) {
     service.getUser(req.param("id"),function(user){
         service.getUsers(function(users)
         {
-            res.render('profile', {
+            res.render('theme/profile', {
                 profileUser: user,
                 users: users,
                 user: req.session.user

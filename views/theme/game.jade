@@ -1,0 +1,29 @@
+//
+                                 Created by Ahmed on 3/23/2016.
+extends game-layout
+block extra-head
+   script(src="/javascript/lib/socket.io.js")
+   script(src="/javascript/lib/easeljs-NEXT.min.js")
+   script(src="/javascript/lib/tweenjs-NEXT.min.js")
+   script(src="/javascript/lib/ScaleBitmap.js")
+   script(src="/javascript/game/animation.js")
+   script(src="/javascript/game/client-game-socket.js")
+   script(src="/javascript/game/user-input-handler.js")
+   script(src="/javascript/game/utils.js")
+   script.
+      window.onload = function () {
+          main('#{socketUrl}');
+      }
+block content
+   div
+      h3.text-center
+         div#world-name ????
+      hr.star-primary
+      p.text-center#gameSocketStatus Disconnected
+   div.col-sm-12
+      canvas.img-responsive(style="border:1px solid #000000;")#pokemonCanvas.col-sm-12
+   div.col-sm-12
+      br
+      input.form-control(type='text' autofocus)#messageInput
+      br
+      button.form-control.btn.btn-default#submit(onclick="sendMessage()") Send
