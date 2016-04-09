@@ -21,7 +21,7 @@ router.get('/login', function(req, res, next) {
         });
 });
 
-/* GET login page. */
+/* lDestroy session and render home page */
 router.get('/logout', function(req, res, next) {
     req.session.destroy();
     res.render('theme/home',

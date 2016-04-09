@@ -11,6 +11,7 @@ var Player = function(user,socketId) {
         roomId = user.roomId,
         socketId= socketId;
 
+
     return {
         x:x,
         y:y,
