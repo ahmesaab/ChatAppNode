@@ -1,14 +1,14 @@
 /**
  * Created by Ahmed on 3/4/2016.
  */
-var DB = require('../data/database.js');
+var DB = require('../data/database-open-shift.js');
 
 var User = require('../models/user.js');
 
 function Service() {
     var that = this;
     this.db = new DB();
-    //this.connection = this.db.getConnection();
+    this.connection = this.db.getConnection();
 
     this.getUser = function(id,callback)
     {
