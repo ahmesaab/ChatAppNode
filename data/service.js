@@ -8,7 +8,7 @@ var User = require('../models/user.js');
 function Service() {
     var that = this;
     this.db = new DB();
-    this.connection = this.db.getConnection();
+    //this.connection = this.db.getConnection();
 
     this.getUser = function(id,callback)
     {
