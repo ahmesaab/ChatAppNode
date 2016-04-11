@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
             {
                 user: req.session.user,
                 title: 'Game of Life',
-                socketUrl:"http://"+getServerIps()[0]+":2000/game"
+                socketUrl: getServerIp()+"/game"
             })
     }
     else
@@ -21,19 +21,16 @@ router.get('/', function(req, res, next) {
     }
 });
 
-function getServerIps()
+function getServerIp()
 {
-    var interfaces = os.networkInterfaces();
-    var addresses = [];
-    for (var k in interfaces) {
-        for (var k2 in interfaces[k]) {
-            var address = interfaces[k][k2];
-            if (address.family === 'IPv4' && !address.internal) {
-                addresses.push(address.address);
-            }
-        }
+    if(process.env.OPENSHIFT_NODEJS_IP)
+    {
+        return 'ws://'+process.env.OPENSHIFT_APP_DNS+":8000";
     }
-    return addresses;
+    else
+    {
+        return 'http://localhost:3000';
+    }
 }
 
 module.exports = router;
