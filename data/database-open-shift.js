@@ -12,9 +12,9 @@ var DB = function()
             return this.connection;
         }
         var connection = mysql.createConnection({
-            host     : 'localhost',
-            user     : 'adminB6CnQ6E',
-            password : '2-zHq3DcIQeG',
+            host     : process.env.OPENSHIFT_MYSQL_DB_HOST || 'localhost',
+            user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME || 'root',
+            password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD || 'roxas',
             database: 'chat'
         });
         connection.connect();

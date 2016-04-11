@@ -2,7 +2,6 @@
  * Created by Ahmed on 3/4/2016.
  */
 var DB = require('../data/database-open-shift.js');
-
 var User = require('../models/user.js');
 
 function Service() {
