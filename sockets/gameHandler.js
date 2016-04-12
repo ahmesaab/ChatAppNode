@@ -1,13 +1,13 @@
 var Service = require('../data/service.js');
 var Player = require("../models/player.js").Player;
 var io;
-
+var service;
 var Handler = function(socket,serverIo)
 {
     var user = socket.request.session.user;
     if(validate(user))
     {
-        var service = new Service();
+        service = new Service();
         io = serverIo;
         service.getUser(user.id,function(updatedUser)
         {
@@ -25,8 +25,7 @@ var Handler = function(socket,serverIo)
                 socket.on("change room", onChangeRoom);
                 socket.on('message', onMessage);
                 broadcastNewPlayer(socket);
-                //printMapInConsole(map);
-                service.close();
+                //printMapInConsole(map);;
             })
         });
     }
@@ -39,7 +38,6 @@ var Handler = function(socket,serverIo)
 
 function onClientDisconnect()
 {
-    var service = new Service();
     service.updatePosition(this.request.session.user.id,Math.round(this.player.x),Math.round(this.player.y));
     service.close();
     if(typeof this.player !=='undefined')
