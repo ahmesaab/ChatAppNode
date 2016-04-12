@@ -15,6 +15,8 @@ function drawMap(pokemonCanvas)
     navigationMap.cellLength = widthCell < heightCell ? widthCell : heightCell;
     pokemonCanvas.width = navigationMap.cellLength * navigationMap.width ;
     pokemonCanvas.height = navigationMap.cellLength * navigationMap.height;
+    //$('.panel-body').height(pokemonCanvas.height);
+    document.getElementsByClassName("panel-body").height = pokemonCanvas.height;
     var background = new createjs.Container();
     for (var i = 0; i < navigationMap.width; i++)
     {

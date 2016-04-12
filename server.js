@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-
 //Imports
 var express = require('express');
 var path = require('path');
@@ -10,9 +9,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
-var routes = require('./routes/index');
+var home = require('./routes/home');
 var profile = require('./routes/profile');
 var game = require('./routes/game');
+var login = require('./routes/login');
+var logout = require('./routes/logout');
 
 var changeSettings = require('./rest/changeSettings');
 
@@ -41,9 +42,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //Controllers
-app.use('/', routes);
+app.use('/', home);
 app.use('/game', game);
 app.use('/profile', profile);
+app.use('/login', login);
+app.use('/logout', logout);
 app.use('/rest/changeSettings', changeSettings);
 
 
@@ -86,13 +89,6 @@ app.use(function(err, req, res, next) {
 var debug = require('debug')('ChatApp:server');
 var http = require('http');
 
-/**
-* Get port from environment and store in Express.
-*/
-
-var port = normalizePort(process.env.OPENSHIFT_NODEJS_PORT || '3000');
-app.set('port', port);
-
 
 /**
 * Create HTTP server.
@@ -113,9 +109,17 @@ io.use(function(socket, next) {
 var gameNamespace = io.of('/game');
 gameNamespace.on('connection', function(socket){gameSocketHandler(socket,io)});
 
+
+
+
+/**
+ * Get port from environment and store in Express.
+ */
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-server.listen(port, server_ip_address, function(){
-  console.log("Listening on " + server_ip_address + ", port " + port)
+var server_port = normalizePort(process.env.OPENSHIFT_NODEJS_PORT || '3000');
+app.set('port', server_port);
+server.listen(server_port, server_ip_address, function(){
+  console.log("Listening on " + server_ip_address + ", port " + server_port)
 });
 
 server.on('error', onError);

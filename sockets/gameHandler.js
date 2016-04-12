@@ -1,12 +1,13 @@
 var Service = require('../data/service.js');
 var Player = require("../models/player.js").Player;
-var service = new Service();
 var io;
+
 var Handler = function(socket,serverIo)
 {
     var user = socket.request.session.user;
     if(validate(user))
     {
+        var service = new Service();
         io = serverIo;
         service.getUser(user.id,function(updatedUser)
         {
@@ -24,7 +25,8 @@ var Handler = function(socket,serverIo)
                 socket.on("change room", onChangeRoom);
                 socket.on('message', onMessage);
                 broadcastNewPlayer(socket);
-                printMapInConsole(map);
+                //printMapInConsole(map);
+                service.close();
             })
         });
     }
@@ -37,6 +39,9 @@ var Handler = function(socket,serverIo)
 
 function onClientDisconnect()
 {
+    var service = new Service();
+    service.updatePosition(this.request.session.user.id,Math.round(this.player.x),Math.round(this.player.y));
+    service.close();
     if(typeof this.player !=='undefined')
     {
         console.log("Player has disconnected: "+this.player.socketId);
@@ -53,7 +58,6 @@ function onMovePlayer(data)
         {
             this.player.x = data.x;
             this.player.y = data.y;
-            service.updatePosition(this.request.session.user.id,Math.round(data.x),Math.round(data.y));
             this.to(this.player.roomId).emit("move player", {id: this.player.socketId, x: this.player.x,
                 y: this.player.y, frame: data.frame});
         }
@@ -73,10 +77,13 @@ function onMovePlayer(data)
 
 function onMessage(message)
 {
-    var data = { 'message' : message, nickName : this.player.nickName, id: this.player.socketId };
-    service.addMessage(this.request.session.user.id,this.player.roomId,message);
-    this.to(this.player.roomId).emit('message', data);
-    console.log("user " + this.player.nickName + " send this : " + message+" to broadcast "+this.player.roomId);
+    if(message!=null)
+    {
+        var data = { 'message' : message, nickName : this.player.nickName, id: this.player.socketId };
+        service.addMessage(this.request.session.user.id,this.player.roomId,message);
+        this.to(this.player.roomId).emit('message', data);
+        console.log("user " + this.player.nickName + " send this : " + message+" to broadcast "+this.player.roomId);
+    }
 };
 
 function onChangeRoom(data)

@@ -3,7 +3,6 @@
  */
 var express = require('express');
 var router = express.Router();
-var os = require('os');
 
 router.get('/', function(req, res, next) {
     if(req.session.user)
@@ -12,7 +11,7 @@ router.get('/', function(req, res, next) {
             {
                 user: req.session.user,
                 title: 'Game of Life',
-                socketUrl: getServerIp()+"/game"
+                socketUrl: getSocketUrl()
             })
     }
     else
@@ -21,15 +20,15 @@ router.get('/', function(req, res, next) {
     }
 });
 
-function getServerIp()
+function getSocketUrl()
 {
     if(process.env.OPENSHIFT_NODEJS_IP)
     {
-        return 'ws://'+process.env.OPENSHIFT_APP_DNS+":8000";
+        return 'ws://'+process.env.OPENSHIFT_APP_DNS+':8000/game';
     }
     else
     {
-        return 'http://localhost:3000';
+        return 'http://localhost:3000/game';
     }
 }
 
