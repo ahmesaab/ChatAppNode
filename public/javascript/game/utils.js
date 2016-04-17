@@ -2,7 +2,7 @@
  * Created by Ahmed on 3/19/2016.
  */
 
-function addMessageToUi(msg, displayName, player)
+function addMessageToGame(msg, displayName, player)
 {
     var textBubble = new createjs.Container();
 
@@ -91,10 +91,66 @@ function addMessageToUi(msg, displayName, player)
     $("#chatEntries").append('<div class="message"><p>' + displayName + ' : ' + msg + '</p></div>');
 }
 
+function addMessageToChatHistory(msg,displayName,own)
+{
+    var div;
+    if(own)
+    {
+        div =
+            '<li class="right clearfix">' +
+                '<span class="chat-img pull-right">' +
+                    '<img src="http://placehold.it/50/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle">' +
+                '</span>' +
+                '<div class="chat-body clearfix">' +
+                    '<div class="header">' +
+                        '<small class="text-muted">' +
+                            '<span class="glyphicon glyphicon-time"></span>'+
+                        '2 seconds ago' +
+                        '</small>' +
+                        '<strong class="pull-right primary-font">'+displayName +'</strong>'+
+                    '</div>' +
+                    '<p>'+msg+'</p>'+
+                '</div>' +
+            '</li>';
+    }
+    else
+    {
+        div = '<li class="left clearfix">' +
+        '<span class="chat-img pull-left">' +
+        '<img src="http://placehold.it/50/55C1E7/fff&amp;text='+displayName[0]+'" alt="User Avatar" class="img-circle">' +
+        '</span><div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+displayName+'</strong>' +
+        '<small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span>2 seconds ago</small>' +
+        '</div><p>'+msg+'</p></div></li>'
+    }
+    $('.chat').append($(div));
+    $('.panel-body').scrollTop($('li').last().offset().top);
+}
 function updateMapNameUi(name)
 {
     $('#world-name').text(name);
 }
+
+function getChatHistory(mapId,count)
+{
+    $(".chat").empty();
+    $.ajax({
+        url: '/rest/chatHistory?mapId='+mapId+'&count='+count,
+        success: function(messages)
+        {
+            for(var i=0;i<messages.length;i++)
+            {
+                addMessageToChatHistory(messages[i].content,messages[i].nickName,
+                    localPlayer.nickName==messages[i].nickName)
+            }
+        },
+        error: function()
+        {
+            $("#serverMessage").text('Failed to fetch Chat History');
+            $("#serverModal").modal('show')
+        }
+    });
+}
+
 
 function playerById(id)
 {

@@ -16,10 +16,16 @@ router.post('/', function(req, res) {
     var service = new Service();
     service.getUser(req.body.userId,function(user)
     {
-        service.close();
-        req.session.user = user;
-        res.redirect('/game');
-        //res.redirect('/profile/'+req.session.user.id);
+        if(user!=null)
+        {
+            req.session.user = user;
+            res.redirect('/game');
+            //res.redirect('/profile/'+req.session.user.id);
+        }
+        else
+        {
+            res.redirect('/login');
+        }
     });
 });
 

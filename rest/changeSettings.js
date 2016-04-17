@@ -22,7 +22,6 @@ router.get('/', function(req, res, next) {
                 {
                     res.sendStatus(500);
                 }
-                service.close()
             }
         )
     }

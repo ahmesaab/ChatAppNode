@@ -78,7 +78,8 @@ function sendMessage() {
     if (messageTextBox.val() != "")
     {
         socket.emit('message',messageContent );
-        addMessageToUi(messageContent, localPlayer.nickName, localPlayer);
+        addMessageToGame(messageContent, localPlayer.nickName, localPlayer);
+        addMessageToChatHistory(messageContent,localPlayer.nickName,true);
         messageTextBox.val('');
     }
 }

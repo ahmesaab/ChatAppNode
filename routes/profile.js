@@ -3,14 +3,13 @@
  */
 var express = require('express');
 var router = express.Router();
-var Service = require('../data/service.js');
+var serviceBuilder = require('../data/service.js');
 
 router.get('/:id', function(req, res, next) {
-    var service = new Service();
+    var service = new(serviceBuilder)();
     service.getUser(req.param("id"),function(user){
         service.getUsers(function(users)
         {
-            service.close();
             res.render('theme/profile', {
                 profileUser: user,
                 users: users,

@@ -9,6 +9,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
+var db = require('./data/db')
+
 var home = require('./routes/home');
 var profile = require('./routes/profile');
 var game = require('./routes/game');
@@ -16,6 +18,7 @@ var login = require('./routes/login');
 var logout = require('./routes/logout');
 
 var changeSettings = require('./rest/changeSettings');
+var chatHistory =require('./rest/chatHistory')
 
 //Express Application
 var app = express();
@@ -48,6 +51,7 @@ app.use('/profile', profile);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/rest/changeSettings', changeSettings);
+app.use('/rest/chatHistory', chatHistory);
 
 
 //Game WebSocket Handler
@@ -118,9 +122,20 @@ gameNamespace.on('connection', function(socket){gameSocketHandler(socket,io)});
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var server_port = normalizePort(process.env.OPENSHIFT_NODEJS_PORT || '3000');
 app.set('port', server_port);
-server.listen(server_port, server_ip_address, function(){
-  console.log("Listening on " + server_ip_address + ", port " + server_port)
-});
+
+// Connect to MySQL on start
+db.connect(db.MODE_PRODUCTION, function(err) {
+  if (err) {
+    console.log('Unable to connect to MySQL.')
+    process.exit(1)
+  } else {
+    server.listen(server_port, server_ip_address, function(){
+      console.log("Listening on " + server_ip_address + ", port " + server_port)
+    });
+  }
+})
+
+
 
 server.on('error', onError);
 server.on('listening', onListening);

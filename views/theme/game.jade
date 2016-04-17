@@ -10,18 +10,30 @@ block extra-head
    script(src="/javascript/game/client-game-socket.js")
    script(src="/javascript/game/user-input-handler.js")
    script(src="/javascript/game/utils.js")
-   link(rel='stylesheet prefetch', href='https://s3-us-west-2.amazonaws.com/s.cdpn.io/104946/animate.min.css')
+   link(href='/stylesheets/theme/animate.min.css',rel='stylesheet prefetch')
    link(href='/stylesheets/style.css',rel='stylesheet', type='text/css')
    script.
       window.onload = function () {
           main('#{socketUrl}');
       }
 block content
+   //Server Message Modal
+   div#serverModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+     div.modal-content
+       div.modal-header
+         button.close(type='button', data-dismiss='modal' href='/login' ) ×
+         h4.modal-title Message from SmallWorld
+       div.modal-body
+         p#serverMessage nothingness
+       div.modal-footer
+         a.btn.btn-default(type='button', data-dismiss='modal', href='/login') Close
+
+   //Body
    div
       h3.text-center
-         div#world-name ????
+         div#world-name Loading...
       hr.star-primary
-      p.text-center#gameSocketStatus Disconnected
+      p.text-center#gameSocketStatus (connecting)
    row
       div.col-sm-9
          canvas.img-responsive(style="border:1px solid #000000;")#pokemonCanvas
@@ -33,39 +45,28 @@ block content
                .btn-group.pull-right
             .panel-body
                ul.chat
-                  li.left.clearfix
-                     span.chat-img.pull-left
-                        img.img-circle(src='http://placehold.it/50/55C1E7/fff&text=U', alt='User Avatar')
-                     .chat-body.clearfix
-                        .header
-                           strong.primary-font Sa3bolla
-                           small.pull-right.text-muted
-                              span.glyphicon.glyphicon-time
-                              | 12 mins ago
-                        p
-                           | hey man
-                  li.right.clearfix
-                     span.chat-img.pull-right
-                        img.img-circle(src='http://placehold.it/50/FA6F57/fff&text=ME', alt='User Avatar')
-                     .chat-body.clearfix
-                        .header
-                           small.text-muted
-                              span.glyphicon.glyphicon-time
-                              | 13 mins ago
-                           strong.pull-right.primary-font Huda
-                        p
-                           | yayyy eshta3'alet :D
-                  li.left.clearfix
-                     span.chat-img.pull-left
-                        img.img-circle(src='http://placehold.it/50/55C1E7/fff&text=U', alt='User Avatar')
-                     .chat-body.clearfix
-                        .header
-                           strong.primary-font Sa3bolla
-                           small.pull-right.text-muted
-                              span.glyphicon.glyphicon-time
-                              | 14 mins ago
-                        p
-                           | aywa ya 7amada 5ala3 ba2a :P
+                  //li.left.clearfix
+                  //   span.chat-img.pull-left
+                  //      img.img-circle(src='http://placehold.it/50/55C1E7/fff&text=U', alt='User Avatar')
+                  //   .chat-body.clearfix
+                  //      .header
+                  //         strong.primary-font Sa3bolla
+                  //         small.pull-right.text-muted
+                  //            span.glyphicon.glyphicon-time
+                  //            | 12 mins ago
+                  //      p
+                  //         | hey man
+                  //li.right.clearfix
+                  //   span.chat-img.pull-right
+                  //      img.img-circle(src='http://placehold.it/50/FA6F57/fff&text=ME', alt='User Avatar')
+                  //   .chat-body.clearfix
+                  //      .header
+                  //         small.text-muted
+                  //            span.glyphicon.glyphicon-time
+                  //            | 13 mins ago
+                  //         strong.pull-right.primary-font Huda
+                  //      p
+                  //         | yayyy eshta3'alet :D
             .panel-footer
                .input-group
                   input#messageInput.form-control.input-sm(placeholder='Type your message here...',type='text' autofocus)

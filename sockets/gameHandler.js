@@ -2,6 +2,7 @@ var Service = require('../data/service.js');
 var Player = require("../models/player.js").Player;
 var io;
 var service;
+
 var Handler = function(socket,serverIo)
 {
     var user = socket.request.session.user;
@@ -11,39 +12,58 @@ var Handler = function(socket,serverIo)
         io = serverIo;
         service.getUser(user.id,function(updatedUser)
         {
-            console.log(user.nickName+' connected to GAME with id='+socket.id+' in room '+updatedUser.roomId);
-            socket.player = new Player(updatedUser,socket.id);
+            if(user.status==='offline')
+            {
+                service.connectUser(user.id);
+                console.log(user.nickName+' connected to GAME with id='+socket.id+' in room '+updatedUser.roomId);
+                socket.player = new Player(updatedUser,socket.id);
 
-            emitYou(socket);
-            service.getMap(socket.player.roomId,function(map){
-                socket.world = map;
-                socket.emit("map",socket.world);
-                emitPlayers(socket,io);
-                socket.join(socket.player.roomId);
-                socket.on("disconnect", onClientDisconnect);
-                socket.on("move player", onMovePlayer);
-                socket.on("change room", onChangeRoom);
-                socket.on('message', onMessage);
-                broadcastNewPlayer(socket);
-                //printMapInConsole(map);;
-            })
+                emitYou(socket);
+                service.getMap(socket.player.roomId,function(map){
+                    socket.world = map;
+                    socket.emit("map",socket.world);
+                    emitPlayers(socket,io);
+                    socket.join(socket.player.roomId);
+                    socket.on("disconnect", onClientDisconnect);
+                    socket.on("move player", onMovePlayer);
+                    socket.on("change room", onChangeRoom);
+                    socket.on('message', onMessage);
+                    broadcastNewPlayer(socket);
+                    //printMapInConsole(map);;
+                })
+            }
+            else if(user.status==='online')
+            {
+                console.log('User is already online in GAME');
+                socket.emit("server message","You have been disconnected" +
+                    " because you are already playing in another connection or session");
+                socket.disconnect();
+            }
+            else
+            {
+                socket.disconnect();
+            }
+
         });
     }
     else
     {
         console.log('Invalid user trying to connect to GAME');
+        socket.emit("server message","You have been disconnected" +
+            " because you are not logged in");
         socket.disconnect();
     }
 }
 
 function onClientDisconnect()
 {
-    service.updatePosition(this.request.session.user.id,Math.round(this.player.x),Math.round(this.player.y));
-    service.close();
+    var userId = this.request.session.user.id;
+    service.disconnectUser(userId);
+    service.updatePosition(userId,Math.round(this.player.x),Math.round(this.player.y));
     if(typeof this.player !=='undefined')
     {
         console.log("Player has disconnected: "+this.player.socketId);
-        this.to(this.player.roomId).emit("remove player", {id: this.player.socketId});
+        this.to(this.player.roomId).emit("remove player", this.player.socketId);
     }
 };
 
@@ -52,7 +72,7 @@ function onMovePlayer(data)
     var navMap = this.world.navMap;
     try
     {
-        if(navMap[Math.round(data.x+1)][Math.round(data.y+1)]==true)
+        if(navMap[Math.round(data.x+1)][Math.round(data.y+1)]===true)
         {
             this.player.x = data.x;
             this.player.y = data.y;
@@ -61,6 +81,8 @@ function onMovePlayer(data)
         }
         else
         {
+            socket.emit("server message","You have been disconnected" +
+                " because you have violated the game rules");
             socket.disconnect();
             console.log("Trying to access false block, player disconnected for violation");
         }

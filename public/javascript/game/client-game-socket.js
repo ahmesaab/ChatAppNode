@@ -20,6 +20,7 @@ function onSocketConnected() {
 function onYou(player) {
     console.log("Got Player Data from Server");
     localPlayer = player;
+    getChatHistory(player.roomId,10);
 };
 
 function onMap(data)
@@ -31,7 +32,7 @@ function onMap(data)
     graphicsMap = data.draMap
     assets = data.assets;
     exits = data.exits;
-    updateMapNameUi(data.name)
+    updateMapNameUi(data.name);
     startAnimation();
 }
 
@@ -44,7 +45,8 @@ function onSocketDisconnect() {
 
 function onMessage(data) {
     console.log("Got Message from "+data.nickName+" saying "+data.message);
-    addMessageToUi(data.message, data.nickName, playerById(data.id));
+    addMessageToGame(data.message, data.nickName, playerById(data.id));
+    addMessageToChatHistory(data.message,data.nickName,false);
 };
 
 function onNewPlayer(player) {
@@ -78,6 +80,11 @@ function onRemovePlayer(playerId) {
     remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
 };
 
+function onServerMessage(serverMessage) {
+    $("#serverMessage").text(serverMessage);
+    $("#serverModal").modal('show')
+};
+
 function setEventHandlers()
 {
     // Keyboard Events
@@ -93,10 +100,14 @@ function setEventHandlers()
     socket.on("message", onMessage);
     socket.on("remove player", onRemovePlayer);
     socket.on("map", onMap);
+    socket.on("server message", onServerMessage);
 };
 
 function main(gameSocketUrl)
 {
     socket = io.connect(gameSocketUrl);
     setEventHandlers();
+    $('html, body').animate({
+        scrollTop: $("#world-name").offset().top
+    }, 2000);
 }

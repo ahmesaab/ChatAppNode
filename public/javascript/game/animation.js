@@ -100,7 +100,7 @@ function startAnimation()
                         });
                 }
                 else if(navigationMap[Math.round(centerX/navigationMap.cellLength)]
-                        [Math.round(centerY/navigationMap.cellLength)] == null)
+                        [Math.round(centerY/navigationMap.cellLength)]=== null)
                 {
                     clearAll();
                     changeRoom(Math.round(centerX/navigationMap.cellLength),
