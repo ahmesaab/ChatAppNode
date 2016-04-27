@@ -5,10 +5,10 @@
 module.exports = {
 
     'facebookAuth' : {
-        'clientID'      : '455942167864223',
-        'clientSecret'  : '136b8a1ff6fee455190a2f9d87298eb3',
-        'callbackURL'   : 'http://localhost:3000/auth/facebook/callback'
-        //'callbackURL'   : 'http://192.168.1.105:3000/auth/facebook/callback'
+        'clientID'      : '223618774679227',
+        'clientSecret'  : '5c763d40eaef3c58f184cfb6d950a2aa',
+        'callbackURL'   : 'http://test-smallworldbeta.rhcloud.com/auth/facebook/callback'
+        //'callbackURL'   : 'http://localhost:3000/auth/facebook/callback'
     },
 
     'twitterAuth' : {

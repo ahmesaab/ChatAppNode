@@ -28,6 +28,7 @@ var Handler = function(socket,serverIo)
                     socket.join(socket.player.roomId);
                     socket.on("disconnect", onClientDisconnect);
                     socket.on("move player", onMovePlayer);
+                    socket.on("key status", onPlayerKey);
                     socket.on("change room", onChangeRoom);
                     socket.on('message', onMessage);
                     broadcastNewPlayer(socket);
@@ -95,6 +96,12 @@ function onMovePlayer(data)
     }
 
 };
+
+function onPlayerKey(data)
+{
+    this.to(this.player.roomId).emit("key status", {id: this.player.socketId, key: data.key,
+        keyStatus: data.keyStatus});
+}
 
 function onMessage(message)
 {
