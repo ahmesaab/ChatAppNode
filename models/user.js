@@ -2,7 +2,7 @@
  * Created by Ahmed on 3/8/2016.
  */
 
-function User(id,firstName,lastName,nickName,shape,color,x,y,roomId,status)
+function User(id,firstName,lastName,nickName,shape,color,x,y,roomId,status,facebookId)
 {
     this.id = id;
     this.firstName = firstName;
@@ -14,6 +14,7 @@ function User(id,firstName,lastName,nickName,shape,color,x,y,roomId,status)
     this.y = y;
     this.roomId = roomId;
     this.status = status;
+    this.facebookId = facebookId;
 }
 
 module.exports = User;

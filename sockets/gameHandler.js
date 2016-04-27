@@ -5,18 +5,20 @@ var service;
 
 var Handler = function(socket,serverIo)
 {
-    var user = socket.request.session.user;
-    if(validate(user))
+
+    if(validate(socket.request.session.passport))
     {
+        var userId = socket.request.session.passport.user;
         service = new Service();
         io = serverIo;
-        service.getUser(user.id,function(updatedUser)
+        service.getUser(userId,function(user)
         {
             if(user.status==='offline')
             {
                 service.connectUser(user.id);
-                console.log(user.nickName+' connected to GAME with id='+socket.id+' in room '+updatedUser.roomId);
-                socket.player = new Player(updatedUser,socket.id);
+                console.log(user.nickName+' connected to GAME with id='+socket.id+' in room '+user.roomId);
+                socket.player = new Player(user,socket.id);
+                socket.userId = user.id;
 
                 emitYou(socket);
                 service.getMap(socket.player.roomId,function(map){
@@ -57,9 +59,8 @@ var Handler = function(socket,serverIo)
 
 function onClientDisconnect()
 {
-    var userId = this.request.session.user.id;
-    service.disconnectUser(userId);
-    service.updatePosition(userId,Math.round(this.player.x),Math.round(this.player.y));
+    service.disconnectUser(this.userId);
+    service.updatePosition(this.userId,Math.round(this.player.x),Math.round(this.player.y));
     if(typeof this.player !=='undefined')
     {
         console.log("Player has disconnected: "+this.player.socketId);
@@ -100,7 +101,7 @@ function onMessage(message)
     if(message!=null)
     {
         var data = { 'message' : message, nickName : this.player.nickName, id: this.player.socketId };
-        service.addMessage(this.request.session.user.id,this.player.roomId,message);
+        service.addMessage(this.userId,this.player.roomId,message);
         this.to(this.player.roomId).emit('message', data);
         console.log("user " + this.player.nickName + " send this : " + message+" to broadcast "+this.player.roomId);
     }
@@ -114,7 +115,7 @@ function onChangeRoom(data)
         if(exit.entranceX == data.x && exit.entranceY == data.y)
         {
             var newRoomId = exit.destination;
-            service.updateUserCurrentMap(this.request.session.user.id,newRoomId);
+            service.updateUserCurrentMap(this.userId,newRoomId);
 
             broadcastRemovePlayer(this);
 
@@ -137,9 +138,9 @@ function onChangeRoom(data)
     }
 };
 
-function validate(user)
+function validate(userId)
 {
-    if(typeof user !== 'undefined')
+    if(typeof userId !== 'undefined')
         return true;
     else
         return false;

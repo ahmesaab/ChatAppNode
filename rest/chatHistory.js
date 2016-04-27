@@ -9,7 +9,7 @@ var router = express.Router();
 var Service = require('../data/service.js');
 
 router.get('/', function(req, res, next) {
-    if(req.session.user)
+    if(req.session.passport)
     {
         var service = new Service();
         service.getMessages(req.query.mapId,req.query.count,

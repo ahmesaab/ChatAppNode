@@ -10,10 +10,11 @@ router.get('/:id', function(req, res, next) {
     service.getUser(req.param("id"),function(user){
         service.getUsers(function(users)
         {
-            res.render('theme/profile', {
+            res.render('profile', {
                 profileUser: user,
                 users: users,
-                user: req.session.user
+                userId: req.session.passport ? req.session.passport.user:null,
+                navigationLinks: {'Profile':'/profile/'+req.session.passport.user,'Logout':'/logout'}
             })
         })
     });

@@ -6,7 +6,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    res.render('theme/home',
+    res.render('home',
         {
             title: 'Home',
             user: req.session.user

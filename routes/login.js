@@ -4,10 +4,10 @@ var Service = require('../data/service.js');
 
 /* GET login page. */
 router.get('/', function(req, res) {
-    res.render('theme/login',
+    res.render('login',
         {
             title: 'Login',
-            user: req.session.user
+            navigationLinks: {'Sign up':'/signup'}
         });
 });
 
@@ -18,13 +18,18 @@ router.post('/', function(req, res) {
     {
         if(user!=null)
         {
-            req.session.user = user;
+            req.session.passport ={'user': user.id};
             res.redirect('/game');
             //res.redirect('/profile/'+req.session.user.id);
         }
         else
         {
-            res.redirect('/login');
+            res.render('login',
+                {
+                    title: 'Login',
+                    navigationLinks: {'Sign up':'/signup'},
+                    error: 'Email or password is Incorrect'
+                });
         }
     });
 });

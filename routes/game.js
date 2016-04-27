@@ -4,13 +4,14 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
-    if(req.session.user)
+router.get('/', function(req, res, next){
+    if(req.session.passport)
     {
-        res.render('theme/game',
+        res.render('game',
             {
-                user: req.session.user,
                 title: 'Game of Life',
+                userId: req.session.passport.user,
+                navigationLinks: {'Profile':'/profile/'+req.session.passport.user,'Logout':'/logout'},
                 socketUrl: getSocketUrl()
             })
     }
@@ -29,6 +30,7 @@ function getSocketUrl()
     else
     {
         return 'http://localhost:3000/game';
+        //return 'http://192.168.1.105:3000/game';
     }
 }
 

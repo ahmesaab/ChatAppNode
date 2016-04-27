@@ -1,28 +1,55 @@
 //
-   Created by Ahmed on 3/23/2016.
-extends layout
-block extraHeader
-    script(src="/javascript/lib/socket.io.js")
-    script(src="/javascript/lib/easeljs-NEXT.min.js")
-    script(src="/javascript/lib/tweenjs-NEXT.min.js")
-    script(src="/javascript/lib/ScaleBitmap.js")
-    script(src="/javascript/game/animation.js")
-    script(src="/javascript/game/client-game-socket.js")
-    script(src="/javascript/game/user-input-handler.js")
-    script(src="/javascript/game/utils.js")
-    script.
-        window.onload = function () {
-            main('#{socketUrl}');
-        }
+   Created by Ahmed on 4/19/2016.
+
+//
+                                 Created by Ahmed on 3/23/2016.
+extends layouts/simple
+block extra-head
+   script(src="/javascript/lib/socket.io.js")
+   script(src="/javascript/lib/easeljs-NEXT.min.js")
+   script(src="/javascript/lib/tweenjs-NEXT.min.js")
+   script(src="/javascript/lib/ScaleBitmap.js")
+   script(src="/javascript/game/animation.js")
+   script(src="/javascript/game/client-game-socket.js")
+   script(src="/javascript/game/user-input-handler.js")
+   script(src="/javascript/game/utils.js")
+   link(href='/stylesheets/theme/animate.min.css',rel='stylesheet prefetch')
+   link(href='/stylesheets/style.css',rel='stylesheet', type='text/css')
+   script.
+      window.onload = function () {
+         main('#{socketUrl}');
+      }
 block content
-    br
-    br
-    div.container
-        div.row
-            div#col-sm-12
-                h3#world-name ????
-                h3#gameSocketStatus Disconnected
-                div#chatControls
-                    input(type='text' autofocus)#messageInput
-                    button#submit(onclick="sendMessage()") Send
-                canvas.img-responsive(style="border:1px solid #000000;")#pokemonCanvas.col-sm-12
+   //Server Message Modal
+   div#serverModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+      div.modal-content
+         div.modal-header
+            button.close(type='button', data-dismiss='modal' href='/login' ) ×
+            h4.modal-title Message from SmallWorld
+         div.modal-body
+            p#serverMessage nothingness
+         div.modal-footer
+            a.btn.btn-default(type='button', data-dismiss='modal', href='/login') Close
+   //Body
+   div
+      h3.text-center
+         div#world-name Loading...
+      hr.star-primary
+      p.text-center#gameSocketStatus (connecting)
+   row
+      div.col-sm-9
+         canvas.img-responsive(style="border:1px solid #000000;")#pokemonCanvas
+      div.col-sm-3
+         div.panel.panel-primary
+            .panel-heading
+               span.glyphicon.glyphicon-comment
+               | Chat History
+               .btn-group.pull-right
+            .panel-body
+               ul.chat
+            .panel-footer
+               .input-group
+                  input#messageInput.form-control.input-sm(placeholder='Type your message here...',type='text' autofocus)
+                  span.input-group-btn
+                     button.form-controlbtn.btn-warning.btn-sm#submit(onclick="sendMessage()")
+                        | Send

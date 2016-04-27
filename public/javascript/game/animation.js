@@ -31,13 +31,18 @@ function drawMap(pokemonCanvas)
             background.addChild(tile);
         }
     }
+    background.name = 'background';
     stage.addChild(background);
-    stage.addChild(createAssetsFromArray(assets));
+    var assetsBitmaps = createAssetsFromArray(assets);
+    for(var i in assetsBitmaps)
+    {
+        stage.addChild(assetsBitmaps[i]);
+    }
 }
 
 function createAssetsFromArray(array)
 {
-    var assets = new createjs.Container();
+    var assets = new Array();
     for (var i = 0; i < array.length; i++)
     {
         var assetInfo = array[i];
@@ -46,19 +51,30 @@ function createAssetsFromArray(array)
         asset.scaleY = (navigationMap.cellLength*assetInfo.height)/assetInfo.pixelheight;
         asset.x = assetInfo.x * navigationMap.cellLength;
         asset.y = assetInfo.y * navigationMap.cellLength;
-        assets.addChild(asset);
+        asset.yBase = assetInfo.yBase * navigationMap.cellLength;
+        assets.push(asset);
     }
     return assets;
 }
 
+function sortByY (obj1, obj2) {
+    if(obj1.name == 'background') { return -1}
+    if(obj2.name == 'background') {return 1}
+    if (obj1.yBase > obj2.yBase) { return 1; }
+    if (obj1.yBase < obj2.yBase) { return -1; }
+    return 0;
+}
 
 function startAnimation()
 {
     var pokemonCanvas = document.getElementById("pokemonCanvas");
     stage = new createjs.Stage(pokemonCanvas);
 
+
     drawMap(pokemonCanvas);
-    addPlayerToStage(localPlayer);
+    addPlayerToStage(localPlayer,'localplayer');
+
+    stage.sortChildren(sortByY);
 
     if(startTicker)
     {
@@ -90,6 +106,7 @@ function startAnimation()
                 {
                     localPlayer.grant.x = newX;
                     localPlayer.grant.y = newY;
+                    localPlayer.grant.yBase = newY;
                     localPlayer.x = localPlayer.grant.x;
                     localPlayer.y = localPlayer.grant.y;
                     socket.emit("move player",
@@ -106,6 +123,7 @@ function startAnimation()
                     changeRoom(Math.round(centerX/navigationMap.cellLength),
                         Math.round(centerY/navigationMap.cellLength));
                 }
+                stage.sortChildren(sortByY);
             }
             catch(err)
             {
@@ -127,7 +145,7 @@ function clearAll()
     remotePlayers=[];
 }
 
-function addPlayerToStage(player)
+function addPlayerToStage(player,name)
 {
     var color = "";
     if(player.color==1)
@@ -155,9 +173,11 @@ function addPlayerToStage(player)
     var grant = new createjs.Sprite(spriteSheet, "staionaryDown");
     grant.x = player.x * navigationMap.cellLength;
     grant.y = player.y * navigationMap.cellLength;
+    grant.yBase = grant.y;
     grant.scaleX = (navigationMap.cellLength/spriteWidth)*2;
     grant.scaleY = (navigationMap.cellLength/spriteHeight)*2;
     grant.speed = speed;
+    grant.name = name;
 
     player.grant = grant;
 

@@ -44,6 +44,40 @@ Service.prototype.getUser = function(id,callback)
     );
 };
 
+// METHOD: query the database by facebook_id & returns a user model or null if the user doesn't exist.
+Service.prototype.getUserByFacebookId = function(facebookId,callback)
+{
+    this._connection.query('SELECT * FROM users WHERE facebook_id=?',facebookId,
+        function(err, rows)
+        {
+            var user = null;
+            if(err)
+            {
+                console.log(err);
+            }
+            else
+            {
+                if(rows.length>0)
+                {
+                    user = new User(
+                        parseInt(rows[0].id),
+                        String(rows[0].first_name),
+                        String(rows[0].last_name),
+                        String(rows[0].nick_name),
+                        parseInt(rows[0].shape),
+                        parseInt(rows[0].color),
+                        parseInt(rows[0].x),
+                        parseInt(rows[0].y),
+                        parseInt(rows[0].current_map_id),
+                        String(rows[0].status),
+                        parseInt(rows[0].facebook_id));
+                }
+            }
+            callback(user);
+        }
+    );
+};
+
 // METHOD: query the database & returns list of all users in the user table.
 Service.prototype.getUsers = function(callback)
 {
@@ -90,6 +124,16 @@ Service.prototype.addMessage = function(userId,mapId,message)
     " values ("+userId+","+mapId+",?,NOW())",[message]);
 };
 
+// METHOD: insert a new user given the user holder object (will be changed later).
+Service.prototype.addNewUser = function(data,callback)
+{
+    this._connection.query("INSERT INTO users(first_name,last_name,nick_name,shape,color,x,y,current_map_id,status," +
+    "facebook_id) values ('"+data.firstName+"','"+data.lastName+"','"+data.nickName+"',"+data.shape+","+data.color+","+
+    data.x+","+data.y+","+data.roomId+",'"+data.status+"',"+data.facebookId+")",function(err, result){
+        if (err) throw err;
+        callback(result.insertId)});
+};
+
 // METHOD: update the user location to the given x & y.
 Service.prototype.updatePosition =  function(userId,x,y)
 {
@@ -125,6 +169,7 @@ Service.prototype.getMap = function(mapId,callback)
                 'a.height as assetHeight,'+
                 'a.pixel_width as assetPixelWidth,'+
                 'a.pixel_height as assetPixelHeight,'+
+                'a.z_start as zStart,'+
                 'ma.x as x,'+
                 'ma.y as y,'+
                 'ma.is_background,'+
@@ -178,8 +223,9 @@ Service.prototype.getMap = function(mapId,callback)
                                 drawObjectInfo.y = row.y;
                                 drawObjectInfo.width=row.assetWidth;
                                 drawObjectInfo.height=row.assetHeight;
+                                drawObjectInfo.yBase = row.y + row.zStart;
                                 assets.push(drawObjectInfo);
-                                for (var u = 0; u < drawObjectInfo.height; u++) {
+                                for (var u = row.zStart; u < drawObjectInfo.height; u++) {
                                     for (var v = 0; v < drawObjectInfo.width; v++) {
                                         navigationMap[row.x + v][row.y + u] = false;
                                     }

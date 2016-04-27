@@ -16,9 +16,8 @@ nav.navbar.navbar-default.navbar-collapse
             ul.nav.navbar-nav.navbar-right
                 li.hidden
                     a(href='#page-top')
-                li.page-scroll
-                    a(href="/profile/" + user.id) Profile
-                li.page-scroll
-                    a(href='/logout') Logout
+                each val, index in navigationLinks
+                    li.page-scroll
+                        a(href=val)=index
         // /.navbar-collapse
     // /.container-fluid

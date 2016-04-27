@@ -52,6 +52,7 @@ function onMessage(data) {
 function onNewPlayer(player) {
     console.log("Player "+player.socketId+" was connected")
     addPlayerToStage(player);
+    stage.sortChildren(sortByY);
     remotePlayers.push(player);
 };
 
@@ -64,9 +65,11 @@ function onMovePlayer(data) {
     };
     movePlayer.grant.x = data.x*navigationMap.cellLength;
     movePlayer.grant.y = data.y*navigationMap.cellLength;
+    movePlayer.grant.yBase = data.y*navigationMap.cellLength;
     movePlayer.grant.gotoAndStop(data.frame);
     movePlayer.x = data.x;
     movePlayer.y = data.y;
+    stage.sortChildren(sortByY);
 };
 
 function onRemovePlayer(playerId) {
@@ -109,5 +112,5 @@ function main(gameSocketUrl)
     setEventHandlers();
     $('html, body').animate({
         scrollTop: $("#world-name").offset().top
-    }, 2000);
+    }, 500);
 }

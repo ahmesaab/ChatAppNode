@@ -7,7 +7,7 @@ var router = express.Router();
 /* Destroy session and render home page */
 router.get('/', function(req, res, next) {
     req.session.destroy();
-    res.render('theme/home',
+    res.render('home',
         {
             title: 'Home'
         });

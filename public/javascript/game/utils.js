@@ -123,7 +123,7 @@ function addMessageToChatHistory(msg,displayName,own)
         '</div><p>'+msg+'</p></div></li>'
     }
     $('.chat').append($(div));
-    $('.panel-body').scrollTop($('li').last().offset().top);
+    scrollToBottomChatHistory();
 }
 function updateMapNameUi(name)
 {
@@ -142,6 +142,7 @@ function getChatHistory(mapId,count)
                 addMessageToChatHistory(messages[i].content,messages[i].nickName,
                     localPlayer.nickName==messages[i].nickName)
             }
+            setTimeout(scrollToBottomChatHistory,2000);
         },
         error: function()
         {
@@ -151,6 +152,9 @@ function getChatHistory(mapId,count)
     });
 }
 
+function scrollToBottomChatHistory() {
+    $('.panel-body').scrollTop($('li').last().offset().top)
+}
 
 function playerById(id)
 {
