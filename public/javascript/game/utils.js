@@ -88,7 +88,6 @@ function addMessageToGame(msg, displayName, player)
       stage.removeChild(textBubble);
     });
 
-    $("#chatEntries").append('<div class="message"><p>' + displayName + ' : ' + msg + '</p></div>');
 }
 
 function addMessageToChatHistory(msg,displayName,own)
@@ -142,7 +141,7 @@ function getChatHistory(mapId,count)
                 addMessageToChatHistory(messages[i].content,messages[i].nickName,
                     localPlayer.nickName==messages[i].nickName)
             }
-            setTimeout(scrollToBottomChatHistory,2000);
+            setTimeout(scrollToBottomChatHistory,500);
         },
         error: function()
         {
@@ -165,3 +164,4 @@ function playerById(id)
     };
     return false;
 };
+

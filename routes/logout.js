@@ -3,14 +3,16 @@
  */
 var express = require('express');
 var router = express.Router();
+var Service = require('../data/service.js');
 
-/* Destroy session and render home page */
+/* Destroy session, update user status to offline, and redirect to home page */
 router.get('/', function(req, res, next) {
-    req.session.destroy();
-    res.render('home',
-        {
-            title: 'Home'
-        });
+    if(req.session.passport) {
+        var service = new Service();
+        service.disconnectUser(req.session.passport.user);
+        req.session.destroy();
+    }
+    res.redirect('/');
 });
 
 module.exports = router;

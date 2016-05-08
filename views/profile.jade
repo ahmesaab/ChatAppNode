@@ -2,31 +2,44 @@
    Created by Ahmed on 3/4/2016.
 extends layouts/simple
 block extra-head
+    script(src="/javascript/lib/angular.min.js")
+    script(src="/javascript/lib/easeljs-NEXT.min.js")
     script(src="/javascript/other/drop-down.js")
+    script(src="/javascript/game/sprites-config.js")
+    script(src="/javascript/angular/profile-app.js")
+    style.
+        canvas:hover {
+            border: 6px solid blue;
+        }
+
+        canvas{
+            border: 6px solid white;
+        }
+
+        .selected-character{
+            display: inline;
+        }
+
 block content
-    section
-      .container
-         .row
-            .col-lg-12
-               .text-center
-                   h1= profileUser.firstName + ' ' + profileUser.lastName
-                   if userId && (userId == profileUser.id)
-                       p Hair Color:
-                       select(class='color', value="#{profileUser.color}")
-                          each val, index in {1:'green',2:'brown'}
-                             if profileUser.color == index
-                                 option(selected,value=index) #{val}
-                             else
-                                 option(value=index) #{val}
-                   else
-                       p Hair Color:
-                       p #{profileUser.color}
-    section
-      .container
-         .row
-            .col-lg-12.text-center
-               .text-center
-                  each user in users
-                     h3
-                        a(href='#{user.id}') #{user.firstName + ' ' + user.lastName}
-                        br
+    .container(ng-app="myApp",ng-controller="myCtrl",ng-init="init(#{profileUser.color},#{userId && (userId == profileUser.id)})")
+        section#portfolio
+            .container
+                .row
+                    .col-lg-12.text-center
+                        h2=profileUser.firstName + ' ' + profileUser.lastName
+                        hr.star-primary
+                .row
+                    .col-sm-12.portfolio-item.text-center
+                        canvas#current-character-canvas.img-responsive.selected-character(ng-click="viewCharacters()")
+                .row#sprites(ng-show="showCharacters")
+                    .col-sm-1.portfolio-item(ng-repeat="(id,image) in charachters")
+                        canvas.img-responsive.character(ng-click="changeCharacter(id)")
+        section
+            .container
+            .row
+                .col-lg-12.text-center
+                   .text-center
+                      each user in users
+                         h3
+                            a(href='#{user.id}') #{user.firstName + ' ' + user.lastName}
+                            br

@@ -61,51 +61,49 @@ function onMovePlayer(data) {
     var movePlayer = playerById(data.id);
     if (!movePlayer) {
         console.log("Player not found: "+data.id);
-        return;
-    };
-    movePlayer.grant.x = data.x*navigationMap.cellLength;
-    movePlayer.grant.y = data.y*navigationMap.cellLength;
-    movePlayer.grant.yBase = data.y*navigationMap.cellLength;
-    //movePlayer.grant.gotoAndStop(data.frame);
-    movePlayer.x = data.x;
-    movePlayer.y = data.y;
-    stage.sortChildren(sortByY);
-};
-
-function onPlayerKey(data)
-{
-    var movePlayer = playerById(data.id);
-    var doStuff;
-    if(data.keyStatus=='pressed')
+    }
+    else
     {
-        doStuff = function(sprite)
-        {
-            if(!movePlayer.playing)
-            {
-                movePlayer.grant.gotoAndPlay(sprite);
+        var newX = data.x*navigationMap.cellLength;
+        var newY = data.y*navigationMap.cellLength;
+        var oldX = movePlayer.grant.x;
+        var oldY = movePlayer.grant.y;
+        if(!movePlayer.playing) {
+            if (newX > oldX) {
+                movePlayer.grant.gotoAndPlay("right");
+                movePlayer.playing = true;
+            }
+            else if (oldX > newX) {
+                movePlayer.grant.gotoAndPlay("left");
+                movePlayer.playing = true;
+            }
+            else if (newY > oldY) {
+                movePlayer.grant.gotoAndPlay("down");
+                movePlayer.playing = true;
+            }
+            else if (oldY > newY) {
+                movePlayer.grant.gotoAndPlay("up");
                 movePlayer.playing = true;
             }
         }
+        movePlayer.grant.x = newX;
+        movePlayer.grant.y = newY;
+        movePlayer.grant.yBase = newY;
+        movePlayer.x = data.x;
+        movePlayer.y = data.y;
+        stage.sortChildren(sortByY);
     }
-    else if(data.keyStatus =='released')
+};
+
+function onStopPlayer(data) {
+    console.log("Player "+data.id+" stopped");
+    var movePlayer = playerById(data.id);
+    if (!movePlayer) {
+        console.log("Player not found: "+data.id);
+    }
+    else
     {
-        doStuff = function(sprite)
-        {
-            movePlayer.grant.gotoAndPlay("staionary"+sprite.charAt(0).toUpperCase() + sprite.slice(1));
-        }
-    }
-    switch(data.key) {
-        case 0:
-            doStuff("left");
-            break;
-        case 1:
-            doStuff("right");
-            break;
-        case 2:
-            doStuff("up");
-            break;
-        case 3:
-            doStuff("down");
+        movePlayer.grant.gotoAndPlay(data.stationaryAnimationName);
     }
 }
 
@@ -141,7 +139,7 @@ function setEventHandlers()
     socket.on("remove player", onRemovePlayer);
     socket.on("map", onMap);
     socket.on("server message", onServerMessage);
-    socket.on("key status",onPlayerKey);
+    socket.on("stop player",onStopPlayer);
 };
 
 function main(gameSocketUrl)

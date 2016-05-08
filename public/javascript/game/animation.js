@@ -87,6 +87,18 @@ function startAnimation()
        createjs.Ticker.paused = false;
     }
 
+    var moving = false;
+    var changingRoom = false;
+
+    function clearAll()
+    {
+        startTicker = false;
+        console.log("Clear Stage & Pause Ticker");
+        createjs.Ticker.paused = true;
+        stage.removeAllChildren();
+        remotePlayers=[];
+        changingRoom = false;
+    }
 
     function tick(event)
     {
@@ -104,6 +116,7 @@ function startAnimation()
                 if(navigationMap[Math.round(centerX/navigationMap.cellLength)]
                         [Math.round(centerY/navigationMap.cellLength)])
                 {
+                    moving = true;
                     localPlayer.grant.x = newX;
                     localPlayer.grant.y = newY;
                     localPlayer.grant.yBase = newY;
@@ -117,8 +130,9 @@ function startAnimation()
                         });
                 }
                 else if(navigationMap[Math.round(centerX/navigationMap.cellLength)]
-                        [Math.round(centerY/navigationMap.cellLength)]=== null)
+                        [Math.round(centerY/navigationMap.cellLength)]=== null && !changingRoom)
                 {
+                    changingRoom = true;
                     clearAll();
                     changeRoom(Math.round(centerX/navigationMap.cellLength),
                         Math.round(centerY/navigationMap.cellLength));
@@ -129,59 +143,37 @@ function startAnimation()
             {
                 console.log("ERROR: "+err);
             }
-
-
+        }
+        else if(moving)
+        {
+            moving = false;
+            socket.emit("stop player",localPlayer.grant.currentAnimation);
         }
         stage.update(event);
     }
 }
 
-function clearAll()
-{
-    startTicker = false;
-    console.log("Clear Stage & Pause Ticker");
-    createjs.Ticker.paused = true;
-    stage.removeAllChildren();
-    remotePlayers=[];
-}
+
 
 function addPlayerToStage(player,name)
 {
-    var color = "";
-    if(player.color==1)
-    {
-        color = "green-";
-    }
-    var spriteHeight = 50;
-    var spriteWidth = 50;
-    var spriteSheet = new createjs.SpriteSheet({
-        framerate: 30,
-        "images": ["images/"+color+"pokemon-trainer.png"],
-        "frames": { "height": 50, "count": spriteHeight, "width": spriteWidth},
-        "animations": {
-            "left": [4, 7,"left",0.5],
-            "right": [8, 11,"right",0.5],
-            "up":[12,15,"up",0.5],
-            "down":[0,3,"down",0.5],
-            "staionaryLeft" : 4,
-            "staionaryRight" : 8,
-            "staionaryDown" : 0,
-            "staionaryUp" : 12
-        }
-    });
-
+    var spriteSheetConfig = getSpriteConfig(player.color);
+    var spriteSheet = new createjs.SpriteSheet(spriteSheetConfig);
     var grant = new createjs.Sprite(spriteSheet, "staionaryDown");
+
+    grant.scaleX = (navigationMap.cellLength / spriteSheetConfig.frames.width) * spriteSheetConfig.scale.x;
+    grant.scaleY = (navigationMap.cellLength / spriteSheetConfig.frames.height) * spriteSheetConfig.scale.y;
+
     grant.x = player.x * navigationMap.cellLength;
     grant.y = player.y * navigationMap.cellLength;
     grant.yBase = grant.y;
-    grant.scaleX = (navigationMap.cellLength/spriteWidth)*2;
-    grant.scaleY = (navigationMap.cellLength/spriteHeight)*2;
+
     grant.speed = speed;
     grant.name = name;
 
     player.grant = grant;
 
-    grant.on('animationend',function(e){
+    grant.on('animationend', function (e) {
         player.playing = false;
     });
 

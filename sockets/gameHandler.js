@@ -28,7 +28,7 @@ var Handler = function(socket,serverIo)
                     socket.join(socket.player.roomId);
                     socket.on("disconnect", onClientDisconnect);
                     socket.on("move player", onMovePlayer);
-                    socket.on("key status", onPlayerKey);
+                    socket.on("stop player", onStopPlayer);
                     socket.on("change room", onChangeRoom);
                     socket.on('message', onMessage);
                     broadcastNewPlayer(socket);
@@ -97,10 +97,9 @@ function onMovePlayer(data)
 
 };
 
-function onPlayerKey(data)
+function onStopPlayer(data)
 {
-    this.to(this.player.roomId).emit("key status", {id: this.player.socketId, key: data.key,
-        keyStatus: data.keyStatus});
+    this.to(this.player.roomId).emit("stop player", {id: this.player.socketId, stationaryAnimationName: data});
 }
 
 function onMessage(message)
@@ -135,11 +134,14 @@ function onChangeRoom(data)
 
             emitYou(this);
             var that = this;
+            console.log("---------------");
+            console.log(that.player.x);
             service.getMap(this.player.roomId,function(map) {
                 that.world = map;
                 that.emit("map", that.world);
                 emitPlayers(that,io);
                 broadcastNewPlayer(that);
+                console.log(that.player.x);
             });
         }
     }
@@ -194,6 +196,7 @@ function emitPlayers(socket,io)
 
 function broadcastNewPlayer(socket)
 {
+    console.log(socket.player.x);
     socket.to(socket.player.roomId).emit("new player", socket.player);
 }
 

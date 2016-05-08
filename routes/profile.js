@@ -14,7 +14,7 @@ router.get('/:id', function(req, res, next) {
                 profileUser: user,
                 users: users,
                 userId: req.session.passport ? req.session.passport.user:null,
-                navigationLinks: {'Profile':'/profile/'+req.session.passport.user,'Logout':'/logout'}
+                navigationLinks: {'Play':'/game','Logout':'/logout'}
             })
         })
     });

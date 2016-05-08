@@ -19,22 +19,18 @@ function keyPressed(event)
     {
         case KEYCODE_LEFT:
             keys[0] = true;
-            emitKey(0,'pressed');
             event.preventDefault();
             break;
         case KEYCODE_RIGHT:
             keys[1] = true;
-            emitKey(1,'pressed');
             event.preventDefault();
             break;
         case KEYCODE_UP:
             keys[2] = true;
-            emitKey(2,'pressed');
             event.preventDefault();
             break;
         case KEYCODE_DOWN:
             keys[3] = true;
-            emitKey(3,'pressed');
             event.preventDefault();
             break;
         //TO DO ADD ENTER SEND CHAT
@@ -53,22 +49,18 @@ function keyReleased(event)
         {
             case KEYCODE_LEFT:
                 keys[0]  = false;
-                emitKey(0,'released');
                 localPlayer.grant.gotoAndPlay("staionaryLeft");
                 break;
             case KEYCODE_RIGHT:
                 keys[1]  = false;
-                emitKey(1,'released');
                 localPlayer.grant.gotoAndPlay("staionaryRight");
                 break;
             case KEYCODE_UP:
                 keys[2]  = false;
-                emitKey(2,'released');
                 localPlayer.grant.gotoAndPlay("staionaryUp");
                 break;
             case KEYCODE_DOWN:
                 keys[3]  = false;
-                emitKey(3,'released');
                 localPlayer.grant.gotoAndPlay("staionaryDown");
                 break;
         }
@@ -90,15 +82,6 @@ function sendMessage() {
         addMessageToChatHistory(messageContent,localPlayer.nickName,true);
         messageTextBox.val('');
     }
-}
-
-function emitKey(key,keyStatus)
-{
-    socket.emit("key status",
-        {
-            keyStatus: keyStatus,
-            key: key
-        });
 }
 
 function changeRoom(x,y)
