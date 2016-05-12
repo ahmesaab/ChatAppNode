@@ -95,34 +95,14 @@ function addMessageToChatHistory(msg,displayName,own)
     var div;
     if(own)
     {
-        div =
-            '<li class="right clearfix">' +
-                '<span class="chat-img pull-right">' +
-                    '<img src="http://placehold.it/50/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle">' +
-                '</span>' +
-                '<div class="chat-body clearfix">' +
-                    '<div class="header">' +
-                        '<small class="text-muted">' +
-                            '<span class="glyphicon glyphicon-time"></span>'+
-                        '2 seconds ago' +
-                        '</small>' +
-                        '<strong class="pull-right primary-font">'+displayName +'</strong>'+
-                    '</div>' +
-                    '<p>'+msg+'</p>'+
-                '</div>' +
-            '</li>';
+        div='<li><b><span style="color:#095bff">Me: </span></b>'+msg+'</li>'
     }
     else
     {
-        div = '<li class="left clearfix">' +
-        '<span class="chat-img pull-left">' +
-        '<img src="http://placehold.it/50/55C1E7/fff&amp;text='+displayName[0]+'" alt="User Avatar" class="img-circle">' +
-        '</span><div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+displayName+'</strong>' +
-        '<small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span>2 seconds ago</small>' +
-        '</div><p>'+msg+'</p></div></li>'
+        div='<li><b><span style="color:#ff2c00">'+displayName+': </span></b>'+msg+'</li>'
     }
-    $('.chat').append($(div));
-    scrollToBottomChatHistory();
+    $('#chat-history').append($(div));
+    $('#chat-history').scrollTop($('li').last().offset().top)
 }
 function updateMapNameUi(name)
 {
@@ -151,8 +131,9 @@ function getChatHistory(mapId,count)
     });
 }
 
-function scrollToBottomChatHistory() {
-    $('.panel-body').scrollTop($('li').last().offset().top)
+function repositionSideBar()
+{
+    $('#sidebar-wrapper').css({left:$('#pokemonCanvas').css('marginLeft')});
 }
 
 function playerById(id)

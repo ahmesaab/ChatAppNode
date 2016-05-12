@@ -36,7 +36,33 @@ function keyPressed(event)
         //TO DO ADD ENTER SEND CHAT
         case 13:
             event.preventDefault();
-            $("#submit").click();
+            var messageTextBox = $('#message-text-box');
+            var message = messageTextBox.val();
+            if(message==='')
+            {
+                $("#wrapper").toggleClass("toggled");
+                messageTextBox.focus();
+            }
+            else
+            {
+                sendMessage(message);
+                messageTextBox.val('')
+            }
+            //if($('.bootbox-input').length===0)
+            //{
+            //    bootbox.prompt("Wanna say something ?", function(message) {
+            //        if (message === null) {
+            //            //alert("nothing typed!")
+            //        } else {
+            //            sendMessage(message)
+            //        }
+            //    });
+            //}
+            //else
+            //{
+            //    sendMessage($('.bootbox-input').val());
+            //    bootbox.hideAll();
+            //}
             break;
     }
 }
@@ -72,18 +98,15 @@ function keyReleased(event)
 
 }
 
-function sendMessage() {
-    var messageTextBox = $('#messageInput');
-    var messageContent = messageTextBox.val();
-    if (messageTextBox.val() != "")
+function sendMessage(message) {
+    if (message != "")
     {
-        socket.emit('message',messageContent );
-        addMessageToGame(messageContent, localPlayer.nickName, localPlayer);
-        addMessageToChatHistory(messageContent,localPlayer.nickName,true);
-        messageTextBox.val('');
+        $('.bootbox-input').val('');
+        socket.emit('message',message );
+        addMessageToGame(message, localPlayer.nickName, localPlayer);
+        addMessageToChatHistory(message,localPlayer.nickName,true);
     }
 }
-
 function changeRoom(x,y)
 {
     console.log("Changing room");

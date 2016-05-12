@@ -119,8 +119,7 @@ function onRemovePlayer(playerId) {
 };
 
 function onServerMessage(serverMessage) {
-    $("#serverMessage").text(serverMessage);
-    $("#serverModal").modal('show')
+    bootbox.alert(serverMessage);
 };
 
 function setEventHandlers()
@@ -146,7 +145,8 @@ function main(gameSocketUrl)
 {
     socket = io.connect(gameSocketUrl);
     setEventHandlers();
-    $('html, body').animate({
-        scrollTop: $("#world-name").offset().top
-    }, 500);
+    $('#message-text-box').focus();
+    $( window ).resize(function() {
+        repositionSideBar()
+    });
 }

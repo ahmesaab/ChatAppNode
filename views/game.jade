@@ -32,14 +32,14 @@ block content
          div.modal-footer
             a.btn.btn-default(type='button', data-dismiss='modal', href='/login') Close
    //Body
-   .container
+   .container-fluid
       div
          h3.text-center
             div#world-name Loading...
          hr.star-primary
          p.text-center#gameSocketStatus (connecting)
       row
-         div.col-sm-9
+         div.col-sm-12(style='padding-bottom: 60px;')
             canvas.img-responsive(style="border:1px solid #000000;")#pokemonCanvas
          div.col-sm-3
             div.panel.panel-primary

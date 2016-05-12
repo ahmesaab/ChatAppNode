@@ -1,0 +1,58 @@
+
+html
+   head
+      meta(charset='utf-8')
+      meta(http-equiv='X-UA-Compatible', content='IE=edge')
+      meta(name='viewport', content='width=device-width, initial-scale=1')
+      meta(name='description', content='')
+      meta(name='author', content='Ahmed Saab')
+      title= 'Small World - ' + title
+      // Libs
+      script(src="/javascript/lib/socket.io.js")
+      script(src='/javascript/theme/jquery.js')
+      script(src='/javascript/lib/jquery.easing.min.js')
+      script(src='/javascript/theme/bootstrap.min.js')
+      script(src="/javascript/lib/easeljs-NEXT.min.js")
+      script(src="/javascript/lib/tweenjs-NEXT.min.js")
+      script(src="/javascript/lib/ScaleBitmap.js")
+      script(src="/javascript/lib/bootbox.min.js")
+      // Main Script
+      script.
+         window.onload = function () {
+             main('#{socketUrl}');
+         }
+      // Development
+      script(src="/javascript/game/animation.js")
+      script(src="/javascript/game/client-game-socket.js")
+      script(src="/javascript/game/user-input-handler.js")
+      script(src="/javascript/game/utils.js")
+      script(src="/javascript/game/sprites-config.js")
+      // CSS Style
+      link(href='/stylesheets/theme/bootstrap.min.css', rel='stylesheet')
+      link(href='/stylesheets/game.css', rel='stylesheet')
+   body
+      //Menu Modal
+      //div#serverModal.modal.fade.menu-modal(role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+      //   div.modal-content
+      //      div.modal-header
+      //         button.close(type='button', data-dismiss='modal' href='/login' ) ×
+      //         h4.modal-title Menu
+      //      div.modal-body
+      //         each link, name in navigationLinks
+      //            button.btn.btn-default.btn-lg.btn-block(type='button',
+      //               onclick="window.location = '#{link}';")=name
+
+      #wrapper
+          // Sidebar
+          #sidebar-wrapper
+              .sidebar-nav
+                  div.sidebar-button#home-label(onclick="window.location = '/';") Home
+                  div.sidebar-button#profile-label(onclick="window.location = '/profile/#{userId}';") Profile
+                  div.sidebar-button#chat-history-label Chat History
+                  ul#chat-history
+                  div#message-form.form-group
+                      textarea#message-text-box.form-control(rows='2',placeholder='Type a message')
+                  div.sidebar-button#tip Press ENTER to hide/show.
+      //Body
+      canvas.img-responsive#pokemonCanvas
+                                                            

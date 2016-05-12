@@ -18,6 +18,7 @@ router.get('/', function(req, res, next) {
         //        res.send(messages);
         //    }
         //)
+        res.send([]);
     }
     else
     {

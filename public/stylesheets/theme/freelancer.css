@@ -17,6 +17,12 @@ p {
     border: 1px solid #18bc9c;
 }
 
+.play-btn:hover {
+    background-color: #18bc9c;
+    border: 1px solid #18bc9c;
+}
+
+
 .nav-btn{
     background-color: #252f41;
     border: 1px solid #18bc9c;

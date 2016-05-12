@@ -1,0 +1,192 @@
+#pokemonCanvas{
+    margin:auto;
+    border:1px solid #000000;
+}
+
+#profile-label
+{
+    background-color: #ffee06;
+    font-weight: 900;
+}
+
+#home-label
+{
+    background-color: #1ed800;
+    font-weight: 900;
+}
+
+#profile-label:hover
+{
+    background-color: #ab9f00;
+}
+
+#home-label:hover
+{
+    background-color: #159900;
+}
+
+#chat-history-label
+{
+    background-color: #00B7FF ;
+    font-weight: 900;
+}
+
+#message-form{
+    max-height: 10vh;
+    height: 10vh;
+}
+
+#chat-history li{
+    display: block;
+    word-wrap:break-word;
+}
+
+#tip{
+    text-indent: 10px;
+    line-height: 3vh;
+    max-height: 3vh;
+    height: 3vh;
+}
+
+body{
+    background-color:black;
+    overflow-y:hidden ;
+    font-size: 1.5em;
+}
+
+.modal-dialog
+{
+    opacity:0.5 !important;
+}
+
+.modal-backdrop{
+    z-index: 0;
+}
+
+.modal-backdrop.in
+{
+    opacity: 0 !important;
+}
+
+.menu-modal{
+    width: 50%;
+    height: 100%;
+    margin-left: 25%;
+    margin-top: 10%;
+    opacity:0.8 !important;
+}
+
+.menu-item{
+
+}
+
+.sidebar-button{
+    text-indent: 20px;
+    line-height: 5vh;
+    max-height: 5vh;
+    height: 5vh;
+}
+
+
+/*!
+ * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+/* Toggle Styles */
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+    padding-left: 250px;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: absolute;
+    /*position: fixed;*/
+    /*left: 250px;*/
+    width: 0;
+    height: 100%;
+    overflow-y: hidden;
+    /*margin-left: -250px;*/
+    background: #000;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    /*extra*/
+    opacity:0.8;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    /*width: 250px;*/
+
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    /*margin-right: -250px;*/
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    width: inherit;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    max-height: 68vh;
+    height: 68vh;
+}
+
+@media(min-width:768px) {
+    #wrapper {
+        /*padding-left: 250px;*/
+    }
+
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 250px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}

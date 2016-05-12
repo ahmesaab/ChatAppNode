@@ -7,11 +7,10 @@ var router = express.Router();
 router.get('/', function(req, res, next){
     if(req.session.passport)
     {
-        res.render('game',
+        res.render('game-full',
             {
                 title: 'Game of Life',
                 userId: req.session.passport.user,
-                navigationLinks: {'Profile':'/profile/'+req.session.passport.user,'Logout':'/logout'},
                 socketUrl: getSocketUrl()
             })
     }
