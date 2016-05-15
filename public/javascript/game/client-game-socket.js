@@ -12,8 +12,8 @@ var exits;
 
 function onSocketConnected() {
     console.log("Connected to socket server");
-    var gameStatusElement = $('#gameSocketStatus');
-    gameStatusElement.text(' (connected)');
+    var gameStatusElement = $('#game-socket-status');
+    gameStatusElement.text('connected');
     gameStatusElement.css('color', 'green');
 };
 
@@ -38,8 +38,8 @@ function onMap(data)
 
 function onSocketDisconnect() {
     console.log("Disconnected from socket server");
-    var gameStatusElement = $('#gameSocketStatus');
-    gameStatusElement.text(' (disconnected)');
+    var gameStatusElement = $('#game-socket-status');
+    gameStatusElement.text('disconnected');
     gameStatusElement.css('color', 'red');
 };
 

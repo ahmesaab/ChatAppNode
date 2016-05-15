@@ -46,13 +46,20 @@ html
           // Sidebar
           #sidebar-wrapper
               .sidebar-nav
-                  div.sidebar-button#home-label(onclick="window.location = '/';") Home
-                  div.sidebar-button#profile-label(onclick="window.location = '/profile/#{userId}';") Profile
-                  div.sidebar-button#chat-history-label Chat History
+                  #map-label ???
+                  .sidebar-button#home-label(onclick="window.location = '/';") Home
+                  .sidebar-button#profile-label(onclick="window.location = '/profile/#{userId}';") Profile
+                  #chat-history-label Chat History
                   ul#chat-history
                   div#message-form.form-group
                       textarea#message-text-box.form-control(rows='2',placeholder='Type a message')
-                  div.sidebar-button#tip Press ENTER to hide/show.
+                  span#game-socket-status connecting...
       //Body
       canvas.img-responsive#pokemonCanvas
+      .badge-sticky-button
+          a(style='font-weight:bold;color:#ffffff;',
+                onclick="$('#wrapper').toggleClass('toggled');") Press Enter to hide/show the sidebar
+          a(style='padding-left:5px;color:#ffffff;',
+                onclick="$('.badge-sticky-button').remove()") ✖
+
                                                             

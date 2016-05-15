@@ -107,7 +107,7 @@ function getSpriteConfig(charachterId)
                     "staionaryDown": 0,
                     "staionaryUp": 12
                 },
-                "scale": {x: 1.2, y: 2}
+                "scale": {x: 1.2, y: 1.85}
             };
             break;
         case 6:

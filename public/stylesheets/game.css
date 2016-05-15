@@ -5,40 +5,83 @@
 
 #profile-label
 {
-    background-color: #ffee06;
+    background-color: #b7a606;
     font-weight: 900;
 }
 
 #home-label
 {
-    background-color: #1ed800;
+    background-color: #05a800;
     font-weight: 900;
 }
 
 #profile-label:hover
 {
-    background-color: #ab9f00;
+    background-color: #ffee06;
+    opacity: 1;
 }
 
 #home-label:hover
 {
-    background-color: #159900;
+    background-color: #05ff00;
+    opacity: 1;
 }
+
+#game-socket-status
+{
+    font-size: 0.8em;
+    font-weight: 300;
+    text-align: right;
+    vertical-align: middle;
+    line-height: 2vh;
+    height: 2vh;
+    max-height: 2vh;
+    display: block;
+}
+
+#map-label
+{
+    font-weight: 900;
+    text-align: center;
+    vertical-align: middle;
+    height: 10vh;
+    max-height: 10vh;
+    line-height: 10vh;
+    text-indent: 0px;
+    background-color: #18bc9c;
+    font-size: 1.3em;
+}
+
+
 
 #chat-history-label
 {
-    background-color: #00B7FF ;
-    font-weight: 900;
+    text-align: center;
+    vertical-align: middle;
+    height: 5vh;
+    max-height: 5vh;
+    line-height: 5vh;
+    text-indent: 0px;
+    border-bottom: 1px solid;
+    font-weight: 700;
 }
 
 #message-form{
     max-height: 10vh;
+    height: 10vh;
+    margin-bottom:0px;
+}
+
+textarea.form-control {
     height: 10vh;
 }
 
 #chat-history li{
     display: block;
     word-wrap:break-word;
+    text-indent: 2px;
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 
 #tip{
@@ -54,19 +97,19 @@ body{
     font-size: 1.5em;
 }
 
-.modal-dialog
-{
-    opacity:0.5 !important;
-}
+/*.modal-dialog*/
+/*{*/
+    /*opacity:0.5 !important;*/
+/*}*/
 
-.modal-backdrop{
-    z-index: 0;
-}
+/*.modal-backdrop{*/
+    /*z-index: 0;*/
+/*}*/
 
-.modal-backdrop.in
-{
-    opacity: 0 !important;
-}
+/*.modal-backdrop.in*/
+/*{*/
+    /*opacity: 0 !important;*/
+/*}*/
 
 .menu-modal{
     width: 50%;
@@ -81,10 +124,12 @@ body{
 }
 
 .sidebar-button{
-    text-indent: 20px;
-    line-height: 5vh;
-    max-height: 5vh;
+    text-align: center;
+    vertical-align: middle;
     height: 5vh;
+    max-height: 5vh;
+    line-height: 5vh;
+    border-top: 1px solid;
 }
 
 
@@ -159,8 +204,28 @@ body{
     margin: 0;
     padding: 0;
     overflow-y: auto;
-    max-height: 68vh;
-    height: 68vh;
+    max-height: 63vh;
+    height: 63vh;
+}
+
+.badge-sticky-button {
+    background-color: rgba(0,0,0,.9);
+    right: 70px;
+    bottom: 0;
+    height: 2em;
+    line-height: 2em;
+    position: fixed;
+    padding: 0 10px;
+    z-index: 150;
+    _position: absolute;
+    _top: expression(eval(document.documentElement.scrollTop+ (document.documentElement.clientHeight-this.offsetHeight)));
+}
+
+.badge-sticky-button a {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    text-decoration: none;
 }
 
 @media(min-width:768px) {

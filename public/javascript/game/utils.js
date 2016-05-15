@@ -104,9 +104,10 @@ function addMessageToChatHistory(msg,displayName,own)
     $('#chat-history').append($(div));
     $('#chat-history').scrollTop($('li').last().offset().top)
 }
+
 function updateMapNameUi(name)
 {
-    $('#world-name').text(name);
+    $('#map-label').text(name);
 }
 
 function getChatHistory(mapId,count)
@@ -121,7 +122,7 @@ function getChatHistory(mapId,count)
                 addMessageToChatHistory(messages[i].content,messages[i].nickName,
                     localPlayer.nickName==messages[i].nickName)
             }
-            setTimeout(scrollToBottomChatHistory,500);
+            setTimeout($('#chat-history').scrollTop($('li').last().offset().top),500);
         },
         error: function()
         {

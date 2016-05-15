@@ -12,21 +12,10 @@ p {
     font-size: 20px;
 }
 
-.play-btn {
-    background-color: #18bc9c;
-    border: 1px solid #18bc9c;
-}
-
 .play-btn:hover {
-    background-color: #18bc9c;
-    border: 1px solid #18bc9c;
+    background-color: #1a242f;
 }
 
-
-.nav-btn{
-    background-color: #252f41;
-    border: 1px solid #18bc9c;
-}
 
 p.small {
     font-size: 16px;

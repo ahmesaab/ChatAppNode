@@ -107,6 +107,7 @@ function sendMessage(message) {
         addMessageToChatHistory(message,localPlayer.nickName,true);
     }
 }
+
 function changeRoom(x,y)
 {
     console.log("Changing room");
