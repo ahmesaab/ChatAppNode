@@ -22,7 +22,7 @@ configs = {
         switch (characterId) {
             case 1:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[1]],
                     "frames": {"count": 16, "height": 50, "width": 50},
                     "animations": {
@@ -40,7 +40,7 @@ configs = {
                 break;
             case 2:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[2]],
                     "frames": {"height": 32, "count": 12, "width":20 },
                     "animations": {
@@ -58,7 +58,7 @@ configs = {
                 break;
             case 3:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[3]],
                     "frames": {"height": 31, "count": 12, "width":28 },
                     "animations": {
@@ -76,7 +76,7 @@ configs = {
                 break;
             case 4:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[4]],
                     "frames": {"height": 29, "count": 16, "width":20 },
                     "animations": {
@@ -94,7 +94,7 @@ configs = {
                 break;
             case 5:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[5]],
                     "frames": {"height": 48, "count": 16, "width":32 },
                     "animations": {
@@ -112,7 +112,7 @@ configs = {
                 break;
             case 6:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[6]],
                     "frames": {"height": 64, "count": 16, "width":64 },
                     "animations": {
@@ -130,7 +130,7 @@ configs = {
                 break;
             case 7:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[7]],
                     "frames": {"height": 32, "count": 16, "width":32 },
                     "animations": {
@@ -148,7 +148,7 @@ configs = {
                 break;
             case 8:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[8]],
                     "frames": {"height": 64, "count": 16, "width":48 },
                     "animations": {
@@ -166,7 +166,7 @@ configs = {
                 break;
             case 9:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[9]],
                     "frames": {"height": 42, "count": 16, "width":32 },
                     "animations": {
@@ -184,7 +184,7 @@ configs = {
                 break;
             case 10:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [this.images[10]],
                     "frames": {"height": 31, "count": 16, "width":28 },
                     "animations": {
@@ -202,7 +202,7 @@ configs = {
                 break;
             default:
                 spriteSheet = {
-                    framerate: 15,
+                    framerate: 30,
                     "images": [images.default],
                     "frames": {"count": 16, "height": 50, "width": 50},
                     "animations": {

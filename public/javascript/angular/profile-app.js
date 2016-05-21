@@ -14,7 +14,7 @@ app.controller('myCtrl', function($scope,$http) {
     $scope.init = function(currentCharacterId,canEdit)
     {
         $scope.currentCharacterId = currentCharacterId;
-        $scope.charachters = images;
+        $scope.charachters = configs.images;
         $scope.showCharacters = false;
         $scope.firstTime=true;
         $scope.stages=[];
@@ -43,7 +43,7 @@ app.controller('myCtrl', function($scope,$http) {
     {
         var canvas = document.getElementById("current-character-canvas");
         var stage = new createjs.Stage(canvas);
-        var spriteSheetConfig = getSpriteConfig($scope.currentCharacterId);
+        var spriteSheetConfig = configs.getSpriteConfig($scope.currentCharacterId);
         var spriteSheet = new createjs.SpriteSheet(spriteSheetConfig);
         var grant = new createjs.Sprite(spriteSheet, "staionaryDown");
 
@@ -77,7 +77,7 @@ app.controller('myCtrl', function($scope,$http) {
         var canvases = document.getElementsByClassName("character");
         for (var i = 0; i < canvases.length; i++) {
             var stage = new createjs.Stage(canvases[i]);
-            var spriteSheetConfig = getSpriteConfig(i + 1);
+            var spriteSheetConfig = configs.getSpriteConfig(i + 1);
             var spriteSheet = new createjs.SpriteSheet(spriteSheetConfig);
             var grant = new createjs.Sprite(spriteSheet, "staionaryDown");
 
