@@ -9,8 +9,8 @@ var Player = function(user,socketId) {
         color = user.color,
         nickName = user.nickName,
         roomId = user.roomId,
-        socketId= socketId;
-
+        frameRate = user.frameRate,
+        speed = user.speed;
 
     return {
         x:x,
@@ -19,6 +19,8 @@ var Player = function(user,socketId) {
         color:color,
         nickName:nickName,
         roomId:roomId,
+        speed:speed,
+        frameRate: frameRate,
         socketId:socketId
     }
 };

@@ -2,130 +2,94 @@
  * Created by Ahmed on 3/19/2016.
  */
 
-function client(url)
+function createClient(url,game)
 {
-    this.socket = io.connect(url);
 
+    // Initialization
+    var _socket = io.connect(url);
+    var _game = game;
     // Socket Events
-    this.socket.on("connect", onSocketConnected);
-    this.socket.on("you", onYou);
-    this.socket.on("disconnect", onSocketDisconnect);
-    this.socket.on("new player", onNewPlayer);
-    this.socket.on("move player", onMovePlayer);
-    this.socket.on("message", onMessage);
-    this.socket.on("remove player", onRemovePlayer);
-    this.socket.on("map", onMap);
-    this.socket.on("server message", onServerMessage);
-    this.socket.on("stop player",onStopPlayer);
+    _socket.on("connect", _onSocketConnected);
+    _socket.on("you", _onYou);
+    _socket.on("disconnect", _onSocketDisconnect);
+    _socket.on("new player", _onNewPlayer);
+    _socket.on("move player", _onMovePlayer);
+    _socket.on("message", _onMessage);
+    _socket.on("remove player", _onRemovePlayer);
+    _socket.on("map", _onMap);
+    _socket.on("server message", _onServerMessage);
+    _socket.on("stop player",_onStopPlayer);
 
-    function onSocketConnected() {
+    // private functions
+    function _onSocketConnected(){
         console.log("Connected to socket server");
         ui.updateStatus(true);
     };
 
-    function onYou(player) {
+    function _onYou(player) {
         console.log("Got Player Data from Server");
-        game.localPlayer = player;
-        //ui.getChatHistory(player.roomId,10);
+        _game.setLocalPlayer(player);
     };
 
-    function onMap(data)
-    {
+    function _onMap(data) {
         console.log("Got Map Data from Server");
+        var cellLength = ui.scaleGameCanvas(data.width,data.height);
         ui.updateMapNameUi(data.name);
-        game.map = data;
-        game.start();
+        ui.repositionSideBar();
+        _game.setMap(data,cellLength);
+        _game.start();
     }
 
-    function onSocketDisconnect() {
+    function _onSocketDisconnect() {
         console.log("Disconnected from socket server");
         ui.updateStatus(false);
     };
 
-    function onMessage(data) {
+    function _onMessage(data) {
         console.log("Got Message from "+data.nickName+" saying "+data.message);
-        game.addMessageToGame(data.message, data.nickName, game.getPlayerById(data.id));
+        _game.addMessage(data.id, data.message);
         ui.addMessageToChatHistory(data.message,data.nickName,false);
     };
 
-    function onNewPlayer(player) {
+    function _onNewPlayer(player) {
         console.log("Player "+player.socketId+" was connected")
-        game.addPlayer(player);
-        game.sort();
+        _game.addPlayer(player);
     };
 
-    function onMovePlayer(data) {
-        console.log("Player "+data.id+" moved");
-        var movePlayer = game.getPlayerById(data.id);
-        if (!movePlayer) {
-            console.log("Player not found: "+data.id);
-        }
-        else
-        {
-            var newX = data.x*navigationMap.cellLength;
-            var newY = data.y*navigationMap.cellLength;
-            var oldX = movePlayer.grant.x;
-            var oldY = movePlayer.grant.y;
-            if(!movePlayer.playing) {
-                if (newX > oldX) {
-                    movePlayer.grant.gotoAndPlay("right");
-                    movePlayer.playing = true;
-                }
-                else if (oldX > newX) {
-                    movePlayer.grant.gotoAndPlay("left");
-                    movePlayer.playing = true;
-                }
-                else if (newY > oldY) {
-                    movePlayer.grant.gotoAndPlay("down");
-                    movePlayer.playing = true;
-                }
-                else if (oldY > newY) {
-                    movePlayer.grant.gotoAndPlay("up");
-                    movePlayer.playing = true;
-                }
-            }
-            movePlayer.grant.x = newX;
-            movePlayer.grant.y = newY;
-            movePlayer.grant.yBase = newY;
-            movePlayer.x = data.x;
-            movePlayer.y = data.y;
-            game.sort();
-        }
+    function _onMovePlayer(data) {
+        _game.movePlayer(data.id,data.x,data.y)
     };
 
-    function onStopPlayer(data) {
-        console.log("Player "+data.id+" stopped");
-        var movePlayer = game.getPlayerById(data.id);
-        if (!movePlayer) {
-            console.log("Player not found: "+data.id);
-        }
-        else
-        {
-            movePlayer.grant.gotoAndPlay(data.stationaryAnimationName);
-        }
+    function _onStopPlayer(data) {
+        _game.stopPlayer(data.id,data.stationaryAnimationName)
     }
 
-    function onRemovePlayer(playerId) {
-        game.removePlayer(game.getPlayerById(playerId));
+    function _onRemovePlayer(playerId) {
+        _game.removePlayer(playerId);
     };
 
-    function onServerMessage(serverMessage) {
+    function _onServerMessage(serverMessage) {
         ui.alert(serverMessage);
     };
 
-    this.changeRoom = function(x,y)
-    {
-        console.log("Changing room");
-        this.socket.emit('change room',{x:x,y:y});
-    }
-
-    this.sendMessage = function(message)
-    {
-        if (message != "")
+    // public functions
+    return {
+        emitSendMessage:function(message)
         {
-            this.socket.emit('message',message );
-            game.addMessageToGame(message, localPlayer.nickName, localPlayer);
-            ui.addMessageToChatHistory(message,localPlayer.nickName,true);
+            if (message != "")
+            {
+                _socket.emit('message',message );
+                _game.addMessage(_game.getLocalPlayer().socketId, message);
+                ui.addMessageToChatHistory(message,_game.getLocalPlayer().nickName,true);
+            }
+        },
+        emitMovePlayer:function(direction)
+        {
+            _socket.emit('move player',direction);
+        },
+        emitStopPlayer:function(frame)
+        {
+            _socket.emit('stop player',frame);
         }
     }
 }

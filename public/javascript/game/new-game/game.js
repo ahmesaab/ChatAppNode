@@ -1,299 +1,304 @@
-function game(data)
+function createGame()
 {
-    this.map = data;
-    this.stage = new createjs.Stage(ui.gameCanvs);
-    this.localPlayer;
-    this.remotePlayers=[];
+    // private attributes
 
-    var cellLength = ui.scaleGameCanvas();
-    var speed = 0.1;
-    var moving = false;
+    var _map;
+    var _stage;
+    var _localPlayer;
+    var _remotePlayers;
+    var _cellLength;
 
-    var validateMove =  function(newX,newY)
-    {
-        var corners = [
-            {x:newX+cellLength,y:newY+cellLength},
-            {x:newX+cellLength,y:newY+(2*cellLength)},
-            {x:newX,y:newY+cellLength},
-            {x:newX,y:newY+(2*cellLength)}
-        ];
+    //private functions
 
-        for(var i=0;i<corners.length;i++)
-        {
-            var x = Math.round(corners[i].x/cellLength);
-            var y = Math.round(corners[i].y/cellLength)
-            var cellValue = this.map.data[x][y].value;
-            if(cellValue===null)
-            {
-                return [null,x,y];
-            }
-            else if(!cellValue)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    var sortByY =  function(obj1, obj2)
+    var _sortByY =  function(obj1, obj2)
     {
         if(obj1.name == 'background') { return -1}
         if(obj2.name == 'background') {return 1}
         if (obj1.yBase > obj2.yBase) { return 1; }
         if (obj1.yBase < obj2.yBase) { return -1; }
         return 0;
-    }
+    };
 
-    var createAssetsFromArray = function(assets)
+    var _createAssetsFromArray = function(assets)
     {
-        var assetsBitmaps = new Array();
+        var assetsBitmaps = [];
         for (var i = 0; i < assets.length; i++)
         {
             var assetInfo = assets[i];
             var asset = new createjs.Bitmap('images/'+assetInfo.src);
-            asset.scaleX = (cellLength * assetInfo.width)/assetInfo.pixelwidth;
-            asset.scaleY = (cellLength*assetInfo.height)/assetInfo.pixelheight;
-            asset.x = assetInfo.x * cellLength;
-            asset.y = assetInfo.y * cellLength;
-            asset.yBase = assetInfo.yBase * cellLength;
+            asset.scaleX = (_cellLength * assetInfo.width)/assetInfo.pixelwidth;
+            asset.scaleY = (_cellLength * assetInfo.height)/assetInfo.pixelheight;
+            asset.x = assetInfo.x * _cellLength;
+            asset.y = assetInfo.y * _cellLength;
+            asset.yBase = assetInfo.yBase * _cellLength;
             assetsBitmaps.push(asset);
         }
         return assetsBitmaps;
-    }
+    };
 
-    this.drawMap = function()
+    var _drawMap = function()
     {
+        if( typeof _stage == 'undefined')
+            _stage = new createjs.Stage(ui.getGameCanvas());
+        else
+            _stage.removeAllChildren();
         var background = new createjs.Container();
-        for (var i = 0; i < this.map.width; i++)
+        for (var i = 0; i < _map.width; i++)
         {
-            for (var j = 0; j < this.map.height; j++)
+            for (var j = 0; j < _map.height; j++)
             {
-                var cell = this.map.data[i][j];
+                var cell = _map.map[i][j];
                 var tile = new createjs.Bitmap('images/'+cell.src);
-                tile.scaleX = cellLength / cell.pixelwidth;
-                tile.scaleY = cellLength / cell.pixelheight;
-                tile.x = i * cellLength;
-                tile.y = j * cellLength;
+                tile.scaleX = _cellLength / cell.pixelwidth;
+                tile.scaleY = _cellLength / cell.pixelheight;
+                tile.x = i * _cellLength;
+                tile.y = j * _cellLength;
                 background.addChild(tile);
             }
         }
         background.name = 'background';
-        this.stage.addChild(background);
-        var assetsBitmaps = createAssetsFromArray(this.map.assets);
-        for(var i in assetsBitmaps)
+        _stage.addChild(background);
+        var assetsBitmaps = _createAssetsFromArray(_map.assets);
+        for(var index in assetsBitmaps)
         {
-            this.stage.addChild(assetsBitmaps[i]);
+            _stage.addChild(assetsBitmaps[index]);
         }
-    }
+    };
 
-    this.sort = function()
+    var _sort = function()
     {
-        this.stage.sortChildren(sortByY);
-    }
+        _stage.sortChildren(_sortByY);
+    };
 
-    this.addPlayer = function(player,name)
+    var _getPlayerById = function(id)
     {
-        //TODO: Change color to shape
-
-        var spriteSheetConfig = configs.getSpriteConfig(player.color);
-        var spriteSheet = new createjs.SpriteSheet(spriteSheetConfig);
-        var grant = new createjs.Sprite(spriteSheet, "staionaryDown");
-
-        grant.scaleX = (navigationMap.cellLength / spriteSheetConfig.frames.width) * spriteSheetConfig.scale.x;
-        grant.scaleY = (navigationMap.cellLength / spriteSheetConfig.frames.height) * spriteSheetConfig.scale.y;
-        grant.x = player.x * navigationMap.cellLength;
-        grant.y = player.y * navigationMap.cellLength;
-        grant.yBase = grant.y;
-        grant.speed = speed;
-        grant.name = name;
-
-        player.grant = grant;
-
-        grant.on('animationend', function (e) {
-            player.playing = false;
-        });
-
-        this.remotePlayers.push(player)
-        this.stage.addChild(player.grant);
-    }
-
-    this.removePlayer = function(player)
-    {
-        if (!player)
-        {
-            console.log("Player not found");
-            return;
+        for (var i = 0; i < _remotePlayers.length; i++) {
+            if (_remotePlayers[i].socketId == id)
+                return _remotePlayers[i];
         }
-        else
-        {
-            this.stage.removeChild(player.grant);
-            this.remotePlayers.splice(this.remotePlayers.indexOf(player.scoketId), 1);
-            console.log("Player "+player.socketId+" was disconnected");
-        }
-
-    }
-
-    this.start = function()
-    {
-        this.drawMap();
-        if(!createjs.Ticker.paused)
-        {
-            createjs.Ticker.timingMode = createjs.Ticker.RAF;
-            createjs.Ticker.setInterval(30);
-            createjs.Ticker.addEventListener("tick", this.tick);
-        }
-        else
-        {
-            createjs.Ticker.paused = false;
-        }
-    }
-
-    this.tick =  function(event)
-    {
-        var movement = control.getMovement(this.localPlayer);
-        if(movement[0] != 0 || movement[1] !=0)
-        {
-            var deltaZ = event.delta * speed;
-            var newX = this.localPlayer.grant.x + ( deltaZ * movement[0]);
-            var newY = this.localPlayer.grant.y + ( deltaZ * movement[1]);
-            var validMove = validateMove(newX,newY);
-            try
-            {
-                console.log(validMove)
-                if(validMove)
-                {
-                    moving = true;
-                    this.localPlayer.grant.x = newX;
-                    this.localPlayer.grant.y = newY;
-                    this.localPlayer.grant.yBase = newY + ( 1 * cellLength);
-                    this.localPlayer.x = localPlayer.grant.x;
-                    this.localPlayer.y = localPlayer.grant.y;
-                    socket.emit("move player",
-                        {
-                            x: this.localPlayer.grant.x/cellLength,
-                            y: this.localPlayer.grant.y/cellLength,
-                            frame: this.localPlayer.grant.currentFrame
-                        });
-                }
-                this.sort();
-            }
-            catch(err)
-            {
-                console.log("ERROR: "+err);
-            }
-        }
-        else if(moving)
-        {
-            moving = false;
-            socket.emit("stop player",this.localPlayer.grant.currentAnimation);
-        }
-        this.stage.update(event);
-    }
-
-    this.clear = function()
-    {
-        console.log("Clear Stage & Pause Ticker");
-        createjs.Ticker.paused = true;
-        this.stage.removeAllChildren();
-        client.remotePlayers=[];
-    }
-
-    this.getPlayerById = function(id)
-    {
-        var i;
-        for (i = 0; i < this.remotePlayers.length; i++) {
-            if (this.remotePlayers[i].socketId == id)
-                return this.remotePlayers[i];
-        };
         return false;
     };
 
-    this.addMessageToGame = function(msg, displayName, player)
+    var _tick =  function(event)
     {
-        var textBubble = new createjs.Container();
+        _stage.update(event);
+    };
 
-        var configWidth = 30;
+    // public functions
 
-        var fontSize = 20;
-        var lineHeight = 22;
-
-        var marginY = 15;
-        var marginX = 10;
-
-
-        var formattedMsg ='';
-        var lineNum = 1;
-        var maxCharactersPerLine;
-
-        var i=0;
-        for(i;i<msg.length;i++)
+    return {
+        setMap:function(data,cellLength)
         {
-            if(i%configWidth==0 && i!=0)
+            _map = data;
+            _cellLength = cellLength;
+        },
+
+        setLocalPlayer:function(player)
+        {
+            _localPlayer = player;
+        },
+
+        getLocalPlayer:function()
+        {
+            return _localPlayer;
+        },
+
+        start:function()
+        {
+            _drawMap();
+            _remotePlayers = [];
+            this.addPlayer(_localPlayer);
+            if(!createjs.Ticker.paused)
             {
-                if(msg[i]==' ')
-                {
-                    formattedMsg+='\n';
-                    lineNum++;
-                    continue;
+                createjs.Ticker.timingMode = createjs.Ticker.RAF;
+                createjs.Ticker.setInterval(30);
+                createjs.Ticker.addEventListener("tick", _tick);
+            }
+        },
+
+        movePlayer:function(playerId,x,y)
+        {
+            console.log("Player with "+playerId+" moved to x:"+x+" y:"+y);
+            var movePlayer = _getPlayerById(playerId);
+            if (!movePlayer) {
+                console.log("Couldn't move player with id "+playerId+" because player id was not found");
+            }
+            else
+            {
+                var newX = x * _cellLength;
+                var newY = y * _cellLength;
+                var oldX = movePlayer.grant.x;
+                var oldY = movePlayer.grant.y;
+                var direction;
+                if (newX > oldX)
+                    direction = "right";
+                else if (oldX > newX)
+                    direction = "left";
+                else if (newY > oldY)
+                    direction = "down";
+                else if (oldY > newY)
+                    direction = "up";
+                if(direction !== movePlayer.grant.currentAnimation){
+                    movePlayer.grant.gotoAndPlay(direction);
+                    movePlayer.playing = true;
                 }
-                else if(msg[i-1]==' ')
+                movePlayer.grant.x = newX;
+                movePlayer.grant.y = newY;
+                movePlayer.grant.yBase = newY;
+                movePlayer.x = x;
+                movePlayer.y = y;
+                _sort();
+            }
+        },
+
+        stopPlayer:function(playerId,frame)
+        {
+            console.log("Player "+playerId+" stopped");
+            var movePlayer = _getPlayerById(playerId);
+            if (!movePlayer) {
+                console.log("Couldn't stop Player with id "+playerId+" because id was not found");
+            }
+            else
+            {
+                movePlayer.playing = false;
+                movePlayer.grant.gotoAndPlay(frame);
+            }
+        },
+
+        addMessage:function(playerId,msg)
+        {
+            var player = _getPlayerById(playerId);
+            if(player)
+            {
+                var textBubble = new createjs.Container();
+
+                var configWidth = 30;
+
+                var fontSize = 20;
+                var lineHeight = 22;
+
+                var marginY = 15;
+                var marginX = 10;
+
+
+                var formattedMsg ='';
+                var lineNum = 1;
+                var maxCharactersPerLine;
+
+                var i=0;
+                for(i;i<msg.length;i++)
                 {
-                    formattedMsg = formattedMsg.substr(0, i-1) + '\n' + formattedMsg.substr(i-1+'\n'.length);
-                    lineNum++;
+                    if(i%configWidth==0 && i!=0)
+                    {
+                        if(msg[i]==' ')
+                        {
+                            formattedMsg+='\n';
+                            lineNum++;
+                            continue;
+                        }
+                        else if(msg[i-1]==' ')
+                        {
+                            formattedMsg = formattedMsg.substr(0, i-1) + '\n' + formattedMsg.substr(i-1+'\n'.length);
+                            lineNum++;
+                        }
+                        else
+                        {
+                            var j=i;
+                            for(j;j>0;j--)
+                            {
+                                if(formattedMsg[j]==' ')
+                                {
+                                    formattedMsg = formattedMsg.substr(0, j) + '\n' + formattedMsg.substr(j+'\n'.length);
+                                    break;
+                                }
+                            }
+                            if(j==0)
+                            {
+                                formattedMsg+='\n';
+                            }
+                            lineNum++;
+                        }
+                    }
+                    formattedMsg+=msg[i];
+                }
+
+                if(i<configWidth-1)
+                {
+                    maxCharactersPerLine = i;
                 }
                 else
                 {
-                    var j=i;
-                    for(j;j>0;j--)
-                    {
-                        if(formattedMsg[j]==' ')
-                        {
-                            formattedMsg = formattedMsg.substr(0, j) + '\n' + formattedMsg.substr(j+'\n'.length);
-                            break;
-                        }
-                    }
-                    if(j==0)
-                    {
-                        formattedMsg+='\n';
-                    }
-                    lineNum++;
+                    maxCharactersPerLine = configWidth-1;
                 }
+
+
+                var image = new Image();
+                image.src = "images/chat-bubble.png";
+                var sb = new createjs.ScaleBitmap(image, new createjs.Rectangle(15, 12, 3, 7));
+                sb.x = player.grant.x-(maxCharactersPerLine*12)-5;
+                sb.y = player.grant.y-(lineHeight*lineNum)-30;
+                sb.setDrawSize((maxCharactersPerLine*12)+12+marginX,(lineHeight*lineNum)+lineHeight+fontSize+marginY);
+
+                var text = new createjs.Text(formattedMsg, fontSize+"px Consolas", "#000000");
+                text.x = sb.x + marginX;
+                text.y = sb.y + marginY;
+                text.lineHeight = lineHeight;
+
+                textBubble.addChild(sb);
+                textBubble.addChild(text);
+
+                _stage.addChild(textBubble);
+                _stage.update();
+
+                createjs.Tween.get(textBubble).to({alpha: 0},1000*lineNum+4000).call(function(){
+                    _stage.removeChild(textBubble);
+                });
             }
-            formattedMsg+=msg[i];
-        }
+            else
+            {
+                console.log("Couldn't add Player message to game because player with id "+playerId+" was not found");
+            }
 
-        if(i<configWidth-1)
+        },
+
+        addPlayer:function(player)
         {
-            maxCharactersPerLine = i;
-        }
-        else
+            //TODO: Change color to shape
+
+            var spriteSheetConfig = configs.getSpriteConfig(player.color);
+            spriteSheetConfig.framerate = player.frameRate;
+            var spriteSheet = new createjs.SpriteSheet(spriteSheetConfig);
+            var grant = new createjs.Sprite(spriteSheet, "stationarydown");
+
+            grant.scaleX = (_cellLength / spriteSheetConfig.frames.width) * spriteSheetConfig.scale.x;
+            grant.scaleY = (_cellLength / spriteSheetConfig.frames.height) * spriteSheetConfig.scale.y;
+            grant.x = player.x * _cellLength;
+            grant.y = player.y * _cellLength;
+            grant.yBase = grant.y;
+
+            player.grant = grant;
+            player.playing = false;
+
+            _remotePlayers.push(player);
+            _stage.addChild(player.grant);
+            _sort();
+        },
+
+        removePlayer:function(playerId)
         {
-            maxCharactersPerLine = configWidth-1;
+            var player = _getPlayerById(playerId);
+            if (!player)
+            {
+                console.log("Couldn't remove Player with id"+playerId+" because player was not found");
+            }
+            else
+            {
+                _stage.removeChild(player.grant);
+                _remotePlayers.splice(_remotePlayers.indexOf(playerId), 1);
+                console.log("Player "+playerId+" was disconnected");
+                // TODO: display player removal on UI
+            }
         }
-
-
-        var image = new Image();
-        image.src = "images/chat-bubble.png"
-        var sb = new createjs.ScaleBitmap(image, new createjs.Rectangle(15, 12, 3, 7));
-        sb.x = player.grant.x-(maxCharactersPerLine*12)-5;
-        sb.y = player.grant.y-(lineHeight*lineNum)-30;
-        sb.setDrawSize((maxCharactersPerLine*12)+12+marginX,(lineHeight*lineNum)+lineHeight+fontSize+marginY);
-
-        var text = new createjs.Text(formattedMsg, fontSize+"px Consolas", "#000000");
-        text.x = sb.x + marginX;
-        text.y = sb.y + marginY;
-        text.lineHeight = lineHeight;
-
-        textBubble.addChild(sb);
-        textBubble.addChild(text);
-
-        this.stage.addChild(textBubble);
-        this.stage.update();
-
-        createjs.Tween.get(textBubble).to({alpha: 0},1000*lineNum+4000).call(function(){
-            this.stage.removeChild(textBubble);
-        });
-
     }
 
 }

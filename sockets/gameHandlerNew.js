@@ -29,7 +29,6 @@ var Handler = function(socket,serverIo)
                     socket.on("disconnect", onClientDisconnect);
                     socket.on("move player", onMovePlayer);
                     socket.on("stop player", onStopPlayer);
-                    socket.on("change room", onChangeRoom);
                     socket.on('message', onMessage);
                     broadcastNewPlayer(socket);
                     //printMapInConsole(map);;
@@ -39,7 +38,7 @@ var Handler = function(socket,serverIo)
             {
                 console.log('User is already online in GAME');
                 socket.emit("server message","You have been disconnected" +
-                    " because you are already playing in another connection or session");
+                " because you are already playing in another connection or session");
                 socket.disconnect();
             }
             else
@@ -53,7 +52,7 @@ var Handler = function(socket,serverIo)
     {
         console.log('Invalid user trying to connect to GAME');
         socket.emit("server message","You have been disconnected" +
-            " because you are not logged in");
+        " because you are not logged in");
         socket.disconnect();
     }
 }
@@ -69,37 +68,74 @@ function onClientDisconnect()
     }
 };
 
-function onMovePlayer(data)
-{
-    var navMap = this.world.navMap;
-    try
-    {
-        if(navMap[Math.round(data.x+1)][Math.round(data.y+1)]===true)
-        {
-            this.player.x = data.x;
-            this.player.y = data.y;
-            this.to(this.player.roomId).emit("move player", {id: this.player.socketId, x: this.player.x,
-                y: this.player.y, frame: data.frame});
-        }
-        else
-        {
-            socket.emit("server message","You have been disconnected" +
-                " because you have violated the game rules");
-            socket.disconnect();
-            console.log("Trying to access false block, player disconnected for violation");
-        }
-    }
-    catch(err)
-    {
-        this.disconnect();
-        console.log(err);
-    }
 
+function onMovePlayer(direction)
+{
+    var oldX = this.player.x;
+    var oldY = this.player.y;
+    var speed = this.player.speed;
+    var newX = oldX;
+    var newY = oldY;
+    switch(direction)
+    {
+        case 0:
+            newX = oldX - speed;
+            break;
+        case 1:
+            newX = oldX + speed;
+            break;
+        case 2:
+            newY = oldY - speed;
+            break;
+        case 3:
+            newY = oldY + speed;
+    }
+    var move = validateMove(Math.round(newX),Math.round(newY),this.world.map);
+    if(move === true)
+    {
+        this.player.x = newX;
+        this.player.y = newY;
+        var data = {id: this.player.socketId, x:newX ,y:newY}
+        this.to(this.player.roomId).emit("move player",data);
+        this.emit("move player",data);
+    }
+    else if(move.constructor === Array)
+    {
+        console.log("Trying to escape with x:"+move[0]+" y:"+move[1]);
+        for(var i=0;i<this.world.exits.length;i++)
+        {
+            var exit = this.world.exits[i];
+            if(exit.entranceX == move[0] && exit.entranceY == move[1])
+            {
+                var newRoomId = exit.destination;
+                service.updateUserCurrentMap(this.userId,newRoomId);
+
+                broadcastRemovePlayer(this);
+
+                this.join(newRoomId);
+                this.leave(this.player.roomId);
+
+                this.player.roomId = newRoomId;
+                this.player.x = exit.exitX;
+                this.player.y = exit.exitY-1;
+
+                emitYou(this);
+                var that = this;
+                service.getMap(this.player.roomId,function(map) {
+                    that.world = map;
+                    that.emit("map", that.world);
+                    emitPlayers(that,io);
+                    broadcastNewPlayer(that);
+                });
+            }
+        }
+    }
 };
 
 function onStopPlayer(data)
 {
     this.to(this.player.roomId).emit("stop player", {id: this.player.socketId, stationaryAnimationName: data});
+    this.emit("stop player", {id: this.player.socketId, stationaryAnimationName: data});
 }
 
 function onMessage(message)
@@ -109,41 +145,7 @@ function onMessage(message)
         var data = { 'message' : message, nickName : this.player.nickName, id: this.player.socketId };
         service.addMessage(this.userId,this.player.roomId,message);
         this.to(this.player.roomId).emit('message', data);
-        console.log("user " + this.player.nickName + " send this : " + message+" to broadcast "+this.player.roomId);
-    }
-};
-
-function onChangeRoom(data)
-{
-    for(var i=0;i<this.world.exits.length;i++)
-    {
-        var exit = this.world.exits[i];
-        if(exit.entranceX == data.x && exit.entranceY == data.y)
-        {
-            var newRoomId = exit.destination;
-            service.updateUserCurrentMap(this.userId,newRoomId);
-
-            broadcastRemovePlayer(this);
-
-            this.join(newRoomId);
-            this.leave(this.player.roomId);
-
-            this.player.roomId = newRoomId;
-            this.player.x = exit.exitX;
-            this.player.y = exit.exitY-1;
-
-            emitYou(this);
-            var that = this;
-            console.log("---------------");
-            console.log(that.player.x);
-            service.getMap(this.player.roomId,function(map) {
-                that.world = map;
-                that.emit("map", that.world);
-                emitPlayers(that,io);
-                broadcastNewPlayer(that);
-                console.log(that.player.x);
-            });
-        }
+        console.log("User " + this.player.nickName + " send this : " + message+" to broadcast "+this.player.roomId);
     }
 };
 
@@ -154,6 +156,35 @@ function validate(userId)
     else
         return false;
 }
+
+function validateMove(newX,newY,map)
+{
+    var corners = [
+        {x:newX+1,y:newY+1},
+        {x:newX+1,y:newY+2},
+        {x:newX,y:newY+1},
+        {x:newX,y:newY+2}
+    ];
+
+    for(var i=0;i<corners.length;i++)
+    {
+        var x = corners[i].x;
+        var y = corners[i].y;
+        try
+        {
+            var cellValue = map[x][y].value;
+            if(!cellValue)
+            {
+                return false;
+            }
+        }
+        catch(err)
+        {
+            return [x,y]
+        }
+    }
+    return true;
+};
 
 function printMapInConsole(map)
 {
@@ -190,13 +221,12 @@ function emitPlayers(socket,io)
     catch(err)
     {
         console.log("No previous members in room "+socket.player.roomId);
-        console.log(err);
+        console.log("ERROR: "+err);
     }
 }
 
 function broadcastNewPlayer(socket)
 {
-    console.log(socket.player.x);
     socket.to(socket.player.roomId).emit("new player", socket.player);
 }
 

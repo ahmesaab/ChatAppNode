@@ -64,7 +64,7 @@ require('./routes/auth')(app, passport); // load our routes and pass in our app 
 
 
 //Game WebSocket Handler
-var gameSocketHandler = require('./sockets/gameHandler');
+var gameSocketHandler = require('./sockets/gameHandlerNew');
 
 
 // catch 404 and forward to error handler

@@ -36,7 +36,11 @@ Service.prototype.getUser = function(id,callback)
                         parseInt(rows[0].x),
                         parseInt(rows[0].y),
                         parseInt(rows[0].current_map_id),
-                        String(rows[0].status));
+                        String(rows[0].status),
+                        parseInt(rows[0].facebook_id),
+                        parseFloat(rows[0].speed),
+                        parseInt(rows[0].frame_rate)
+                    );
                 }
             }
             callback(user);
@@ -185,19 +189,18 @@ Service.prototype.getMap = function(mapId,callback)
                     }
                     else
                     {
-                        var navigationMap = new Array(worldWidth);
-                        var drawMap = new Array(worldWidth);
+                        var map = new Array(worldWidth);
                         var assets = new Array();
                         var exits = new Array();
                         for (var i = 0; i < worldWidth; i++)
                         {
-                            navigationMap[i] = new Array(worldHeight);
-                            drawMap[i] = new Array(worldHeight);
+                            map[i] = new Array(worldHeight);
                         }
                         for (var i = 0; i < rows.length; i++)
                         {
                             var row = rows[i];
                             var drawObjectInfo = new Object();
+                            var value;
                             drawObjectInfo.src = row.assetSrc;
                             drawObjectInfo.pixelwidth = row.assetPixelWidth;
                             drawObjectInfo.pixelheight = row.assetPixelHeight;
@@ -205,17 +208,18 @@ Service.prototype.getMap = function(mapId,callback)
                             {
                                 if(row.navigation === "true")
                                 {
-                                    navigationMap[row.x][row.y]=true;
+                                    value=true;
                                 }
                                 else if(row.navigation === "false")
                                 {
-                                    navigationMap[row.x][row.y]=false;
+                                    value=false;
                                 }
                                 else
                                 {
-                                    navigationMap[row.x][row.y]=null;
+                                    value=null;
                                 }
-                                drawMap[row.x][row.y]=drawObjectInfo;
+                                drawObjectInfo.value = value;
+                                map[row.x][row.y]=drawObjectInfo;
                             }
                             else
                             {
@@ -227,7 +231,7 @@ Service.prototype.getMap = function(mapId,callback)
                                 assets.push(drawObjectInfo);
                                 for (var u = row.zStart; u < drawObjectInfo.height; u++) {
                                     for (var v = 0; v < drawObjectInfo.width; v++) {
-                                        navigationMap[row.x + v][row.y + u] = false;
+                                        map[row.x + v][row.y + u].value = false;
                                     }
                                 }
                             }
@@ -251,7 +255,7 @@ Service.prototype.getMap = function(mapId,callback)
                                     exits.push(exit);
                                 }
                                 callback({
-                                    navMap: navigationMap, draMap: drawMap, width: worldWidth,
+                                    map: map, width: worldWidth,
                                     height: worldHeight, name:worldName, assets: assets, exits:exits
                                 });
                             }

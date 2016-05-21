@@ -16,20 +16,26 @@ html
       script(src="/javascript/lib/tweenjs-NEXT.min.js")
       script(src="/javascript/lib/ScaleBitmap.js")
       script(src="/javascript/lib/bootbox.min.js")
-      // Main Script
-      script.
-         window.onload = function () {
-             main('#{socketUrl}');
-         }
       // Development
-      script(src="/javascript/game/animation.js")
-      script(src="/javascript/game/client-game-socket.js")
-      script(src="/javascript/game/user-input-handler.js")
-      script(src="/javascript/game/utils.js")
-      script(src="/javascript/game/sprites-config.js")
+      //script(src="/javascript/game/animation.js")
+      //script(src="/javascript/game/client-game-socket.js")
+      //script(src="/javascript/game/user-input-handler.js")
+      //script(src="/javascript/game/utils.js")
+      //script(src="/javascript/game/sprites-config.js")
+      script(src="/javascript/game/new-game/client.js")
+      script(src="/javascript/game/new-game/control.js")
+      script(src="/javascript/game/new-game/game.js")
+      script(src="/javascript/game/new-game/main.js")
+      script(src="/javascript/game/new-game/ui.js")
+      script(src="/javascript/game/new-game/config.js")
       // CSS Style
       link(href='/stylesheets/theme/bootstrap.min.css', rel='stylesheet')
       link(href='/stylesheets/game.css', rel='stylesheet')
+      // Main Script
+      script.
+          window.onload = function () {
+              main('#{socketUrl}');
+          }
    body
       //Menu Modal
       //div#serverModal.modal.fade.menu-modal(role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')

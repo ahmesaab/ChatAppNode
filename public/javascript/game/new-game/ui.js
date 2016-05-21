@@ -2,41 +2,42 @@
  * Created by Ahmed on 3/19/2016.
  */
 
-function ui()
+ui =
 {
-    this.sideBar = $('#sidebar-wrapper');
-    this.gameCanvs = $('#pokemonCanvas');
-    this.mapLabel = $('#map-label');
-    this.chatList = $('li');
-    this.chatHistory = $('#chat-history');
-    this.chatTextArea = $('#message-text-box');
-    this.gameStatusElement = $('#game-socket-status');
-
-    this.scaleGameCanvas = function()
+    getGameCanvas: function()
     {
-        var widthCell = window.innerWidth/navigationMap.width;
-        var heightCell = window.innerHeight/navigationMap.height;
+        return $('#pokemonCanvas')[0];
+    },
+
+    scaleGameCanvas:function(mapWidth,mapHeight)
+    {
+        var canvas = $('#pokemonCanvas')[0];
+
+        var widthCell = window.innerWidth / mapWidth;
+        var heightCell = window.innerHeight/ mapHeight;
 
         var cellLength = widthCell < heightCell ? widthCell : heightCell;
 
-        this.gameCanvs.width = cellLength * navigationMap.width ;
-        this.gameCanvs.height = cellLength * navigationMap.height;
+        canvas.width = cellLength * mapWidth;
+        canvas.height = cellLength * mapHeight;
 
         return cellLength;
-    }
+    },
 
-    this.repositionSideBar = function()
+    repositionSideBar:function()
     {
-        this.sideBar.css({left:this.gameCanvs.css('marginLeft')});
-    }
+        $('#sidebar-wrapper').css({left:$('#pokemonCanvas').css('marginLeft')});
+        $('#message-text-box').focus();
+    },
 
-    this.updateMapNameUi = function(name)
+    updateMapNameUi:function(name)
     {
-        this.mapLabel.text(name);
-    }
+        $('#map-label').text(name);
+    },
 
-    this.addMessageToChatHistory = function(msg,displayName,own)
+    addMessageToChatHistory:function(msg,displayName,own)
     {
+        var chatHistory = $('#chat-history');
         var div;
         if(own)
         {
@@ -46,54 +47,43 @@ function ui()
         {
             div='<li><b><span style="color:#ff2c00">'+displayName+': </span></b>'+msg+'</li>'
         }
-        this.chatHistory.append($(div));
-        this.chatHistory.scrollTop(this.chatList.last().offset().top)
-    }
+        chatHistory.append($(div));
+        chatHistory.scrollTop($('li').last().offset().top)
+    },
 
-    this.getChatHistory = function(mapId,count)
+    updateStatus:function(status)
     {
-        $(".chat").empty();
-        $.ajax({
-            url: '/rest/chatHistory?mapId='+mapId+'&count='+count,
-            success: function(messages)
-            {
-                for(var i=0;i<messages.length;i++)
-                {
-                    addMessageToChatHistory(messages[i].content,messages[i].nickName,
-                        localPlayer.nickName==messages[i].nickName)
-                }
-                setTimeout($('#chat-history').scrollTop($('li').last().offset().top),500);
-            },
-            error: function()
-            {
-                $("#serverMessage").text('Failed to fetch Chat History');
-                $("#serverModal").modal('show')
-            }
-        });
-    }
-
-    this.focusChatTextArea = function()
-    {
-        this.chatTextArea.focus();
-    }
-
-    this.updateStatus = function(status)
-    {
+        var gameSocketStatus = $('#game-socket-status');
         if(status)
         {
-            this.gameStatusElement.text('connected');
-            this.gameStatusElement.css('color', 'green');
+            gameSocketStatus.text('connected');
+            gameSocketStatus.css('color', 'green');
         }
         else
         {
-            this.gameStatusElement.text('disconnected');
-            this.gameStatusElement.css('color', 'red');
+            gameSocketStatus.text('disconnected');
+            gameSocketStatus.css('color', 'red');
         }
-    }
-
-    this.alert =  function(message)
+    },
+    alert:function(message)
     {
         bootbox.alert(message);
-    }
+    },
 
-}
+    enterEvent:function()
+    {
+        var messageTextBox = $('#message-text-box');
+        var message = messageTextBox.val();
+        if(message==='')
+        {
+            $("#wrapper").toggleClass("toggled");
+            messageTextBox.focus();
+            return false;
+        }
+        else
+        {
+            messageTextBox.val('');
+            return message;
+        }
+    }
+};
