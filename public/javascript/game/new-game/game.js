@@ -1,21 +1,23 @@
 function createGame()
 {
     // private attributes
-
+    //--------------------------------------------------
     var _map;
     var _stage;
     var _localPlayer;
     var _remotePlayers;
+    var _bullets;
     var _cellLength;
+    const _networkDelay = configs.networkDelay;
 
-    //private functions
-
+    // private functions
+    //---------------------------------------------------
     var _sortByY =  function(obj1, obj2)
     {
-        if(obj1.name == 'background') { return -1}
-        if(obj2.name == 'background') {return 1}
-        if (obj1.yBase > obj2.yBase) { return 1; }
-        if (obj1.yBase < obj2.yBase) { return -1; }
+        if(obj1.name == 'background' || obj1.name == 'bullets') { return -1}
+        if(obj2.name == 'background' || obj2.name == 'bullets')  {return 1}
+        if(obj1.yBase > obj2.yBase) { return 1; }
+        if(obj1.yBase < obj2.yBase) { return -1; }
         return 0;
     };
 
@@ -43,6 +45,7 @@ function createGame()
         else
             _stage.removeAllChildren();
         var background = new createjs.Container();
+        var bullets = new createjs.Container();
         for (var i = 0; i < _map.width; i++)
         {
             for (var j = 0; j < _map.height; j++)
@@ -57,13 +60,42 @@ function createGame()
             }
         }
         background.name = 'background';
+        bullets.name = 'bullets';
         _stage.addChild(background);
+        _stage.addChild(bullets);
         var assetsBitmaps = _createAssetsFromArray(_map.assets);
         for(var index in assetsBitmaps)
         {
             _stage.addChild(assetsBitmaps[index]);
         }
+        _stage.on("click", function(evt) {
+            _localPlayer.x  = evt.stageX - _cellLength;
+            _localPlayer.y = evt.stageY - _cellLength;
+            _localPlayer.playing = true;
+        });
     };
+
+    var _addBullet = function(id,x,y)
+    {
+        var graphics = new createjs.Bitmap("/images/pokeballscaled.png");
+        graphics.x = x * _cellLength;
+        graphics.y = y * _cellLength;
+        graphics.scaleX = _cellLength / graphics.image.width;
+        graphics.scaleY = _cellLength / graphics.image.height;
+        graphics.regX = graphics.image.width/2;
+        graphics.regY = graphics.image.height/2;
+        graphics.rotationSpeed = 20;
+
+        var bullet = {
+            x : graphics.x,
+            y : graphics.y,
+            graphics : graphics,
+            speed : 5.9
+        };
+
+        _bullets[id] = bullet;
+        _stage.getChildByName('bullets').addChild(bullet.graphics);
+    }
 
     var _sort = function()
     {
@@ -79,13 +111,91 @@ function createGame()
         return false;
     };
 
+    var _interpolateBullets = function(delta)
+    {
+        for(var id in _bullets)
+        {
+            var bullet = _bullets[id];
+            bullet.graphics.rotation+=bullet.graphics.rotationSpeed;
+            if(bullet.graphics.x != bullet.x || bullet.graphics.y != bullet.y)
+            {
+                var cellPerSecond = bullet.speed;
+                var pixelPerSecond = cellPerSecond * _cellLength;
+                var pixels = delta/1000*pixelPerSecond ;
+                if(bullet.x < bullet.graphics.x)
+                {
+                    bullet.graphics.x = bullet.graphics.x - pixels;
+                }
+                else if(bullet.x > bullet.graphics.x)
+                {
+                    bullet.graphics.x = bullet.graphics.x + pixels;
+                }
+                else if(bullet.y < bullet.graphics.y)
+                {
+                    bullet.graphics.y = bullet.graphics.y - pixels;
+                }
+                else if(bullet.y > bullet.graphics.y)
+                {
+                    bullet.graphics.y = bullet.graphics.y + pixels;
+                }
+            }
+        }
+    };
+
+    var _interpolatePlayers = function(delta)
+    {
+        for(var i=0;i<_remotePlayers.length;i++)
+        {
+            var player = _remotePlayers[i];
+            if(player.playing)
+            {
+                var direction;
+                var cellPerSecond = player.speed - _networkDelay;
+                var pixelPerSecond = cellPerSecond * _cellLength;
+                var pixels = delta/1000*pixelPerSecond ;
+
+                if (player.x - player.grant.x >= pixels){
+                    direction = "right";
+                    player.grant.x = player.grant.x + pixels;
+                }
+                else if (player.grant.x - player.x >= pixels) {
+                    direction = "left";
+                    player.grant.x = player.grant.x - pixels;
+                }
+                else if (player.y - player.grant.y >= pixels) {
+                    direction = "down";
+                    player.grant.y = player.grant.y + pixels;
+                    player.grant.yBase = player.grant.y;
+                }
+                else if (player.grant.y - player.y >= pixels) {
+                    direction = "up";
+                    player.grant.y = player.grant.y - pixels;
+                    player.grant.yBase = player.grant.y;
+                }
+                else
+                {
+                    player.grant.gotoAndPlay("stationary" + player.grant.currentAnimation);
+                    player.playing = false;
+                }
+
+                if(typeof direction !=='undefined' && direction !== player.grant.currentAnimation){
+                    player.grant.gotoAndPlay(direction);
+                }
+            }
+        }
+    };
+
     var _tick =  function(event)
     {
+        _interpolateBullets(event.delta);
+        _interpolatePlayers(event.delta);
+        _sort();
         _stage.update(event);
     };
 
-    // public functions
 
+    // public functions
+    //---------------------------------------------------
     return {
         setMap:function(data,cellLength)
         {
@@ -98,6 +208,11 @@ function createGame()
             _localPlayer = player;
         },
 
+        getCellLength:function()
+        {
+            return _cellLength
+        },
+
         getLocalPlayer:function()
         {
             return _localPlayer;
@@ -107,6 +222,7 @@ function createGame()
         {
             _drawMap();
             _remotePlayers = [];
+            _bullets = [];
             this.addPlayer(_localPlayer);
             if(!createjs.Ticker.paused)
             {
@@ -118,50 +234,15 @@ function createGame()
 
         movePlayer:function(playerId,x,y)
         {
-            console.log("Player with "+playerId+" moved to x:"+x+" y:"+y);
             var movePlayer = _getPlayerById(playerId);
-            if (!movePlayer) {
+            if (!movePlayer){
                 console.log("Couldn't move player with id "+playerId+" because player id was not found");
             }
             else
             {
-                var newX = x * _cellLength;
-                var newY = y * _cellLength;
-                var oldX = movePlayer.grant.x;
-                var oldY = movePlayer.grant.y;
-                var direction;
-                if (newX > oldX)
-                    direction = "right";
-                else if (oldX > newX)
-                    direction = "left";
-                else if (newY > oldY)
-                    direction = "down";
-                else if (oldY > newY)
-                    direction = "up";
-                if(direction !== movePlayer.grant.currentAnimation){
-                    movePlayer.grant.gotoAndPlay(direction);
-                    movePlayer.playing = true;
-                }
-                movePlayer.grant.x = newX;
-                movePlayer.grant.y = newY;
-                movePlayer.grant.yBase = newY;
-                movePlayer.x = x;
-                movePlayer.y = y;
-                _sort();
-            }
-        },
-
-        stopPlayer:function(playerId,frame)
-        {
-            console.log("Player "+playerId+" stopped");
-            var movePlayer = _getPlayerById(playerId);
-            if (!movePlayer) {
-                console.log("Couldn't stop Player with id "+playerId+" because id was not found");
-            }
-            else
-            {
-                movePlayer.playing = false;
-                movePlayer.grant.gotoAndPlay(frame);
+                movePlayer.playing = true;
+                movePlayer.x = x * _cellLength;
+                movePlayer.y = y * _cellLength;
             }
         },
 
@@ -278,10 +359,29 @@ function createGame()
 
             player.grant = grant;
             player.playing = false;
+            player.getDirection = function(){
+                switch(this.grant.currentAnimation) {
+                    case "stationaryleft":
+                    case "left":
+                        return 0;
+                        break;
+                    case "stationaryright":
+                    case "right":
+                        return 1;
+                        break;
+                    case "stationaryup":
+                    case "up":
+                        return 2;
+                        break;
+                    case "stationarydown":
+                    case "down":
+                        return 3;
+                        break;
+                }
+            };
 
             _remotePlayers.push(player);
             _stage.addChild(player.grant);
-            _sort();
         },
 
         removePlayer:function(playerId)
@@ -295,8 +395,36 @@ function createGame()
             {
                 _stage.removeChild(player.grant);
                 _remotePlayers.splice(_remotePlayers.indexOf(playerId), 1);
+                ui.log("Player "+player.nickName+" left the room")
                 console.log("Player "+playerId+" was disconnected");
-                // TODO: display player removal on UI
+            }
+        },
+
+        moveBullet:function(id,x,y)
+        {
+            if(id in _bullets)
+            {
+                var bullet = _bullets[id];
+                bullet.x = x * _cellLength;
+                bullet.y = y * _cellLength;
+            }
+            else
+            {
+                _addBullet(id,x,y);
+            }
+        },
+
+        removeBullet:function(id)
+        {
+            if(id in _bullets)
+            {
+                var bullet = _bullets[id];
+                _stage.getChildByName('bullets').removeChild(bullet.graphics)
+                delete _bullets[id];
+            }
+            else
+            {
+                console.log("Couldn't remove bullet with id "+id+" because id not found")
             }
         }
     }

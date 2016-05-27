@@ -6,13 +6,11 @@
 #profile-label
 {
     background-color: #b7a606;
-    font-weight: 900;
 }
 
 #home-label
 {
     background-color: #05a800;
-    font-weight: 900;
 }
 
 #profile-label:hover
@@ -30,13 +28,14 @@
 #game-socket-status
 {
     font-size: 0.8em;
-    font-weight: 300;
+    font-weight: 900;
     text-align: right;
     vertical-align: middle;
     line-height: 2vh;
     height: 2vh;
     max-height: 2vh;
     display: block;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
 #map-label
@@ -50,6 +49,7 @@
     text-indent: 0px;
     background-color: #18bc9c;
     font-size: 1.3em;
+    opacity:0.5;
 }
 
 
@@ -64,6 +64,8 @@
     text-indent: 0px;
     border-bottom: 1px solid;
     font-weight: 700;
+    opacity:0.5;
+    color:white;
 }
 
 #message-form{
@@ -82,6 +84,8 @@ textarea.form-control {
     text-indent: 2px;
     padding-top: 1px;
     padding-bottom: 1px;
+    color: white;
+    /*text-shadow: -1px 0 grey, 0 1px grey, 1px 0 grey, 0 -1px grey;*/
 }
 
 #tip{
@@ -130,6 +134,8 @@ body{
     max-height: 5vh;
     line-height: 5vh;
     border-top: 1px solid;
+    font-weight: 900;
+    opacity:0.5;
 }
 
 
@@ -147,10 +153,11 @@ body{
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
+
 }
 
 #wrapper.toggled {
-    padding-left: 250px;
+    /*padding-left: 250px;*/
 }
 
 #sidebar-wrapper {
@@ -162,13 +169,14 @@ body{
     height: 100%;
     overflow-y: hidden;
     /*margin-left: -250px;*/
-    background: #000;
+    background: black; /* Fall-back for browsers that don't
+                                    support rgba */
+    background: rgba(0, 0, 0, 0.5);
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
-    /*extra*/
-    opacity:0.8;
+
 }
 
 #wrapper.toggled #sidebar-wrapper {
@@ -192,10 +200,11 @@ body{
 .sidebar-nav {
     position: absolute;
     top: 0;
-    width: 250px;
+    width: 100%;
     margin: 0;
     padding: 0;
     list-style: none;
+    border-right: 1px solid #2D2D2D;
 }
 
 .sidebar-nav ul {
@@ -228,7 +237,7 @@ body{
     text-decoration: none;
 }
 
-@media(min-width:768px) {
+@media(min-width:400px) {
     #wrapper {
         /*padding-left: 250px;*/
     }
@@ -238,7 +247,7 @@ body{
     }
 
     #sidebar-wrapper {
-        width: 250px;
+        width: 30%;
     }
 
     #wrapper.toggled #sidebar-wrapper {
@@ -255,3 +264,33 @@ body{
         margin-right: 0;
     }
 }
+
+@media(min-width:1100px) {
+    #wrapper {
+        /*padding-left: 250px;*/
+    }
+
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 20%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}
+
+

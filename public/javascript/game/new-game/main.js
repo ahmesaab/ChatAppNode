@@ -6,7 +6,8 @@ function main(url)
 {
     var game = createGame();
     var client = createClient(url,game);
-    var controller = new Controller(client,game);
+
+    bindKeyboardController(client,game);
 
     $( window ).resize(function() {
         ui.repositionSideBar()

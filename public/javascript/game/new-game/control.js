@@ -1,107 +1,83 @@
 
-function Controller(client,game)
+function bindKeyboardController(client,game)
 {
-    const KEY_CODE_LEFT = 37;
-    const KEY_CODE_RIGHT = 39;
-    const KEY_CODE_UP = 38;
-    const KEY_CODE_DOWN = 40;
+    var keys= {
+        37 : { val:false, dir:0 }, // left
+        38 : { val:false, dir:2 }, // up
+        39 : { val:false, dir:1 }, // right
+        40 : { val:false, dir:3 }  // down
+    };
 
-    var keys=[false,false,false,false];
-    var player;
-
+    var currentDirection = null;
 
     // Keyboard Events
     window.document.onkeydown = keyPressed;
     window.document.onkeyup = keyReleased;
 
-    // Global Events
-    setInterval(function(){ handelMovement()}, 50);
-
-    function handelMovement()
+    function updateCurrentDirection()
     {
-        for(var i=0;i<4;i++)
+        for(var code in keys)
         {
-            if(keys[i]==true)
+            if(keys[code].val === true)
             {
-                switch(i)
+                if(currentDirection != keys[code].dir)
                 {
-                    case 0:
-                        client.emitMovePlayer(0);
-                        return;
-                    case 1:
-                        client.emitMovePlayer(1);
-                        return;
-                    case 2:
-                        client.emitMovePlayer(2);
-                        return;
-                    case 3:
-                        client.emitMovePlayer(3);
-                        return;
+                    currentDirection = keys[code].dir;
+                    return true;
                 }
+                return false;
             }
         }
-        if(game.getLocalPlayer().playing)
+        if(currentDirection !== null)
         {
-            client.emitStopPlayer("stationary" + game.getLocalPlayer().grant.currentAnimation);
+            currentDirection = null;
+            return true;
         }
-
     }
 
     function keyReleased(event)
     {
-        try
+        if(event.keyCode in keys)
         {
-            switch(event.keyCode)
+            keys[event.keyCode].val = false;
+            if(updateCurrentDirection())
             {
-                case KEY_CODE_LEFT:
-                    keys[0]  = false;
-                    break;
-                case KEY_CODE_RIGHT:
-                    keys[1]  = false;
-                    break;
-                case KEY_CODE_UP:
-                    keys[2]  = false;
-                    break;
-                case KEY_CODE_DOWN:
-                    keys[3]  = false;
-                    break;
+                client.emitMovePlayer(currentDirection);
             }
         }
-        catch(err)
-        {
-            console.log(err);
-        }
-
     }
 
     function keyPressed(event)
     {
-        switch(event.keyCode)
+        if(event.keyCode in keys)
         {
-            case KEY_CODE_LEFT:
-                keys[0] = true;
-                event.preventDefault();
-                break;
-            case KEY_CODE_RIGHT:
-                keys[1] = true;
-                event.preventDefault();
-                break;
-            case KEY_CODE_UP:
-                keys[2] = true;
-                event.preventDefault();
-                break;
-            case KEY_CODE_DOWN:
-                keys[3] = true;
-                event.preventDefault();
-                break;
-            case 13:
-                event.preventDefault();
-                var message = ui.enterEvent();
-                if(message)
-                {
-                    client.emitSendMessage(message);
-                }
-                break;
+            keys[event.keyCode].val = true;
+            if(updateCurrentDirection())
+            {
+                client.emitMovePlayer(currentDirection);
+            }
+        }
+        else
+        {
+            switch(event.keyCode)
+            {
+                case 13:
+                    event.preventDefault();
+                    var message = ui.enterEvent();
+                    if (message) {
+                        client.emitSendMessage(message);
+                    }
+                    break;
+                case 32:
+                    if (!ui.typeMode) {
+                        var player = game.getLocalPlayer();
+                        var cellLength = game.getCellLength();
+                        client.emitFireBullet(
+                            (player.grant.x + cellLength) / cellLength,
+                            (player.grant.y + (1.5 *cellLength)) / cellLength,
+                            player.getDirection());
+                    }
+            }
         }
     }
 }
