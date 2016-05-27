@@ -1,0 +1,23 @@
+//
+   Created by Ahmed on 4/6/2016.
+// Navigation
+nav.navbar.navbar-default.navbar-collapse
+    .container
+        // Brand and toggle get grouped for better mobile display
+        .navbar-header.page-scroll
+            button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+                span.sr-only Toggle navigation
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+            a.navbar-brand(href='/')  Small World
+        // Collect the nav links, forms, and other content for toggling
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+            ul.nav.navbar-nav.navbar-right
+                li.hidden
+                    a(href='#page-top')
+                each val, index in navigationLinks
+                    li.page-scroll
+                        a(href=val)=index
+        // /.navbar-collapse
+    // /.container-fluid

@@ -1,0 +1,281 @@
+//
+   Created by Ahmed on 4/6/2016.
+
+extends layouts/complex
+block content
+   // Header
+   header
+      .container
+         .row
+            .col-lg-12
+               img.img-responsive(src='/images/favicon.ico', alt='')
+               .intro-text
+                  span.name Small World
+                  hr.star-light
+                  span.skills a fun way to chat with your friends
+
+   // Portfolio Grid Section
+   section#portfolio
+      .container
+         .row
+            .col-lg-12.text-center
+               h2 Sneak Peak
+               hr.star-primary
+         .row
+            .col-sm-4.portfolio-item
+               a.portfolio-link(href='#portfolioModal1', data-toggle='modal')
+                  .caption
+                     .caption-content
+                        i.fa.fa-search-plus.fa-3x
+                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
+            .col-sm-4.portfolio-item
+               a.portfolio-link(href='#portfolioModal2', data-toggle='modal')
+                  .caption
+                     .caption-content
+                        i.fa.fa-search-plus.fa-3x
+                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
+            .col-sm-4.portfolio-item
+               a.portfolio-link(href='#portfolioModal3', data-toggle='modal')
+                  .caption
+                     .caption-content
+                        i.fa.fa-search-plus.fa-3x
+                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
+            .col-sm-4.portfolio-item
+               a.portfolio-link(href='#portfolioModal4', data-toggle='modal')
+                  .caption
+                     .caption-content
+                        i.fa.fa-search-plus.fa-3x
+                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
+            .col-sm-4.portfolio-item
+               a.portfolio-link(href='#portfolioModal5', data-toggle='modal')
+                  .caption
+                     .caption-content
+                        i.fa.fa-search-plus.fa-3x
+                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
+            .col-sm-4.portfolio-item
+               a.portfolio-link(href='#portfolioModal6', data-toggle='modal')
+                  .caption
+                     .caption-content
+                        i.fa.fa-search-plus.fa-3x
+                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
+   // About Section
+   section#about.success
+      .container
+         .row
+            .col-lg-12.text-center
+               h2 About
+               hr.star-light
+         .row
+            .col-lg-4.col-lg-offset-2
+               p
+                  | SmallWorld is a multi-player online game with simple gameboy graphics.
+                  | The game is a simulation of an 8-bit open world which you can explore alone or
+                  | with your friends.
+                  br
+                  br
+                  | This is a Beta version of the project, anybody is welcomed
+                  | to contribute, comment, or test the game and the website.
+            .col-lg-4
+               p
+                  | The whole project is open-source and is availble on Github. SmallWorld was
+                  | built using Nodejs, Createljs, & the websocket library Socket.io. If you share
+                  | an intrest in the game or you have any comments,
+                  | please let me know. Thank you!
+            .col-lg-8.col-lg-offset-2.text-center
+               a.btn.btn-lg.btn-outline(href='https://github.com/ahmesaab/ChatAppNode/tree/GameBranch')
+                  i.fa.fa-download
+                  |  Github
+
+   // Scroll to Top Button (Only visible on small and extra-small screen sizes)
+   .scroll-top.page-scroll.visible-xs.visible-sm
+      a.btn.btn-primary(href='#page-top')
+         i.fa.fa-chevron-up
+   // Portfolio Modals
+   #portfolioModal1.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+      .modal-content
+         .close-modal(data-dismiss='modal')
+            .lr
+               .rl
+         .container
+            .row
+               .col-lg-8.col-lg-offset-2
+                  .modal-body
+                     h2 Project Title
+                     hr.star-primary
+                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     p
+                        | bla bla bla 
+                        
+                        | bla bla bla
+                     ul.list-inline.item-details
+                        li
+                           | Client:
+                           strong
+                              a(href='/') Start 
+                        li
+                           | Date:
+                           strong
+                              a(href='/') April 2014
+                        li
+                           | Service:
+                           strong
+                              a(href='/') Web Development
+                     button.btn.btn-default(type='button', data-dismiss='modal')
+                        i.fa.fa-times
+                        |  Close
+   #portfolioModal2.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+      .modal-content
+         .close-modal(data-dismiss='modal')
+            .lr
+               .rl
+         .container
+            .row
+               .col-lg-8.col-lg-offset-2
+                  .modal-body
+                     h2 Project Title
+                     hr.star-primary
+                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     p
+                        | bla bla bla 
+                        
+                        | bla bla bla
+                     ul.list-inline.item-details
+                        li
+                           | Client:
+                           strong
+                              a(href='/') Start 
+                        li
+                           | Date:
+                           strong
+                              a(href='/') April 2014
+                        li
+                           | Service:
+                           strong
+                              a(href='/') Web Development
+                     button.btn.btn-default(type='button', data-dismiss='modal')
+                        i.fa.fa-times
+                        |  Close
+   #portfolioModal3.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+      .modal-content
+         .close-modal(data-dismiss='modal')
+            .lr
+               .rl
+         .container
+            .row
+               .col-lg-8.col-lg-offset-2
+                  .modal-body
+                     h2 Project Title
+                     hr.star-primary
+                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     p
+                        | bla bla bla
+                        | bla bla bla
+                     ul.list-inline.item-details
+                        li
+                           | Client:
+                           strong
+                              a(href='/') Start 
+                        li
+                           | Date:
+                           strong
+                              a(href='/') April 2014
+                        li
+                           | Service:
+                           strong
+                              a(href='/') Web Development
+                     button.btn.btn-default(type='button', data-dismiss='modal')
+                        i.fa.fa-times
+                        |  Close
+   #portfolioModal4.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+      .modal-content
+         .close-modal(data-dismiss='modal')
+            .lr
+               .rl
+         .container
+            .row
+               .col-lg-8.col-lg-offset-2
+                  .modal-body
+                     h2 Project Title
+                     hr.star-primary
+                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     p
+                        | bla bla bla
+                        | bla bla bla
+                     ul.list-inline.item-details
+                        li
+                           | Client:
+                           strong
+                              a(href='/') Start 
+                        li
+                           | Date:
+                           strong
+                              a(href='/') April 2014
+                        li
+                           | Service:
+                           strong
+                              a(href='/') Web Development
+                     button.btn.btn-default(type='button', data-dismiss='modal')
+                        i.fa.fa-times
+                        |  Close
+   #portfolioModal5.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+      .modal-content
+         .close-modal(data-dismiss='modal')
+            .lr
+               .rl
+         .container
+            .row
+               .col-lg-8.col-lg-offset-2
+                  .modal-body
+                     h2 Project Title
+                     hr.star-primary
+                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     p
+                        | bla bla bla
+                        | bla bla bla
+                     ul.list-inline.item-details
+                        li
+                           | Client:
+                           strong
+                              a(href='/') Start 
+                        li
+                           | Date:
+                           strong
+                              a(href='/') April 2014
+                        li
+                           | Service:
+                           strong
+                              a(href='/') Web Development
+                     button.btn.btn-default(type='button', data-dismiss='modal')
+                        i.fa.fa-times
+                        |  Close
+   #portfolioModal6.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+      .modal-content
+         .close-modal(data-dismiss='modal')
+            .lr
+               .rl
+         .container
+            .row
+               .col-lg-8.col-lg-offset-2
+                  .modal-body
+                     h2 Project Title
+                     hr.star-primary
+                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     p
+                        | bla bla bla
+                        | bla bla bla
+                     ul.list-inline.item-details
+                        li
+                           | Client:
+                           strong
+                              a(href='/') Start 
+                        li
+                           | Date:
+                           strong
+                              a(href='/') April 2014
+                        li
+                           | Service:
+                           strong
+                              a(href='/') Web Development
+                     button.btn.btn-default(type='button', data-dismiss='modal')
+                        i.fa.fa-times
+                        |  Close

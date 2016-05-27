@@ -1,34 +1,45 @@
 //
    Created by Ahmed on 3/4/2016.
+extends layouts/simple
+block extra-head
+    script(src="/javascript/lib/angular.min.js")
+    script(src="/javascript/lib/easeljs-NEXT.min.js")
+    script(src="/javascript/other/drop-down.js")
+    script(src="/javascript/game/new-game/config.js")
+    script(src="/javascript/angular/profile-app.js")
+    style.
+        canvas:hover {
+            border: 6px solid blue;
+        }
 
-extends layout
+        canvas{
+            border: 6px solid white;
+        }
+
+        .selected-character{
+            display: inline;
+        }
 
 block content
-   h1= profileUser.firstName + ' ' + profileUser.lastName
-   if user && (user.id == profileUser.id)
-      script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js")
-      script(src="/javascripts/dropdown.js")
-      p shape:
-      select(class='shape', value="#{profileUser.shape}")
-         each val in [1, 2, 3]
-            if profileUser.shape == val
-               option(selected) #{val}
-            else
-               option #{val}
-      p color:
-      select(class='color', value="#{profileUser.color}")
-         each val in [1, 2, 3]
-            if profileUser.color == val
-               option(selected) #{val}
-            else
-               option #{val}
-   else
-      p shape:
-      p #{profileUser.shape}
-      p color:
-      p #{profileUser.color}
-   br
-   br
-   each user in users
-      a(href='#{user.id}') #{user.firstName+' '+user.lastName}
-      br
+    .container(ng-app="myApp",ng-controller="myCtrl",ng-init="init(#{profileUser.color},#{userId && (userId == profileUser.id)})")
+        section#portfolio
+            .container
+                .row
+                    .col-lg-12.text-center
+                        h2=profileUser.firstName + ' ' + profileUser.lastName
+                        hr.star-primary
+                .row
+                    .col-sm-12.portfolio-item.text-center
+                        canvas#current-character-canvas.img-responsive.selected-character(ng-click="viewCharacters()")
+                .row#sprites(ng-show="showCharacters")
+                    .col-sm-1.portfolio-item(ng-repeat="(id,image) in charachters")
+                        canvas.img-responsive.character(ng-click="changeCharacter(id)")
+        section
+            .container
+            .row
+                .col-lg-12.text-center
+                   .text-center
+                      each user in users
+                         h3
+                            a(href='#{user.id}') #{user.firstName + ' ' + user.lastName}
+                            br

@@ -1,0 +1,71 @@
+
+html
+   head
+      meta(charset='utf-8')
+      meta(http-equiv='X-UA-Compatible', content='IE=edge')
+      meta(name='viewport', content='width=device-width, initial-scale=1')
+      meta(name='description', content='')
+      meta(name='author', content='Ahmed Saab')
+      title= 'Small World - ' + title
+      // Libs
+      script(src="/javascript/lib/socket.io.js")
+      script(src='/javascript/theme/jquery.js')
+      script(src='/javascript/lib/jquery.easing.min.js')
+      script(src='/javascript/theme/bootstrap.min.js')
+      script(src="/javascript/lib/easeljs-NEXT.min.js")
+      script(src="/javascript/lib/tweenjs-NEXT.min.js")
+      script(src="/javascript/lib/ScaleBitmap.js")
+      script(src="/javascript/lib/bootbox.min.js")
+      // Development
+      //script(src="/javascript/game/animation.js")
+      //script(src="/javascript/game/client-game-socket.js")
+      //script(src="/javascript/game/user-input-handler.js")
+      //script(src="/javascript/game/utils.js")
+      //script(src="/javascript/game/sprites-config.js")
+      script(src="/javascript/game/new-game/client.js")
+      script(src="/javascript/game/new-game/control.js")
+      script(src="/javascript/game/new-game/game.js")
+      script(src="/javascript/game/new-game/main.js")
+      script(src="/javascript/game/new-game/ui.js")
+      script(src="/javascript/game/new-game/config.js")
+      // CSS Style
+      link(href='/stylesheets/theme/bootstrap.min.css', rel='stylesheet')
+      link(href='/stylesheets/game.css', rel='stylesheet')
+      // Main Script
+      script.
+          window.onload = function () {
+              main('#{socketUrl}');
+          }
+   body
+      //Menu Modal
+      //div#serverModal.modal.fade.menu-modal(role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+      //   div.modal-content
+      //      div.modal-header
+      //         button.close(type='button', data-dismiss='modal' href='/login' ) ×
+      //         h4.modal-title Menu
+      //      div.modal-body
+      //         each link, name in navigationLinks
+      //            button.btn.btn-default.btn-lg.btn-block(type='button',
+      //               onclick="window.location = '#{link}';")=name
+
+      #wrapper
+          // Sidebar
+          #sidebar-wrapper
+              .sidebar-nav
+                  #map-label ???
+                  .sidebar-button#home-label(onclick="window.location = '/';") Home
+                  .sidebar-button#profile-label(onclick="window.location = '/profile/#{userId}';") Profile
+                  #chat-history-label Chat History
+                  ul#chat-history
+                  div#message-form.form-group
+                      textarea#message-text-box.form-control(rows='2',placeholder='Type a message')
+                  span#game-socket-status connecting...
+      //Body
+      canvas.img-responsive#pokemonCanvas
+      .badge-sticky-button
+          a(style='font-weight:bold;color:#ffffff;',
+                onclick="$('#wrapper').toggleClass('toggled');") Press Enter to hide/show the sidebar
+          a(style='padding-left:5px;color:#ffffff;',
+                onclick="$('.badge-sticky-button').remove()") ✖
+
+                                                            

@@ -1,0 +1,53 @@
+//
+   Created by Ahmed on 4/6/2016.
+extends layouts/simple
+block extra-head
+   link(href='/stylesheets/login-style.css', rel='stylesheet')
+block content
+   .container
+      .omb_login
+         h3.omb_authTitle
+            | Login or
+            a(href='#')  Sign up
+         .row.omb_row-sm-offset-3.omb_socialButtons
+            //.col-xs-12.col-sm-6.col-lg-6
+            .col-xs-4.col-sm-2
+               a.btn.btn-lg.btn-block.omb_btn-facebook(href="/auth/facebook")
+                  i.fa.fa-facebook.visible-xs
+                  span.hidden-xs Facebook
+            .col-xs-4.col-sm-2
+               a.btn.btn-lg.btn-block.omb_btn-twitter(href='#',onclick='alert("not yet supported, sorry")')
+                  i.fa.fa-twitter.visible-xs
+                  span.hidden-xs Twitter
+            .col-xs-4.col-sm-2
+               a.btn.btn-lg.btn-block.omb_btn-google(href='#',onclick='alert("not yet supported, sorry")')
+                  i.fa.fa-google-plus.visible-xs
+                  span.hidden-xs Google+
+         .row.omb_row-sm-offset-3.omb_loginOr
+            .col-xs-12.col-sm-6
+               hr.omb_hrOr
+               span.omb_spanOr or
+         .row.omb_row-sm-offset-3
+            .col-xs-12.col-sm-6
+               form.omb_loginForm(action='/login',method='post',autocomplete='off')
+                  .input-group
+                     span.input-group-addon
+                        i.fa.fa-user
+                     input#userId.form-control(name='userId',type='text', placeholder='email address')
+                  span.help-block
+                  .input-group
+                     span.input-group-addon
+                        i.fa.fa-lock
+                     input.form-control(type='password', name='password', placeholder='Password')
+                  span.help-block #{error}
+                  button.btn.btn-lg.btn-primary.btn-block(type='submit') Login
+         .row.omb_row-sm-offset-3
+            .col-xs-12.col-sm-3
+               label.checkbox
+                  input(type='checkbox', value='remember-me')
+                  | Remember Me
+            .col-xs-12.col-sm-3
+               p.omb_forgotPwd
+                  a(href='#') Forgot password?
+   br
+   br

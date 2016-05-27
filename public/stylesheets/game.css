@@ -1,0 +1,296 @@
+#pokemonCanvas{
+    margin:auto;
+    border:1px solid #000000;
+}
+
+#profile-label
+{
+    background-color: #b7a606;
+}
+
+#home-label
+{
+    background-color: #05a800;
+}
+
+#profile-label:hover
+{
+    background-color: #ffee06;
+    opacity: 1;
+}
+
+#home-label:hover
+{
+    background-color: #05ff00;
+    opacity: 1;
+}
+
+#game-socket-status
+{
+    font-size: 0.8em;
+    font-weight: 900;
+    text-align: right;
+    vertical-align: middle;
+    line-height: 2vh;
+    height: 2vh;
+    max-height: 2vh;
+    display: block;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#map-label
+{
+    font-weight: 900;
+    text-align: center;
+    vertical-align: middle;
+    height: 10vh;
+    max-height: 10vh;
+    line-height: 10vh;
+    text-indent: 0px;
+    background-color: #18bc9c;
+    font-size: 1.3em;
+    opacity:0.5;
+}
+
+
+
+#chat-history-label
+{
+    text-align: center;
+    vertical-align: middle;
+    height: 5vh;
+    max-height: 5vh;
+    line-height: 5vh;
+    text-indent: 0px;
+    border-bottom: 1px solid;
+    font-weight: 700;
+    opacity:0.5;
+    color:white;
+}
+
+#message-form{
+    max-height: 10vh;
+    height: 10vh;
+    margin-bottom:0px;
+}
+
+textarea.form-control {
+    height: 10vh;
+}
+
+#chat-history li{
+    display: block;
+    word-wrap:break-word;
+    text-indent: 2px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    color: white;
+    /*text-shadow: -1px 0 grey, 0 1px grey, 1px 0 grey, 0 -1px grey;*/
+}
+
+#tip{
+    text-indent: 10px;
+    line-height: 3vh;
+    max-height: 3vh;
+    height: 3vh;
+}
+
+body{
+    background-color:black;
+    overflow-y:hidden ;
+    font-size: 1.5em;
+}
+
+/*.modal-dialog*/
+/*{*/
+    /*opacity:0.5 !important;*/
+/*}*/
+
+/*.modal-backdrop{*/
+    /*z-index: 0;*/
+/*}*/
+
+/*.modal-backdrop.in*/
+/*{*/
+    /*opacity: 0 !important;*/
+/*}*/
+
+.menu-modal{
+    width: 50%;
+    height: 100%;
+    margin-left: 25%;
+    margin-top: 10%;
+    opacity:0.8 !important;
+}
+
+.menu-item{
+
+}
+
+.sidebar-button{
+    text-align: center;
+    vertical-align: middle;
+    height: 5vh;
+    max-height: 5vh;
+    line-height: 5vh;
+    border-top: 1px solid;
+    font-weight: 900;
+    opacity:0.5;
+}
+
+
+/*!
+ * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+/* Toggle Styles */
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+
+}
+
+#wrapper.toggled {
+    /*padding-left: 250px;*/
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: absolute;
+    /*position: fixed;*/
+    /*left: 250px;*/
+    width: 0;
+    height: 100%;
+    overflow-y: hidden;
+    /*margin-left: -250px;*/
+    background: black; /* Fall-back for browsers that don't
+                                    support rgba */
+    background: rgba(0, 0, 0, 0.5);
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    /*width: 250px;*/
+
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    /*margin-right: -250px;*/
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-right: 1px solid #2D2D2D;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    width: inherit;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    max-height: 63vh;
+    height: 63vh;
+}
+
+.badge-sticky-button {
+    background-color: rgba(0,0,0,.9);
+    right: 70px;
+    bottom: 0;
+    height: 2em;
+    line-height: 2em;
+    position: fixed;
+    padding: 0 10px;
+    z-index: 150;
+    _position: absolute;
+    _top: expression(eval(document.documentElement.scrollTop+ (document.documentElement.clientHeight-this.offsetHeight)));
+}
+
+.badge-sticky-button a {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    text-decoration: none;
+}
+
+@media(min-width:400px) {
+    #wrapper {
+        /*padding-left: 250px;*/
+    }
+
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 30%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}
+
+@media(min-width:1100px) {
+    #wrapper {
+        /*padding-left: 250px;*/
+    }
+
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 20%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}
+
+

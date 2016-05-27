@@ -6,12 +6,12 @@ var router = express.Router();
 var Service = require('../data/service.js');
 
 router.get('/', function(req, res, next) {
-    if(req.session.user)
+    if(req.session.passport)
     {
         var attribute = req.query.attribute;
         var value = req.query.value;
         var service = new Service();
-        service.changeAttribute(attribute,value,String(req.session.user.id),
+        service.changeAttribute(attribute,value,String(req.session.passport.user),
             function(status)
             {
                 if(status===true)
@@ -22,7 +22,6 @@ router.get('/', function(req, res, next) {
                 {
                     res.sendStatus(500);
                 }
-                service.close()
             }
         )
     }
