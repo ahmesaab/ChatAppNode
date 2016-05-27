@@ -3,6 +3,7 @@
  */
 
 configs = {
+    networkDelay : 0.25,
     images :{
         1:"/images/character-sprites/boy.png",
         2:"/images/character-sprites/girl.png",

@@ -30,6 +30,7 @@ var Handler = function(socket,serverIo)
                     socket.on("move player", onMovePlayer);
                     socket.on("stop player", onStopPlayer);
                     socket.on('message', onMessage);
+                    socket.on('fire bullet', onFireBullet);
                     broadcastNewPlayer(socket);
                     //printMapInConsole(map);;
                 })
@@ -69,68 +70,173 @@ function onClientDisconnect()
 };
 
 
-function onMovePlayer(direction)
+function validateMoveInMap(player,map,cells,direction)
 {
-    var oldX = this.player.x;
-    var oldY = this.player.y;
-    var speed = this.player.speed;
+    var oldX = player.x;
+    var oldY = player.y;
     var newX = oldX;
     var newY = oldY;
     switch(direction)
     {
         case 0:
-            newX = oldX - speed;
+            newX = oldX - cells;
             break;
         case 1:
-            newX = oldX + speed;
+            newX = oldX + cells;
             break;
         case 2:
-            newY = oldY - speed;
+            newY = oldY - cells;
             break;
         case 3:
-            newY = oldY + speed;
+            newY = oldY + cells;
     }
-    var move = validateMove(Math.round(newX),Math.round(newY),this.world.map);
+    var move = validateMove(Math.round(newX),Math.round(newY),map);
     if(move === true)
     {
-        this.player.x = newX;
-        this.player.y = newY;
-        var data = {id: this.player.socketId, x:newX ,y:newY}
-        this.to(this.player.roomId).emit("move player",data);
-        this.emit("move player",data);
+        player.x = newX;
+        player.y = newY;
+        return true;
     }
     else if(move.constructor === Array)
     {
-        console.log("Trying to escape with x:"+move[0]+" y:"+move[1]);
-        for(var i=0;i<this.world.exits.length;i++)
+        return move;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
+function onMovePlayer(direction)
+{
+
+        var socket = this;
+        var cellPerSecond = socket.player.speed;
+        var deltaMilliSeconds = 100; // ms
+        var cellPerDelta = (cellPerSecond/1000) * deltaMilliSeconds;
+        clearInterval(socket.playerMover);
+        if(direction !== null)
         {
-            var exit = this.world.exits[i];
-            if(exit.entranceX == move[0] && exit.entranceY == move[1])
-            {
-                var newRoomId = exit.destination;
-                service.updateUserCurrentMap(this.userId,newRoomId);
+            socket.playerMover = setInterval(function(){
+                var moveLogic = validateMoveInMap(socket.player,socket.world.map,cellPerDelta,direction);
+                if(moveLogic === true)
+                {
+                    console.log("Player "+socket.id+" moved to x:"+socket.player.x+" y:"+socket.player.y);
+                    var data = {id: socket.player.socketId, x:socket.player.x ,y:socket.player.y}
+                    socket.to(socket.player.roomId).emit("move player",data);
+                    socket.emit("move player",data);
+                }
+                else
+                {
+                    clearInterval(socket.playerMover);
+                    if(moveLogic.constructor === Array)
+                        changeRoom(moveLogic[0],moveLogic[1],socket);
+                }
+            }, deltaMilliSeconds);
+        }
+};
 
-                broadcastRemovePlayer(this);
+function changeRoom(x,y,socket)
+{
+    console.log("Player "+socket.id+" is trying to escape with x:"+x+" y:"+y);
+    for(var i=0;i<socket.world.exits.length;i++)
+    {
+        var exit = socket.world.exits[i];
+        if(exit.entranceX == x && exit.entranceY == y)
+        {
+            var newRoomId = exit.destination;
+            service.updateUserCurrentMap(socket.userId,newRoomId);
 
-                this.join(newRoomId);
-                this.leave(this.player.roomId);
+            broadcastRemovePlayer(socket);
 
-                this.player.roomId = newRoomId;
-                this.player.x = exit.exitX;
-                this.player.y = exit.exitY-1;
+            socket.join(newRoomId);
+            socket.leave(socket.player.roomId);
 
-                emitYou(this);
-                var that = this;
-                service.getMap(this.player.roomId,function(map) {
-                    that.world = map;
-                    that.emit("map", that.world);
-                    emitPlayers(that,io);
-                    broadcastNewPlayer(that);
-                });
-            }
+            socket.player.roomId = newRoomId;
+            socket.player.x = exit.exitX;
+            socket.player.y = exit.exitY-1;
+
+            emitYou(socket);
+            var that = socket;
+            service.getMap(socket.player.roomId,function(map) {
+                that.world = map;
+                that.emit("map", that.world);
+                emitPlayers(that,io);
+                broadcastNewPlayer(that);
+            });
         }
     }
-};
+}
+
+function onFireBullet(data)
+{
+    console.log("Bullet fired with x:"+data.x+" y:"+data.y+" direction:"+data.direction);
+    var socket = this;
+    var map = socket.world;
+    var moveFunction;
+    var compareFunction;
+    var cellPerSecond = 6;
+    var deltaMilliSeconds = 100; // ms
+    var cellPerDelta = (cellPerSecond/1000) * deltaMilliSeconds;
+    switch(data.direction)
+    {
+        case 0:
+            moveFunction = function(){
+             this.x-=cellPerDelta;
+            };
+            compareFunction = function(){
+                return bullet.x > 0;
+            };
+            break;
+        case 1:
+            moveFunction = function(){
+                this.x+=cellPerDelta;
+            };
+            compareFunction = function(){
+                return bullet.x < map.width
+            };
+            break;
+        case 2:
+            moveFunction = function(){
+                this.y-=cellPerDelta;
+            };
+            compareFunction = function(){
+                return bullet.y > 0
+            };
+            break;
+        case 3:
+            moveFunction = function(){
+                this.y+=cellPerDelta;
+            };
+            compareFunction = function(){
+                return bullet.y < map.height
+            };
+            break;
+    }
+    var bullet = {
+        id : Math.floor((Math.random() * 1000000000) + 1),
+        x : data.x,
+        y : data.y,
+        move : moveFunction,
+        compare: compareFunction
+    };
+    var bulletMover = setInterval(function(){
+        if(bullet.compare())
+        {
+            console.log("Bullet moved to x:"+bullet.x+" y:"+bullet.y);
+            socket.to(socket.player.roomId).emit("move bullet", {id: bullet.id, x: bullet.x, y:bullet.y});
+            socket.emit("move bullet", {id: bullet.id, x: bullet.x, y:bullet.y});
+            bullet.move();
+        }
+        else
+        {
+            clearInterval(bulletMover);
+            socket.to(socket.player.roomId).emit("remove bullet", bullet.id);
+            socket.emit("remove bullet", bullet.id);
+        }
+    }, deltaMilliSeconds);
+}
 
 function onStopPlayer(data)
 {
@@ -160,10 +266,10 @@ function validate(userId)
 function validateMove(newX,newY,map)
 {
     var corners = [
-        {x:newX+1,y:newY+1},
-        {x:newX+1,y:newY+2},
-        {x:newX,y:newY+1},
-        {x:newX,y:newY+2}
+        {x:newX+1,y:newY+1},  // upper right
+        {x:newX+1,y:newY+2},  // lower right
+        {x:newX,y:newY+1},    // upper left
+        {x:newX,y:newY+2}     // lower left
     ];
 
     for(var i=0;i<corners.length;i++)

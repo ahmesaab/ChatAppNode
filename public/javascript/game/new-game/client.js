@@ -18,11 +18,13 @@ function createClient(url,game)
     _socket.on("remove player", _onRemovePlayer);
     _socket.on("map", _onMap);
     _socket.on("server message", _onServerMessage);
-    _socket.on("stop player",_onStopPlayer);
+    _socket.on("move bullet",_onMoveBullet);
+    _socket.on("remove bullet",_onRemoveBullet);
 
     // private functions
     function _onSocketConnected(){
         console.log("Connected to socket server");
+        ui.log("You have been connected")
         ui.updateStatus(true);
     };
 
@@ -36,12 +38,14 @@ function createClient(url,game)
         var cellLength = ui.scaleGameCanvas(data.width,data.height);
         ui.updateMapNameUi(data.name);
         ui.repositionSideBar();
+        ui.log("You have joined room "+data.name);
         _game.setMap(data,cellLength);
         _game.start();
     }
 
     function _onSocketDisconnect() {
         console.log("Disconnected from socket server");
+        ui.log("You have been disconnected")
         ui.updateStatus(false);
     };
 
@@ -53,6 +57,7 @@ function createClient(url,game)
 
     function _onNewPlayer(player) {
         console.log("Player "+player.socketId+" was connected")
+        ui.log("Player "+player.nickName+" joined the room")
         _game.addPlayer(player);
     };
 
@@ -60,9 +65,6 @@ function createClient(url,game)
         _game.movePlayer(data.id,data.x,data.y)
     };
 
-    function _onStopPlayer(data) {
-        _game.stopPlayer(data.id,data.stationaryAnimationName)
-    }
 
     function _onRemovePlayer(playerId) {
         _game.removePlayer(playerId);
@@ -71,6 +73,14 @@ function createClient(url,game)
     function _onServerMessage(serverMessage) {
         ui.alert(serverMessage);
     };
+
+    function _onMoveBullet(data) {
+        _game.moveBullet(data.id,data.x,data.y);
+    };
+
+    function _onRemoveBullet(bulletId) {
+        _game.removeBullet(bulletId);
+    }
 
     // public functions
     return {
@@ -83,13 +93,15 @@ function createClient(url,game)
                 ui.addMessageToChatHistory(message,_game.getLocalPlayer().nickName,true);
             }
         },
+
         emitMovePlayer:function(direction)
         {
             _socket.emit('move player',direction);
         },
-        emitStopPlayer:function(frame)
+
+        emitFireBullet:function(x,y,direction)
         {
-            _socket.emit('stop player',frame);
+            _socket.emit("fire bullet",{x:x,y:y,direction:direction})
         }
     }
 }

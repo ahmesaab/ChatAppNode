@@ -4,6 +4,7 @@
 
 ui =
 {
+    typeMode:true,
     getGameCanvas: function()
     {
         return $('#pokemonCanvas')[0];
@@ -41,7 +42,7 @@ ui =
         var div;
         if(own)
         {
-            div='<li><b><span style="color:#095bff">Me: </span></b>'+msg+'</li>'
+            div='<li><b><span style="color:#6a6fff">Me: </span></b>'+msg+'</li>'
         }
         else
         {
@@ -49,6 +50,13 @@ ui =
         }
         chatHistory.append($(div));
         chatHistory.scrollTop($('li').last().offset().top)
+    },
+
+    log:function(msg)
+    {
+        var chatHistory = $('#chat-history');
+        var div='<li><b><span style="color:#72ffc2;font-size: 0.75em;">*'+msg+'*</span></b></li>'
+        chatHistory.append($(div));
     },
 
     updateStatus:function(status)
@@ -76,8 +84,12 @@ ui =
         var message = messageTextBox.val();
         if(message==='')
         {
+            this.typeMode = !this.typeMode;
             $("#wrapper").toggleClass("toggled");
-            messageTextBox.focus();
+            if(messageTextBox.is(":focus"))
+                messageTextBox.blur()
+            else
+                messageTextBox.focus();
             return false;
         }
         else
