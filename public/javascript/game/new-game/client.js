@@ -20,6 +20,7 @@ function createClient(url,game)
     _socket.on("server message", _onServerMessage);
     _socket.on("move bullet",_onMoveBullet);
     _socket.on("remove bullet",_onRemoveBullet);
+    _socket.on("set location",_onSetLocation);
 
     // private functions
     function _onSocketConnected(){
@@ -65,6 +66,9 @@ function createClient(url,game)
         _game.movePlayer(data.id,data.x,data.y)
     };
 
+    function _onSetLocation(data) {
+        _game.setLocalPlayerLocation(data.x,data.y);
+    };
 
     function _onRemovePlayer(playerId) {
         _game.removePlayer(playerId);
@@ -94,9 +98,9 @@ function createClient(url,game)
             }
         },
 
-        emitMovePlayer:function(direction)
+        emitMovePlayer:function(x,y)
         {
-            _socket.emit('move player',direction);
+            _socket.emit('move player',{x:x,y:y});
         },
 
         emitFireBullet:function(x,y,direction)

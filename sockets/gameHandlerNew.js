@@ -70,76 +70,80 @@ function onClientDisconnect()
 };
 
 
-function validateMoveInMap(player,map,cells,direction)
+
+function validateMove(oldX,oldY,newX,newY,step,map)
 {
-    var oldX = player.x;
-    var oldY = player.y;
-    var newX = oldX;
-    var newY = oldY;
-    switch(direction)
+    //if(Math.abs(oldX - newX) < step && Math.abs(oldY-newY) < step)
+    if(true)
     {
-        case 0:
-            newX = oldX - cells;
-            break;
-        case 1:
-            newX = oldX + cells;
-            break;
-        case 2:
-            newY = oldY - cells;
-            break;
-        case 3:
-            newY = oldY + cells;
-    }
-    var move = validateMove(Math.round(newX),Math.round(newY),map);
-    if(move === true)
-    {
-        player.x = newX;
-        player.y = newY;
+        var corners = [
+            {x:newX+1,y:newY+1},  // upper right
+            {x:newX+1,y:newY+2},  // lower right
+            {x:newX,y:newY+1},    // upper left
+            {x:newX,y:newY+2}     // lower left
+        ];
+
+        for(var i=0;i<corners.length;i++)
+        {
+            var x = Math.round(corners[i].x);
+            var y = Math.round(corners[i].y);
+            try
+            {
+                var cellValue = map[x][y].value;
+                if(!cellValue)
+                {
+                    return false;
+                }
+            }
+            catch(err)
+            {
+                console.log(err);
+                return [x,y]
+            }
+        }
         return true;
-    }
-    else if(move.constructor === Array)
-    {
-        return move;
     }
     else
     {
         return false;
     }
 
-}
+};
 
-function onMovePlayer(direction)
+function onMovePlayer(data)
 {
 
-        var socket = this;
-        var cellPerSecond = socket.player.speed;
-        var deltaMilliSeconds = 100; // ms
-        var cellPerDelta = (cellPerSecond/1000) * deltaMilliSeconds;
-        clearInterval(socket.playerMover);
-        if(direction !== null)
+    var cellPerSecond = this.player.speed;
+    var deltaMilliSeconds = 300; // ms
+    var cellPerDelta = (cellPerSecond/1000) * deltaMilliSeconds;
+    var moveLogic = validateMove(this.player.x,this.player.y,data.x,data.y,cellPerDelta,this.world.map);
+    if(moveLogic === true)
+    {
+        this.player.x = data.x;
+        this.player.y = data.y;
+        this.to(this.player.roomId).emit("move player",{id: this.player.socketId, x:data.x, y:data.y});
+        console.log("Player "+this.id+" moved to x:"+data.x+" y:"+data.y);
+    }
+    else if(moveLogic === false)
+    {
+        this.emit("set location",{id: this.player.socketId, x:this.player.x, y:this.player.y});
+        console.log("Player "+this.id+" move was invalidated and set to x:"+this.player.x+" y:"+this.player.y);
+    }
+    else
+    {
+        console.log("Player "+this.id+" is trying to escape with x:"+moveLogic[0]+" y:"+moveLogic[1]);
+        var willExitMap = changeRoom(moveLogic[0],moveLogic[1],this);
+        if(!willExitMap)
         {
-            socket.playerMover = setInterval(function(){
-                var moveLogic = validateMoveInMap(socket.player,socket.world.map,cellPerDelta,direction);
-                if(moveLogic === true)
-                {
-                    console.log("Player "+socket.id+" moved to x:"+socket.player.x+" y:"+socket.player.y);
-                    var data = {id: socket.player.socketId, x:socket.player.x ,y:socket.player.y}
-                    socket.to(socket.player.roomId).emit("move player",data);
-                    socket.emit("move player",data);
-                }
-                else
-                {
-                    clearInterval(socket.playerMover);
-                    if(moveLogic.constructor === Array)
-                        changeRoom(moveLogic[0],moveLogic[1],socket);
-                }
-            }, deltaMilliSeconds);
+            this.emit("set location",{id: this.player.socketId, x:this.player.x, y:this.player.y});
         }
+    }
+
 };
 
 function changeRoom(x,y,socket)
 {
-    console.log("Player "+socket.id+" is trying to escape with x:"+x+" y:"+y);
+
     for(var i=0;i<socket.world.exits.length;i++)
     {
         var exit = socket.world.exits[i];
@@ -165,8 +169,10 @@ function changeRoom(x,y,socket)
                 emitPlayers(that,io);
                 broadcastNewPlayer(that);
             });
+            return true;
         }
     }
+    return false;
 }
 
 function onFireBullet(data)
@@ -263,34 +269,7 @@ function validate(userId)
         return false;
 }
 
-function validateMove(newX,newY,map)
-{
-    var corners = [
-        {x:newX+1,y:newY+1},  // upper right
-        {x:newX+1,y:newY+2},  // lower right
-        {x:newX,y:newY+1},    // upper left
-        {x:newX,y:newY+2}     // lower left
-    ];
 
-    for(var i=0;i<corners.length;i++)
-    {
-        var x = corners[i].x;
-        var y = corners[i].y;
-        try
-        {
-            var cellValue = map[x][y].value;
-            if(!cellValue)
-            {
-                return false;
-            }
-        }
-        catch(err)
-        {
-            return [x,y]
-        }
-    }
-    return true;
-};
 
 function printMapInConsole(map)
 {

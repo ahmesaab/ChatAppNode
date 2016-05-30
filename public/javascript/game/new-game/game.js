@@ -8,10 +8,14 @@ function createGame()
     var _remotePlayers;
     var _bullets;
     var _cellLength;
+    var _movement = "stationarydown";
     const _networkDelay = configs.networkDelay;
 
     // private functions
     //---------------------------------------------------
+
+    var _emitMovePlayer;
+
     var _sortByY =  function(obj1, obj2)
     {
         if(obj1.name == 'background' || obj1.name == 'bullets') { return -1}
@@ -150,7 +154,7 @@ function createGame()
             if(player.playing)
             {
                 var direction;
-                var cellPerSecond = player.speed - _networkDelay;
+                var cellPerSecond = player.speed;
                 var pixelPerSecond = cellPerSecond * _cellLength;
                 var pixels = delta/1000*pixelPerSecond ;
 
@@ -187,6 +191,38 @@ function createGame()
 
     var _tick =  function(event)
     {
+        var cellPerSecond = _localPlayer.speed;
+        var pixelPerSecond = cellPerSecond * _cellLength;
+        var pixels = event.delta/1000*pixelPerSecond;
+        console.log(event.delta);
+        if(_movement.indexOf("stationary"))
+        {
+            switch(_movement)
+            {
+                case "left":
+                    _localPlayer.grant.x = _localPlayer.grant.x - pixels;
+                    break;
+                case "right":
+                    _localPlayer.grant.x = _localPlayer.grant.x + pixels;
+                    break;
+                case "up":
+                    _localPlayer.grant.y = _localPlayer.grant.y - pixels;
+                    _localPlayer.grant.yBase = _localPlayer.grant.y;
+                    break;
+                case "down":
+                    _localPlayer.grant.y = _localPlayer.grant.y + pixels;
+                    _localPlayer.grant.yBase = _localPlayer.grant.y;
+            }
+
+            _emitMovePlayer(_localPlayer.grant.x/_cellLength,_localPlayer.grant.y/_cellLength);
+
+        }
+
+        if(_localPlayer.grant.currentAnimation !== _movement)
+        {
+            _localPlayer.grant.gotoAndPlay(_movement);
+        }
+
         _interpolateBullets(event.delta);
         _interpolatePlayers(event.delta);
         _sort();
@@ -197,6 +233,16 @@ function createGame()
     // public functions
     //---------------------------------------------------
     return {
+        setEmitMovePlayer:function(method)
+        {
+            _emitMovePlayer = method;
+        },
+
+        setMovement:function(movement)
+        {
+            _movement = movement;
+        },
+
         setMap:function(data,cellLength)
         {
             _map = data;
@@ -426,6 +472,12 @@ function createGame()
             {
                 console.log("Couldn't remove bullet with id "+id+" because id not found")
             }
+        },
+
+        setLocalPlayerLocation:function(x,y)
+        {
+            _localPlayer.grant.x = x * _cellLength;
+            _localPlayer.grant.y = y * _cellLength;
         }
     }
 
