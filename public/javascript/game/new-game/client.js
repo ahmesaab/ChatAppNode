@@ -59,7 +59,7 @@ function createClient(url,game)
     function _onNewPlayer(player) {
         console.log("Player "+player.socketId+" was connected")
         ui.log("Player "+player.nickName+" joined the room")
-        _game.addPlayer(player);
+        _game.addPlayer(player,true);
     };
 
     function _onMovePlayer(data) {

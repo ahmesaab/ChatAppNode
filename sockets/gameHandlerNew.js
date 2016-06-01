@@ -13,9 +13,9 @@ var Handler = function(socket,serverIo)
         io = serverIo;
         service.getUser(userId,function(user)
         {
-            if(true)//user.status==='offline')
+            if(true) //user.status==='offline')
             {
-                service.connectUser(user.id);
+                //service.connectUser(user.id);
                 console.log(user.nickName+' connected to GAME with id='+socket.id+' in room '+user.roomId);
                 socket.player = new Player(user,socket.id);
                 socket.userId = user.id;
@@ -97,7 +97,7 @@ function validateMove(oldX,oldY,newX,newY,step,map)
             }
             catch(err)
             {
-                console.log(err);
+                //console.log(err);
                 return [x,y]
             }
         }
@@ -182,12 +182,12 @@ function onFireBullet(data)
     var map = socket.world;
     var moveFunction;
     var compareFunction;
-    var cellPerSecond = 6;
+    var cellPerSecond = 20;
     var deltaMilliSeconds = 100; // ms
     var cellPerDelta = (cellPerSecond/1000) * deltaMilliSeconds;
     switch(data.direction)
     {
-        case 0:
+        case "left":
             moveFunction = function(){
              this.x-=cellPerDelta;
             };
@@ -195,7 +195,7 @@ function onFireBullet(data)
                 return bullet.x > 0;
             };
             break;
-        case 1:
+        case "right":
             moveFunction = function(){
                 this.x+=cellPerDelta;
             };
@@ -203,7 +203,7 @@ function onFireBullet(data)
                 return bullet.x < map.width
             };
             break;
-        case 2:
+        case "up":
             moveFunction = function(){
                 this.y-=cellPerDelta;
             };
@@ -211,7 +211,7 @@ function onFireBullet(data)
                 return bullet.y > 0
             };
             break;
-        case 3:
+        case "down":
             moveFunction = function(){
                 this.y+=cellPerDelta;
             };
@@ -228,7 +228,7 @@ function onFireBullet(data)
         compare: compareFunction
     };
     var bulletMover = setInterval(function(){
-        if(bullet.compare())
+        if(validateBullet(bullet,socket.world.map) == true)
         {
             console.log("Bullet moved to x:"+bullet.x+" y:"+bullet.y);
             socket.to(socket.player.roomId).emit("move bullet", {id: bullet.id, x: bullet.x, y:bullet.y});
@@ -318,6 +318,35 @@ function broadcastNewPlayer(socket)
 function broadcastRemovePlayer(socket)
 {
     socket.to(socket.player.roomId).emit("remove player", socket.player.socketId);
+}
+
+function validateBullet(bullet,map)
+{
+    var corners = [
+        {x:bullet.x+1,y:bullet.y},  // upper right
+        {x:bullet.x+1,y:bullet.y+1},  // lower right
+        {x:bullet.x,y:bullet.y},    // upper left
+        {x:bullet.x,y:bullet.y+1}     // lower left
+    ];
+
+    for(var i=0;i<corners.length;i++)
+    {
+        var x = Math.round(corners[i].x);
+        var y = Math.round(corners[i].y);
+        try
+        {
+            var cellValue = map[x][y].value;
+            if(!cellValue)
+            {
+                return false;
+            }
+        }
+        catch(err)
+        {
+            return null;
+        }
+    }
+    return true;
 }
 
 module.exports = Handler;

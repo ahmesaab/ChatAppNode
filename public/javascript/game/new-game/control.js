@@ -74,7 +74,7 @@ function bindKeyboardController(client,game)
                         client.emitFireBullet(
                             (player.grant.x + cellLength) / cellLength,
                             (player.grant.y + (1.5 *cellLength)) / cellLength,
-                            player.getDirection());
+                            player.grant.currentAnimation.replace("stationary",""));
                     }
             }
         }
