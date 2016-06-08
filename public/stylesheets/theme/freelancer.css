@@ -4,8 +4,19 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+
+
 body {
     overflow-x: hidden;
+}
+
+.describtion{
+    font-size: 2em;
+    font-weight: 900;
+}
+
+#play-button {
+    border: 3px solid #18bc9c;
 }
 
 p {
@@ -21,13 +32,11 @@ p.small {
     font-size: 16px;
 }
 
-a,
-a:hover,
-a:focus,
-a:active,
-a.active {
+a.active > a:hover {
     outline: 0;
     color: #18bc9c;
+    text-decoration: underline;
+    border: 3px solid #1a242f; !important;
 }
 
 h1,
@@ -176,7 +185,7 @@ header .intro-text .skills {
 }
 
 section {
-    padding: 100px 0;
+    padding: 140px 0;
 }
 
 section h2 {

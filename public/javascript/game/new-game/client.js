@@ -52,7 +52,7 @@ function createClient(url,game)
 
     function _onMessage(data) {
         console.log("Got Message from "+data.nickName+" saying "+data.message);
-        _game.addMessage(data.id, data.message);
+        _game.addMessage(data.id, data.message,true);
         ui.addMessageToChatHistory(data.message,data.nickName,false);
     };
 
@@ -93,7 +93,7 @@ function createClient(url,game)
             if (message != "")
             {
                 _socket.emit('message',message );
-                _game.addMessage(_game.getLocalPlayer().socketId, message);
+                _game.addMessage(_game.getLocalPlayer().socketId, message,false);
                 ui.addMessageToChatHistory(message,_game.getLocalPlayer().nickName,true);
             }
         },

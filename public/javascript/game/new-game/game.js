@@ -53,18 +53,6 @@ function createGame()
         {
             for (var j = 0; j < _map.height; j++)
             {
-                if(i == 10 && j ==10)
-                {
-                    var cell = _map.map[i][j];
-                    _map.map[10][10].value = false;
-                    var tile = new createjs.Bitmap('images/pokemon_grass_tile.png');
-                    tile.scaleX = _cellLength / cell.pixelwidth;
-                    tile.scaleY = _cellLength / cell.pixelheight;
-                    tile.x = i * _cellLength;
-                    tile.y = j * _cellLength;
-                    background.addChild(tile);
-                    continue;
-                }
                 var cell = _map.map[i][j];
                 var tile = new createjs.Bitmap('images/'+cell.src);
                 tile.scaleX = _cellLength / cell.pixelwidth;
@@ -74,9 +62,6 @@ function createGame()
                 background.addChild(tile);
             }
         }
-
-
-
         background.name = 'background';
         bullets.name = 'bullets';
         _stage.addChild(background);
@@ -235,11 +220,9 @@ function createGame()
             try
             {
                 var cellValue = map[x][y].value;
-                if(cellValue === true)
-                    continue;
-                else if(cellValue === false)
+                if(cellValue === false)
                     return false;
-                else if(_willChangeRoom(x,y))
+                else if(cellValue == null && _willChangeRoom(x,y))
                     return null;
             }
             catch(err)
@@ -252,6 +235,26 @@ function createGame()
         }
         return true;
     };
+
+    var _addLoadingToStage = function()
+    {
+        var spriteSheetConfig = {
+            "images": ["/images/loading.png"],
+            "frames": {"count": 16, "height": 125, "width": 125},
+            "animations": {
+                "load": [0, 15, "load", 0.5]
+            }
+        };
+        var spriteSheet = new createjs.SpriteSheet(spriteSheetConfig);
+        var loading = new createjs.Sprite(spriteSheet, "load");
+        loading.scaleY = (window.innerHeight-200) / spriteSheetConfig.frames.width;
+        loading.scaleX = loading.scaleY;
+        loading.x = (_map.width/2 * _cellLength) - (loading.scaleX * spriteSheetConfig.frames.width/2);
+        loading.y = (_map.height/2 * _cellLength) - (loading.scaleY * spriteSheetConfig.frames.height/2);
+        loading.name = "loading";
+        loading.yBase = 9000;
+        _stage.addChild(loading);
+    }
 
     var _moveLocalPlayer = function(delta)
     {
@@ -292,6 +295,7 @@ function createGame()
             else if (moveLogic === null) {
                 _emitMovePlayer(newX / _cellLength, newY / _cellLength);
                 createjs.Ticker.setPaused(true);
+               _addLoadingToStage();
                 console.log("Paused Ticker & Waiting for new Map!");
             }
         }
@@ -310,12 +314,8 @@ function createGame()
             _interpolateBullets(event.delta);
             _interpolatePlayers(event.delta);
             _sort();
-            _stage.update(event);
         }
-        else
-        {
-            // TODO: Show loading bar on stage
-        }
+        _stage.update(event);
     };
 
 
@@ -368,6 +368,7 @@ function createGame()
             else
             {
                 createjs.Ticker.setPaused(false);
+                _stage.removeChild(_stage.getChildByName("loading"))
             }
 
         },
@@ -380,27 +381,19 @@ function createGame()
             }
             else
             {
-                var leftLeg = {x:Math.round(movePlayer.x),y:Math.round(movePlayer.y+1)} ;
-                var rightLeg = {x:Math.round(movePlayer.x),y:Math.round(movePlayer.y+1)};
-
-                _map.map[leftLeg.x][leftLeg.y].value = true;
-                _map.map[rightLeg.x][rightLeg.y].value = true;
-
                 movePlayer.playing = true;
                 movePlayer.x = x;
                 movePlayer.y = y;
-
-                leftLeg = {x:Math.round(x),y:Math.round(y+1)} ;
-                rightLeg = {x:Math.round(x),y:Math.round(y+1)};
-
-                _map.map[leftLeg.x][leftLeg.y].value = false;
-                _map.map[rightLeg.x][rightLeg.y].value = false;
             }
         },
 
-        addMessage:function(playerId,msg)
+        addMessage:function(playerId,msg,isRemotePlayer)
         {
-            var player = _getPlayerById(playerId);
+            var player;
+            if(isRemotePlayer)
+                player = _getPlayerById(playerId);
+            else
+                player = _localPlayer;
             if(player)
             {
                 var textBubble = new createjs.Container();
@@ -514,13 +507,9 @@ function createGame()
 
             if(isRemotePlayer)
             {
-                var leftLeg = {x:Math.round(player.x),y:Math.round(player.y+1)} ;
-                var rightLeg = {x:Math.round(player.x+1),y:Math.round(player.y+1)};
-                _map.map[leftLeg.x][leftLeg.y].value = false;
-                _map.map[rightLeg.x][rightLeg.y].value = false;
+                _remotePlayers.push(player);
             }
 
-            _remotePlayers.push(player);
             _stage.addChild(player.grant);
         },
 
@@ -570,6 +559,7 @@ function createGame()
 
         setLocalPlayerLocation:function(x,y)
         {
+            _localPlayer.playing = true;
             _localPlayer.grant.x = x * _cellLength;
             _localPlayer.grant.y = y * _cellLength;
         }

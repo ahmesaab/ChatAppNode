@@ -2,6 +2,8 @@
    Created by Ahmed on 4/6/2016.
 
 extends layouts/complex
+block extra-head
+   link(href='/stylesheets/login-style.css', rel='stylesheet')
 block content
    // Header
    header
@@ -17,47 +19,37 @@ block content
    // Portfolio Grid Section
    section#portfolio
       .container
-         .row
-            .col-lg-12.text-center
-               h2 Sneak Peak
-               hr.star-primary
-         .row
-            .col-sm-4.portfolio-item
+         //.row
+         //   .col-lg-12.text-center
+         //      h2 What is it?
+         //      hr.star-primary
+         .col-sm-12
+            .col-sm-6.portfolio-item
                a.portfolio-link(href='#portfolioModal1', data-toggle='modal')
                   .caption
                      .caption-content
                         i.fa.fa-search-plus.fa-3x
-                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
-            .col-sm-4.portfolio-item
+                  img.img-responsive(src='/images/snap-shots/snap1.png', alt='')
+            .col-sm-6.describtion
+               | Talk with anyone in your virtual room.
+         .col-sm-12
+            .col-sm-6.portfolio-item
                a.portfolio-link(href='#portfolioModal2', data-toggle='modal')
                   .caption
                      .caption-content
                         i.fa.fa-search-plus.fa-3x
-                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
-            .col-sm-4.portfolio-item
+                  img.img-responsive(src='/images/snap-shots/snap2.png', alt='')
+            .col-sm-6.describtion
+               | Move with your charachter and talk and interact with others.
+         .col-sm-12
+            .col-sm-6.portfolio-item
                a.portfolio-link(href='#portfolioModal3', data-toggle='modal')
                   .caption
                      .caption-content
                         i.fa.fa-search-plus.fa-3x
-                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
-            .col-sm-4.portfolio-item
-               a.portfolio-link(href='#portfolioModal4', data-toggle='modal')
-                  .caption
-                     .caption-content
-                        i.fa.fa-search-plus.fa-3x
-                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
-            .col-sm-4.portfolio-item
-               a.portfolio-link(href='#portfolioModal5', data-toggle='modal')
-                  .caption
-                     .caption-content
-                        i.fa.fa-search-plus.fa-3x
-                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
-            .col-sm-4.portfolio-item
-               a.portfolio-link(href='#portfolioModal6', data-toggle='modal')
-                  .caption
-                     .caption-content
-                        i.fa.fa-search-plus.fa-3x
-                  img.img-responsive(src='/images/snap-shots/snapshot.png', alt='')
+                  img.img-responsive(src='/images/snap-shots/snap3.png', alt='')
+            .col-sm-6.describtion
+               | Explore an open world with your friends and strangers!
    // About Section
    section#about.success
       .container
@@ -83,8 +75,54 @@ block content
                   | please let me know. Thank you!
             .col-lg-8.col-lg-offset-2.text-center
                a.btn.btn-lg.btn-outline(href='https://github.com/ahmesaab/ChatAppNode/tree/GameBranch')
-                  i.fa.fa-download
+                  i.fa.fa-github.fa-lg
                   |  Github
+   section#login
+      .omb_login
+         h3.omb_authTitle
+            | Login or
+            a(href='#')  Sign up
+         .row.omb_row-sm-offset-3.omb_socialButtons
+            //.col-xs-12.col-sm-6.col-lg-6
+            .col-xs-4.col-sm-2
+               a.btn.btn-lg.btn-block.omb_btn-facebook(href="/auth/facebook")
+                  i.fa.fa-facebook.visible-xs
+                  span.hidden-xs Facebook
+            .col-xs-4.col-sm-2
+               a.btn.btn-lg.btn-block.omb_btn-twitter(href='#',onclick='alert("not yet supported, sorry")')
+                  i.fa.fa-twitter.visible-xs
+                  span.hidden-xs Twitter
+            .col-xs-4.col-sm-2
+               a.btn.btn-lg.btn-block.omb_btn-google(href='#',onclick='alert("not yet supported, sorry")')
+                  i.fa.fa-google-plus.visible-xs
+                  span.hidden-xs Google+
+         .row.omb_row-sm-offset-3.omb_loginOr
+            .col-xs-12.col-sm-6
+               hr.omb_hrOr
+               span.omb_spanOr or
+         .row.omb_row-sm-offset-3
+            .col-xs-12.col-sm-6
+               form.omb_loginForm(action='/login',method='post',autocomplete='off')
+                  .input-group
+                     span.input-group-addon
+                        i.fa.fa-user
+                     input#userId.form-control(name='userId',type='text', placeholder='email address')
+                  span.help-block
+                  .input-group
+                     span.input-group-addon
+                        i.fa.fa-lock
+                     input.form-control(type='password', name='password', placeholder='Password')
+                  span.help-block #{error}
+                  button.btn.btn-lg.btn-primary.btn-block(type='submit') Login
+         .row.omb_row-sm-offset-3
+            .col-xs-12.col-sm-3
+               label.checkbox
+                  input(type='checkbox', value='remember-me')
+                  | Remember Me
+            .col-xs-12.col-sm-3
+               p.omb_forgotPwd
+                  a(href='#') Forgot password?
+
 
    // Scroll to Top Button (Only visible on small and extra-small screen sizes)
    .scroll-top.page-scroll.visible-xs.visible-sm
@@ -102,7 +140,7 @@ block content
                   .modal-body
                      h2 Project Title
                      hr.star-primary
-                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     img.img-responsive.img-centered(src='/images/snap-shots/snap1.png', alt='')
                      p
                         | bla bla bla 
                         
@@ -134,7 +172,7 @@ block content
                   .modal-body
                      h2 Project Title
                      hr.star-primary
-                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     img.img-responsive.img-centered(src='/images/snap-shots/snap2.png', alt='')
                      p
                         | bla bla bla 
                         
@@ -166,100 +204,7 @@ block content
                   .modal-body
                      h2 Project Title
                      hr.star-primary
-                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
-                     p
-                        | bla bla bla
-                        | bla bla bla
-                     ul.list-inline.item-details
-                        li
-                           | Client:
-                           strong
-                              a(href='/') Start 
-                        li
-                           | Date:
-                           strong
-                              a(href='/') April 2014
-                        li
-                           | Service:
-                           strong
-                              a(href='/') Web Development
-                     button.btn.btn-default(type='button', data-dismiss='modal')
-                        i.fa.fa-times
-                        |  Close
-   #portfolioModal4.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
-      .modal-content
-         .close-modal(data-dismiss='modal')
-            .lr
-               .rl
-         .container
-            .row
-               .col-lg-8.col-lg-offset-2
-                  .modal-body
-                     h2 Project Title
-                     hr.star-primary
-                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
-                     p
-                        | bla bla bla
-                        | bla bla bla
-                     ul.list-inline.item-details
-                        li
-                           | Client:
-                           strong
-                              a(href='/') Start 
-                        li
-                           | Date:
-                           strong
-                              a(href='/') April 2014
-                        li
-                           | Service:
-                           strong
-                              a(href='/') Web Development
-                     button.btn.btn-default(type='button', data-dismiss='modal')
-                        i.fa.fa-times
-                        |  Close
-   #portfolioModal5.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
-      .modal-content
-         .close-modal(data-dismiss='modal')
-            .lr
-               .rl
-         .container
-            .row
-               .col-lg-8.col-lg-offset-2
-                  .modal-body
-                     h2 Project Title
-                     hr.star-primary
-                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
-                     p
-                        | bla bla bla
-                        | bla bla bla
-                     ul.list-inline.item-details
-                        li
-                           | Client:
-                           strong
-                              a(href='/') Start 
-                        li
-                           | Date:
-                           strong
-                              a(href='/') April 2014
-                        li
-                           | Service:
-                           strong
-                              a(href='/') Web Development
-                     button.btn.btn-default(type='button', data-dismiss='modal')
-                        i.fa.fa-times
-                        |  Close
-   #portfolioModal6.portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
-      .modal-content
-         .close-modal(data-dismiss='modal')
-            .lr
-               .rl
-         .container
-            .row
-               .col-lg-8.col-lg-offset-2
-                  .modal-body
-                     h2 Project Title
-                     hr.star-primary
-                     img.img-responsive.img-centered(src='/images/snap-shots/snapshot.png', alt='')
+                     img.img-responsive.img-centered(src='/images/snap-shots/snap3.png', alt='')
                      p
                         | bla bla bla
                         | bla bla bla
