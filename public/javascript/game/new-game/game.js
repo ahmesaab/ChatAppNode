@@ -240,9 +240,9 @@ function createGame()
     {
         var spriteSheetConfig = {
             "images": ["/images/loading.png"],
-            "frames": {"count": 16, "height": 125, "width": 125},
+            "frames": {"count": 8, "height": 125, "width": 125},
             "animations": {
-                "load": [0, 15, "load", 0.5]
+                "load": [0, 7, "load", 0.5]
             }
         };
         var spriteSheet = new createjs.SpriteSheet(spriteSheetConfig);
