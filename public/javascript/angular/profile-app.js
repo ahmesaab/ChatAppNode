@@ -1,7 +1,7 @@
 /**
  * Created by Ahmed on 5/6/2016.
  */
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ['ngMaterial']);
 app.controller('myCtrl', function($scope,$http) {
 
     $scope.currentCharacterId;

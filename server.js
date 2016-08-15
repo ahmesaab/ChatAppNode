@@ -20,7 +20,8 @@ var login = require('./routes/login');
 var logout = require('./routes/logout');
 
 var changeSettings = require('./rest/changeSettings');
-var chatHistory =require('./rest/chatHistory')
+var chatHistory =require('./rest/chatHistory');
+var restUser =require('./rest/user');
 
 //Express Application
 var app = express();
@@ -60,6 +61,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/rest/changeSettings', changeSettings);
 app.use('/rest/chatHistory', chatHistory);
+app.use('/rest/user', restUser);
 require('./routes/auth')(app, passport); // load our routes and pass in our app and fully configured passport
 
 

@@ -20,6 +20,11 @@
     "passport-facebook": "^2.1.0",
     "passport-local": "^1.0.0",
     "serve-favicon": "~2.3.0",
-    "socket.io": "1.4.5"
+    "socket.io": "1.4.5",
+    "angular": "^1.5.5",
+    "angular-animate": "^1.5.5",
+    "angular-aria": "^1.5.5",
+    "angular-messages": "^1.5.5",
+    "angular-material": "git+https://github.com/angular/bower-material.git#master"
   }
 }

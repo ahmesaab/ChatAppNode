@@ -8,10 +8,13 @@ function createGame()
     var _remotePlayers;
     var _bullets;
     var _cellLength;
-    const _networkDelay = configs.networkDelay;
+    var _movement = "stationarydown";
 
     // private functions
     //---------------------------------------------------
+
+    var _emitMovePlayer;
+
     var _sortByY =  function(obj1, obj2)
     {
         if(obj1.name == 'background' || obj1.name == 'bullets') { return -1}
@@ -84,13 +87,13 @@ function createGame()
         graphics.scaleY = _cellLength / graphics.image.height;
         graphics.regX = graphics.image.width/2;
         graphics.regY = graphics.image.height/2;
-        graphics.rotationSpeed = 20;
+        graphics.rotationSpeed = 70;
 
         var bullet = {
             x : graphics.x,
             y : graphics.y,
             graphics : graphics,
-            speed : 5.9
+            speed : 19.8
         };
 
         _bullets[id] = bullet;
@@ -122,21 +125,21 @@ function createGame()
                 var cellPerSecond = bullet.speed;
                 var pixelPerSecond = cellPerSecond * _cellLength;
                 var pixels = delta/1000*pixelPerSecond ;
-                if(bullet.x < bullet.graphics.x)
-                {
-                    bullet.graphics.x = bullet.graphics.x - pixels;
-                }
-                else if(bullet.x > bullet.graphics.x)
+                if(bullet.x - bullet.graphics.x >= pixels)
                 {
                     bullet.graphics.x = bullet.graphics.x + pixels;
                 }
-                else if(bullet.y < bullet.graphics.y)
+                else if(bullet.graphics.x - bullet.x  >= pixels)
                 {
-                    bullet.graphics.y = bullet.graphics.y - pixels;
+                    bullet.graphics.x = bullet.graphics.x - pixels;
                 }
-                else if(bullet.y > bullet.graphics.y)
+                else if(bullet.y - bullet.graphics.y >= pixels)
                 {
                     bullet.graphics.y = bullet.graphics.y + pixels;
+                }
+                else if(bullet.graphics.y - bullet.y >= pixels)
+                {
+                    bullet.graphics.y = bullet.graphics.y - pixels;
                 }
             }
         }
@@ -150,24 +153,24 @@ function createGame()
             if(player.playing)
             {
                 var direction;
-                var cellPerSecond = player.speed - _networkDelay;
+                var cellPerSecond = player.speed;
                 var pixelPerSecond = cellPerSecond * _cellLength;
                 var pixels = delta/1000*pixelPerSecond ;
 
-                if (player.x - player.grant.x >= pixels){
+                if ((player.x*_cellLength) - player.grant.x >= pixels){
                     direction = "right";
                     player.grant.x = player.grant.x + pixels;
                 }
-                else if (player.grant.x - player.x >= pixels) {
+                else if (player.grant.x - (player.x*_cellLength) >= pixels) {
                     direction = "left";
                     player.grant.x = player.grant.x - pixels;
                 }
-                else if (player.y - player.grant.y >= pixels) {
+                else if ((player.y*_cellLength) - player.grant.y >= pixels) {
                     direction = "down";
                     player.grant.y = player.grant.y + pixels;
                     player.grant.yBase = player.grant.y;
                 }
-                else if (player.grant.y - player.y >= pixels) {
+                else if (player.grant.y - (player.y*_cellLength) >= pixels) {
                     direction = "up";
                     player.grant.y = player.grant.y - pixels;
                     player.grant.yBase = player.grant.y;
@@ -185,11 +188,133 @@ function createGame()
         }
     };
 
+    var _willChangeRoom =  function(x,y)
+    {
+        for(var i=0;i < _map.exits.length;i++)
+        {
+            var exit = _map.exits[i];
+            if(exit.entranceX == x && exit.entranceY == y)
+            {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    var _validateMove = function(newX,newY,map)
+    {
+        newX = newX / _cellLength;
+        newY = newY / _cellLength;
+
+        var corners = [
+            {x:newX+1,y:newY+1},  // upper right
+            {x:newX+1,y:newY+2},  // lower right
+            {x:newX,y:newY+1},    // upper left
+            {x:newX,y:newY+2}     // lower left
+        ];
+
+        for(var i=0;i<corners.length;i++)
+        {
+            var x = Math.round(corners[i].x);
+            var y = Math.round(corners[i].y);
+            try
+            {
+                var cellValue = map[x][y].value;
+                if(cellValue === false)
+                    return false;
+                else if(cellValue == null && _willChangeRoom(x,y))
+                    return null;
+            }
+            catch(err)
+            {
+                if(_willChangeRoom(x,y))
+                    return null;
+                else
+                    return false;
+            }
+        }
+        return true;
+    };
+
+    var _addLoadingToStage = function()
+    {
+        var spriteSheetConfig = {
+            "images": ["/images/loading.png"],
+            "frames": {"count": 8, "height": 125, "width": 125},
+            "animations": {
+                "load": [0, 7, "load", 0.5]
+            }
+        };
+        var spriteSheet = new createjs.SpriteSheet(spriteSheetConfig);
+        var loading = new createjs.Sprite(spriteSheet, "load");
+        loading.scaleY = (window.innerHeight-200) / spriteSheetConfig.frames.width;
+        loading.scaleX = loading.scaleY;
+        loading.x = (_map.width/2 * _cellLength) - (loading.scaleX * spriteSheetConfig.frames.width/2);
+        loading.y = (_map.height/2 * _cellLength) - (loading.scaleY * spriteSheetConfig.frames.height/2);
+        loading.name = "loading";
+        loading.yBase = 9000;
+        _stage.addChild(loading);
+    }
+
+    var _moveLocalPlayer = function(delta)
+    {
+        if (_movement.indexOf("stationary"))
+        {
+            var cellPerSecond = _localPlayer.speed;
+            var pixelPerSecond = cellPerSecond * _cellLength;
+            var pixels = delta / 1000 * pixelPerSecond;
+
+            var newX = _localPlayer.grant.x;
+            var newY = _localPlayer.grant.y;
+
+            switch (_movement) {
+                case "left":
+                    newX = newX - pixels;
+                    break;
+                case "right":
+                    newX = newX + pixels;
+                    break;
+                case "up":
+                    newY = newY - pixels;
+                    break;
+                case "down":
+                    newY = newY + pixels;
+            }
+
+            var moveLogic = _validateMove(newX, newY, _map.map);
+            if (moveLogic === true) {
+                _localPlayer.grant.x = newX;
+                _localPlayer.grant.y = newY;
+                _localPlayer.grant.yBase = newY;
+                _emitMovePlayer(_localPlayer.grant.x / _cellLength, _localPlayer.grant.y / _cellLength);
+                console.log("Emit player position!");
+            }
+            else if (moveLogic === false) {
+                console.log("Move is invalid!");
+            }
+            else if (moveLogic === null) {
+                _emitMovePlayer(newX / _cellLength, newY / _cellLength);
+                createjs.Ticker.setPaused(true);
+               _addLoadingToStage();
+                console.log("Paused Ticker & Waiting for new Map!");
+            }
+        }
+
+        if (_localPlayer.grant.currentAnimation !== _movement) {
+            _localPlayer.grant.gotoAndPlay(_movement);
+        }
+    };
+
     var _tick =  function(event)
     {
-        _interpolateBullets(event.delta);
-        _interpolatePlayers(event.delta);
-        _sort();
+        if(!event.paused)
+        {
+
+            _moveLocalPlayer(event.delta);
+            _interpolateBullets(event.delta);
+            _interpolatePlayers(event.delta);
+            _sort();
+        }
         _stage.update(event);
     };
 
@@ -197,6 +322,16 @@ function createGame()
     // public functions
     //---------------------------------------------------
     return {
+        setEmitMovePlayer:function(method)
+        {
+            _emitMovePlayer = method;
+        },
+
+        setMovement:function(movement)
+        {
+            _movement = movement;
+        },
+
         setMap:function(data,cellLength)
         {
             _map = data;
@@ -223,13 +358,19 @@ function createGame()
             _drawMap();
             _remotePlayers = [];
             _bullets = [];
-            this.addPlayer(_localPlayer);
+            this.addPlayer(_localPlayer,false);
             if(!createjs.Ticker.paused)
             {
                 createjs.Ticker.timingMode = createjs.Ticker.RAF;
                 createjs.Ticker.setInterval(30);
                 createjs.Ticker.addEventListener("tick", _tick);
             }
+            else
+            {
+                createjs.Ticker.setPaused(false);
+                _stage.removeChild(_stage.getChildByName("loading"))
+            }
+
         },
 
         movePlayer:function(playerId,x,y)
@@ -241,14 +382,18 @@ function createGame()
             else
             {
                 movePlayer.playing = true;
-                movePlayer.x = x * _cellLength;
-                movePlayer.y = y * _cellLength;
+                movePlayer.x = x;
+                movePlayer.y = y;
             }
         },
 
-        addMessage:function(playerId,msg)
+        addMessage:function(playerId,msg,isRemotePlayer)
         {
-            var player = _getPlayerById(playerId);
+            var player;
+            if(isRemotePlayer)
+                player = _getPlayerById(playerId);
+            else
+                player = _localPlayer;
             if(player)
             {
                 var textBubble = new createjs.Container();
@@ -342,7 +487,7 @@ function createGame()
 
         },
 
-        addPlayer:function(player)
+        addPlayer:function(player,isRemotePlayer)
         {
             //TODO: Change color to shape
 
@@ -359,28 +504,12 @@ function createGame()
 
             player.grant = grant;
             player.playing = false;
-            player.getDirection = function(){
-                switch(this.grant.currentAnimation) {
-                    case "stationaryleft":
-                    case "left":
-                        return 0;
-                        break;
-                    case "stationaryright":
-                    case "right":
-                        return 1;
-                        break;
-                    case "stationaryup":
-                    case "up":
-                        return 2;
-                        break;
-                    case "stationarydown":
-                    case "down":
-                        return 3;
-                        break;
-                }
-            };
 
-            _remotePlayers.push(player);
+            if(isRemotePlayer)
+            {
+                _remotePlayers.push(player);
+            }
+
             _stage.addChild(player.grant);
         },
 
@@ -426,6 +555,13 @@ function createGame()
             {
                 console.log("Couldn't remove bullet with id "+id+" because id not found")
             }
+        },
+
+        setLocalPlayerLocation:function(x,y)
+        {
+            _localPlayer.playing = true;
+            _localPlayer.grant.x = x * _cellLength;
+            _localPlayer.grant.y = y * _cellLength;
         }
     }
 

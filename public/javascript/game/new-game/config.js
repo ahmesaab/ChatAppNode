@@ -204,7 +204,7 @@ configs = {
             default:
                 spriteSheet = {
                     framerate: 30,
-                    "images": [images.default],
+                    "images": [this.images.default],
                     "frames": {"count": 16, "height": 50, "width": 50},
                     "animations": {
                         "left": [4, 7, "left", 0.5],

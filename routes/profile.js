@@ -7,10 +7,10 @@ var serviceBuilder = require('../data/service.js');
 
 router.get('/:id', function(req, res, next) {
     var service = new(serviceBuilder)();
-    service.getUser(req.param("id"),function(user){
+    service.getUser(req.params.id,function(user){
         service.getUsers(function(users)
         {
-            res.render('profile', {
+            res.render('profile-full', {
                 profileUser: user,
                 users: users,
                 userId: req.session.passport ? req.session.passport.user:null,

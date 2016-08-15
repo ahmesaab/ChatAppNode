@@ -2,14 +2,6 @@ var express = require('express');
 var router = express.Router();
 var Service = require('../data/service.js');
 
-/* GET login page. */
-router.get('/', function(req, res) {
-    res.render('login',
-        {
-            title: 'Login',
-            navigationLinks: {'Sign up':'/signup'}
-        });
-});
 
 /* Post to login page. */
 router.post('/', function(req, res) {

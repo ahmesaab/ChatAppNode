@@ -20,6 +20,7 @@ function createClient(url,game)
     _socket.on("server message", _onServerMessage);
     _socket.on("move bullet",_onMoveBullet);
     _socket.on("remove bullet",_onRemoveBullet);
+    _socket.on("set location",_onSetLocation);
 
     // private functions
     function _onSocketConnected(){
@@ -51,20 +52,23 @@ function createClient(url,game)
 
     function _onMessage(data) {
         console.log("Got Message from "+data.nickName+" saying "+data.message);
-        _game.addMessage(data.id, data.message);
+        _game.addMessage(data.id, data.message,true);
         ui.addMessageToChatHistory(data.message,data.nickName,false);
     };
 
     function _onNewPlayer(player) {
         console.log("Player "+player.socketId+" was connected")
         ui.log("Player "+player.nickName+" joined the room")
-        _game.addPlayer(player);
+        _game.addPlayer(player,true);
     };
 
     function _onMovePlayer(data) {
         _game.movePlayer(data.id,data.x,data.y)
     };
 
+    function _onSetLocation(data) {
+        _game.setLocalPlayerLocation(data.x,data.y);
+    };
 
     function _onRemovePlayer(playerId) {
         _game.removePlayer(playerId);
@@ -89,14 +93,14 @@ function createClient(url,game)
             if (message != "")
             {
                 _socket.emit('message',message );
-                _game.addMessage(_game.getLocalPlayer().socketId, message);
+                _game.addMessage(_game.getLocalPlayer().socketId, message,false);
                 ui.addMessageToChatHistory(message,_game.getLocalPlayer().nickName,true);
             }
         },
 
-        emitMovePlayer:function(direction)
+        emitMovePlayer:function(x,y)
         {
-            _socket.emit('move player',direction);
+            _socket.emit('move player',{x:x,y:y});
         },
 
         emitFireBullet:function(x,y,direction)

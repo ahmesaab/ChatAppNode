@@ -1,0 +1,70 @@
+head
+   title='Small World - {{selected.firstName + " " + selected.lastName}}'
+
+   link(href='/stylesheets/profile.css', rel='stylesheet')
+   link(href='/stylesheets/angular/angular-material.css', rel='stylesheet')
+
+   script(src="/javascript/lib/easeljs-NEXT.min.js")
+   script(src='/javascript/lib/angular/angular.js')
+   script(src='/javascript/lib/angular/angular-animate.js')
+   script(src='/javascript/lib/angular/angular-aria.js')
+   script(src='/javascript/lib/angular/angular-material.js')
+
+   script(src="/javascript/game/new-game/config.js")
+   script(src="/javascript/angular/profile-app-new.js")
+
+body(ng-app="myApp", ng-controller="myCtrl", ng-init="init(#{JSON.stringify(users)},#{JSON.stringify(profileUser)},#{JSON.stringify(userId)})",layout="column")
+
+   md-toolbar(layout='row')
+      md-button(hide-gt-sm,ng-click='toggleUsersList()' aria-label="Show User List")
+         md-icon(md-svg-icon="menu")
+      h1 SmallWorld
+         b beta
+      span(flex)
+      md-button.toolbar(href='/' aria-label="Go to Home") Home
+      md-button.toolbar(href='/game' aria-label="Go to Home") Game
+
+   div(flex='', layout='row')
+
+      md-sidenav.md-whiteframe-z2(ng-click='toggleUsersList()',md-is-locked-open="$mdMedia('gt-sm')",md-component-id="left")
+         md-list
+            md-button(ng-repeat="profile in users" flex-gt-sm)
+               div(ng-click="$parent.selectUser(profile.id)",ng-class="{'selected' : profile.id === user.id }")
+                  | {{profile.firstName + ' ' + profile.lastName}}
+
+      md-content#content(flex)
+
+         div(layout-gt-sm="row")
+            h2 {{user.firstName + ' ' + user.lastName}}
+
+         div(layout-gt-sm="row")
+            canvas#current-character-canvas(ng-click="viewCharacters()")
+            md-input-container(flex-gt-sm)
+               label Nick Name
+               input(ng-model='user.nickName')
+            md-input-container(flex-gt-sm)
+               label Room
+               input(disabled,ng-model='user.roomId')
+            md-input-container(flex-gt-sm)
+               label Position
+               input(disabled,value="{{user.x+','+user.y}}")
+
+         md-divider.vertical-margin
+
+         div(layout-gt-sm="row")
+            md-input-container.md-block(flex-gt-sm)
+               label First Name
+               input(ng-model='user.firstName')
+            md-input-container.md-block(flex-gt-sm)
+               label Last Name
+               input(ng-model='user.lastName')
+
+         div(layout-gt-sm="row")
+            div#sprites(ng-show="showCharacters")
+               canvas.character(ng-repeat="(id,image) in charachters",ng-click="changeCharacter(id)")
+
+         md-divider.vertical-margin(ng-show="canEdit")
+
+         div(layout-gt-sm="row")
+            md-button.md-primary.save(ng-click="save()",ng-show="canEdit",flex) Save
+

@@ -2,10 +2,10 @@
 function bindKeyboardController(client,game)
 {
     var keys= {
-        37 : { val:false, dir:0 }, // left
-        38 : { val:false, dir:2 }, // up
-        39 : { val:false, dir:1 }, // right
-        40 : { val:false, dir:3 }  // down
+        37 : { val:false, dir:"left" }, // 0
+        38 : { val:false, dir:"up" }, // 2
+        39 : { val:false, dir:"right" }, // 1
+        40 : { val:false, dir:"down" }  // 3
     };
 
     var currentDirection = null;
@@ -28,11 +28,10 @@ function bindKeyboardController(client,game)
                 return false;
             }
         }
-        if(currentDirection !== null)
-        {
-            currentDirection = null;
-            return true;
-        }
+
+        currentDirection = "stationary"+currentDirection;
+        return true;
+
     }
 
     function keyReleased(event)
@@ -42,7 +41,7 @@ function bindKeyboardController(client,game)
             keys[event.keyCode].val = false;
             if(updateCurrentDirection())
             {
-                client.emitMovePlayer(currentDirection);
+                game.setMovement(currentDirection);
             }
         }
     }
@@ -54,7 +53,7 @@ function bindKeyboardController(client,game)
             keys[event.keyCode].val = true;
             if(updateCurrentDirection())
             {
-                client.emitMovePlayer(currentDirection);
+                game.setMovement(currentDirection);
             }
         }
         else
@@ -75,7 +74,7 @@ function bindKeyboardController(client,game)
                         client.emitFireBullet(
                             (player.grant.x + cellLength) / cellLength,
                             (player.grant.y + (1.5 *cellLength)) / cellLength,
-                            player.getDirection());
+                            player.grant.currentAnimation.replace("stationary",""));
                     }
             }
         }
